@@ -6,11 +6,12 @@ import {
 } from 'native-base';
 import { Field, reduxForm, submit } from 'redux-form';
 import Storage from 'react-native-storage';
+import { baseUrl } from "../config/variable";
 
 var storage = new Storage({
     size: 1000,
     storageBackend: AsyncStorage,
-    defaultExpires: 1000 * 3600 * 24,
+    defaultExpires: null,
     enableCache: true,
 })
 
@@ -53,7 +54,7 @@ class Login extends Component {
     }
 
     getAccount(params, callback) {
-        fetch("http://galangbersama.com/api/login", {
+        fetch(baseUrl+"api/login", {
             method: "POST",
             body: JSON.stringify(params),
             headers: {

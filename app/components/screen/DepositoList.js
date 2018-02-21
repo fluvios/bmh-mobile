@@ -6,11 +6,12 @@ import {
 } from "native-base";
 import { styles } from "../config/styles";
 import Storage from 'react-native-storage';
+import { baseUrl } from "../config/variable";
 
 var storage = new Storage({
     size: 1000,
     storageBackend: AsyncStorage,
-    defaultExpires: 1000 * 3600 * 24,
+    defaultExpires: null,
     enableCache: true,
 })
 
@@ -27,7 +28,7 @@ export default class DepositoList extends Component {
     }
 
     getAccount(params, callback) {
-        fetch("http://galangbersama.com/api/account/" + params + "/refresh", {
+        fetch(baseUrl() + "api/account/" + params + "/refresh", {
             method: "GET",
             headers: {
                 'Accept': 'application/json',
@@ -54,6 +55,29 @@ export default class DepositoList extends Component {
         });
     }
 
+    deposit() {
+        storage.load({
+            key: 'user'
+        }).then(ret => {
+            this.props.navigation.navigate('DonateScreen', {
+                user: ret
+            })
+        }).catch(err => {
+            // console.error(err.message)
+            switch (err.name) {
+                case 'NotFoundError':
+                    this.props.navigation.navigate('LoginScreen')
+                    break;
+                case 'ExpiredError':
+                    storage.remove({
+                        key: 'user'
+                    });
+                    this.props.navigation.navigate('LoginScreen')
+                    break;
+            }
+        });
+    }
+
     render() {
         return (
             <Content>
@@ -66,7 +90,7 @@ export default class DepositoList extends Component {
                     </CardItem>
                 </Card>
                 <Button full textStyle={{ color: '#87838B' }}
-                    onPress={() => this.props.navigation.navigate('DonateScreen')}>
+                    onPress={() => this.deposit()}>
                     <Text>Add Saldo</Text>
                 </Button>
             </Content>

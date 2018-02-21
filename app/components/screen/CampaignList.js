@@ -11,6 +11,7 @@ import {
 import { cleanTag, convertToSlug, shortenDescription } from '../config/helper';
 import * as Progress from 'react-native-progress';
 import { styles } from "../config/styles";
+import { baseUrl } from "../config/variable";
 
 var campaignArray = [];
 
@@ -38,7 +39,7 @@ export default class CampaignList extends Component {
   }
 
   getCampaign(callback) {
-    fetch("http://galangbersama.com/api/campaigns", {
+    fetch(baseUrl+"api/campaigns", {
       method: "GET",
       headers: {
         'Accept': 'application/json',
@@ -59,7 +60,7 @@ export default class CampaignList extends Component {
       <Card style={{ flex: 0 }}>
         <CardItem>
           <Left>
-            <Thumbnail source={{ uri: "http://galangbersama.com/public/avatar/default.jpg" }} />
+            <Thumbnail source={{ uri: baseUrl+"public/avatar/default.jpg" }} />
             <Body>
               <Text>{rowData.title}</Text>
               <Text note>{rowData.date}</Text>
@@ -68,7 +69,7 @@ export default class CampaignList extends Component {
         </CardItem>
         <CardItem>
           <Body>
-            <Image source={{ uri: "http://galangbersama.com/public/campaigns/large/" + rowData.large_image }} style={{ height: 200, width: "95%", flex: 1 }} />
+            <Image source={{ uri: baseUrl+"public/campaigns/large/" + rowData.large_image }} style={{ height: 200, width: "95%", flex: 1 }} />
             <Text>
               {shortenDescription(cleanTag(rowData.description))}
             </Text>

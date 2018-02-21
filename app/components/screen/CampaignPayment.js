@@ -7,11 +7,12 @@ import {
     Footer, FooterTab, Text, Form, Item, Toast,
 } from 'native-base';
 import Storage from 'react-native-storage';
+import { baseUrl } from '../config/variable';
 
 var storage = new Storage({
     size: 1000,
     storageBackend: AsyncStorage,
-    defaultExpires: 1000 * 3600 * 24,
+    defaultExpires: null,
     enableCache: true,
 })
 
@@ -35,19 +36,19 @@ export default class CampaignPayment extends Component {
         this.loadStorage()
     }
 
-    onPaymentChange(value: string) {
+    onPaymentChange(value) {
         this.setState({
             payment_gateway: value
         })
     }
 
-    onAnonimChange(value: string) {
+    onAnonimChange(value) {
         this.setState({
             anonymous: value
         })
     }
 
-    onDonationChange(value: string) {
+    onDonationChange(value) {
         this.setState({
             donation_type: value
         });
@@ -56,10 +57,12 @@ export default class CampaignPayment extends Component {
     loadStorage() {
         storage.load({
             key: 'user'
-        }).then(ret => this.setState({
-            user_id: ret.id
+        }).then(ret => this.getAccount(ret.id, response => {
+            this.setState({
+                saldo: response.saldo
+            })
         })).catch(err => {
-            console.error(err.message)
+            console.log(err.message)
         });
     }
 
@@ -73,12 +76,6 @@ export default class CampaignPayment extends Component {
             case 'Transfer':
                 this.donate(this.state.campaign_id, form, response => {
                     if (response.status == 'success') {
-                        // nav.navigate('TransferScreen', { 
-                        //     donationId: response.donationId, 
-                        //     userId: form.user_id,
-                        //     amount: donation 
-                        // })
-
                         nav.dispatch({
                             type: "Navigation/NAVIGATE",
                             routeName: 'TransferScreen',
@@ -118,7 +115,7 @@ export default class CampaignPayment extends Component {
     }
 
     donate(params, data, callback) {
-        fetch("http://galangbersama.com/api/donate/" + params, {
+        fetch(baseUrl + "api/donate/" + params, {
             method: "POST",
             body: JSON.stringify(data),
             headers: {

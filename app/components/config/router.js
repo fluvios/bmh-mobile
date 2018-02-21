@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { TabNavigator, StackNavigator } from "react-navigation";
-import { Icon } from "native-base";
 
 import CampaignList from "../screen/CampaignList";
 import CampaignDetail from "../screen/CampaignDetail";
@@ -39,7 +38,14 @@ export const CampaignStack = StackNavigator({
             title: 'Donate',
             tabBarVisible: false,
         }
-    }, 
+    },
+    LoginScreen: {
+        screen: Login,
+        navigationOptions: {
+            tabBarVisible: false,
+            header: null,
+        }
+    },
     TransferScreen: {
         screen: CampaignTransferPayment,
         navigationOptions: {
@@ -63,13 +69,20 @@ export const DepositoStack = StackNavigator({
             title: 'Galangbersama',
         }
     },
+    LoginScreen: {
+        screen: Login,
+        navigationOptions: {
+            tabBarVisible: false,
+            header: null,
+        }
+    },
     DonateScreen: {
         screen: SaldoPayment,
         navigationOptions: {
             title: 'Saldo',
             tabBarVisible: false,
         }
-    }, 
+    },
     TransferScreen: {
         screen: SaldoTransferPayment,
         navigationOptions: {
@@ -114,42 +127,42 @@ export const ReportStack = StackNavigator({
 export const HomeTabs = TabNavigator({
     Campaign: {
         screen: CampaignStack,
-        navigationOptions:{
+        navigationOptions: {
             title: 'Campaign',
         }
     },
     Deposito: {
         screen: DepositoStack,
-        navigationOptions:{
+        navigationOptions: {
             title: 'Deposito',
         }
     },
     News: {
         screen: NewsStack,
-        navigationOptions:{
+        navigationOptions: {
             title: 'News',
         }
     },
     Report: {
         screen: ReportStack,
-        navigationOptions:{
+        navigationOptions: {
             title: 'Report',
         }
     },
 }, {
-    tabBarPosition: 'bottom',
-    animationEnabled: false,
-    swipeEnabled: false,
-    tabBarOptions: {
-        labelStyle: {
-            fontSize: 11,
+        tabBarPosition: 'bottom',
+        animationEnabled: false,
+        swipeEnabled: false,
+        tabBarOptions: {
+            labelStyle: {
+                fontSize: 11,
+            }
         }
-    }
-});
+    });
 
 export const AuthStack = StackNavigator({
-    LoginScreen: { screen: Login },
+    // LoginScreen: { screen: Login },
     HomeScreen: { screen: HomeTabs },
-},{
+}, {
     headerMode: 'none',
 });

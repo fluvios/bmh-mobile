@@ -7,17 +7,18 @@ import {
 import {
     Container, Header, Left, Body, Right, Title,
     Content, Footer, FooterTab, Button, Text, Card,
-    CardItem, Thumbnail, Spinner,
+    CardItem, Thumbnail, Spinner, Toast,
 } from 'native-base';
 import { cleanTag, convertToSlug, shortenDescription } from '../config/helper';
 import Storage from 'react-native-storage';
+import { baseUrl } from "../config/variable";
 
 var campaignArray = [];
 
 var storage = new Storage({
     size: 1000,
     storageBackend: AsyncStorage,
-    defaultExpires: 1000 * 3600 * 24,
+    defaultExpires: null,
     enableCache: true,
 })
 
@@ -30,7 +31,8 @@ export default class ReportList extends Component {
         });
         this.state = ({
             dataSource: dataSource.cloneWithRows(campaignArray),
-            isLoading: true
+            isLoading: true,
+            showToast: false
         })
     }
 
@@ -39,10 +41,18 @@ export default class ReportList extends Component {
             key: 'user'
         }).then(ret => this.loadData(ret)).catch(err => {
             console.log(err.message)
+            Toast.show({
+                text: "Login untuk melihat data anda",
+                position: 'bottom',
+                buttonText: 'Okay'
+            })
+            this.setState({
+                isLoading: false
+            })
         })
     }
 
-    changeStatus(status: string) {
+    changeStatus(status) {
         let translate
         switch (status) {
             case 'paid':
@@ -73,7 +83,7 @@ export default class ReportList extends Component {
     }
 
     getReport(params, callback) {
-        fetch("http://galangbersama.com/api/history/" + params, {
+        fetch(baseUrl + "api/history/" + params, {
             method: "GET",
             headers: {
                 'Accept': 'application/json',
@@ -93,7 +103,7 @@ export default class ReportList extends Component {
             <Card style={{ flex: 0 }}>
                 <CardItem>
                     <Left>
-                        <Thumbnail source={{ uri: "http://galangbersama.com/public/avatar/default.jpg" }} />
+                        <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
                         <Body>
                             <Text>{rowData.campaign.title}</Text>
                             <Text note>{rowData.donation}</Text>

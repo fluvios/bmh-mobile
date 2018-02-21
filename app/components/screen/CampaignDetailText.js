@@ -7,6 +7,8 @@ import {
 } from 'native-base';
 import { cleanTag, convertToSlug, shortenDescription } from '../config/helper';
 import * as Progress from 'react-native-progress';
+import { baseUrl } from "../config/variable";
+
 
 export default class CampaignDetailText extends Component {
 
@@ -22,7 +24,7 @@ export default class CampaignDetailText extends Component {
         <Card style={{ flex: 0 }}>
           <CardItem>
             <Left>
-              <Thumbnail source={{ uri: "http://galangbersama.com/public/avatar/default.jpg" }} />
+              <Thumbnail source={{ uri: baseUrl+"public/avatar/default.jpg" }} />
               <Body>
                 <Text>{campaign.title}</Text>
                 <Text note>{campaign.date}</Text>

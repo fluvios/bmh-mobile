@@ -11,6 +11,7 @@ import {
 import { cleanTag, convertToSlug, shortenDescription } from '../config/helper';
 import * as Progress from 'react-native-progress';
 import { styles } from "../config/styles";
+import { baseUrl } from "../config/variable";
 
 var campaignArray = [];
 
@@ -39,7 +40,7 @@ export default class CampaignDetailDonatur extends Component {
 
     getDonatur(callback) {
         const campaign = this.props.data.campaign.id
-        fetch("http://galangbersama.com/api/donations/"+campaign, {
+        fetch(baseUrl+"api/donations/"+campaign, {
             method: "GET",
             headers: {
                 'Accept': 'application/json',
@@ -59,7 +60,7 @@ export default class CampaignDetailDonatur extends Component {
             <Card style={{ flex: 0 }}>
                 <CardItem>
                     <Left>
-                        <Thumbnail source={{ uri: "http://galangbersama.com/public/avatar/default.jpg" }} />
+                        <Thumbnail source={{ uri: baseUrl+"public/avatar/default.jpg" }} />
                         <Body>
                             <Text>{rowData.fullname}</Text>
                         </Body>
