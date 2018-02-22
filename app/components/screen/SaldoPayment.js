@@ -6,17 +6,18 @@ import {
 } from 'native-base'
 import { FlatList, AsyncStorage } from 'react-native'
 import Storage from 'react-native-storage'
+import { baseUrl } from "../config/variable"
 
 var storage = new Storage({
     size: 1000,
     storageBackend: AsyncStorage,
-    defaultExpires: 1000 * 3600 * 24,
+    defaultExpires: null,
     enableCache: true,
 })
 
 export default class SaldoPayment extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             funds: [{ id: 1, name: '50000' },
             { id: 2, name: '100000' },
@@ -28,7 +29,7 @@ export default class SaldoPayment extends Component {
             amount: '50000',
             payment_gateway: '',
             user_id: 0,
-        };
+        }
 
         this.loadStorage()
     }
@@ -40,24 +41,24 @@ export default class SaldoPayment extends Component {
             user_id: ret.id
         })).catch(err => {
             console.error(err.message)
-        });
+        })
     }
 
     onCheckBoxPress(value) {
         this.setState({
             selectedId: value.id,
             amount: value.name
-        });
+        })
     }
 
     onValueChange(value) {
         this.setState({
             payment_gateway: value
-        });
+        })
     }
 
     topup(data, callback) {
-        fetch("http://galangbersama.com/api/topup", {
+        fetch(baseUrl + "api/topup", {
             method: "POST",
             body: JSON.stringify(data),
             headers: {
@@ -68,9 +69,9 @@ export default class SaldoPayment extends Component {
             .then((response) => response.json())
             .then(json => callback(json))
             .catch((error) => {
-                console.error(error);
+                console.error(error)
             })
-            .done();
+            .done()
     }
 
     paymentMethod() {
@@ -93,7 +94,7 @@ export default class SaldoPayment extends Component {
                         })
                     }
                 })
-                break;
+                break
             case 'Delivery':
                 this.topup(form, response => {
                     if (response.status == 'success') {
@@ -105,8 +106,8 @@ export default class SaldoPayment extends Component {
                 })
                 break
             case 'Payment':
-                nav.navigate('PayScreen', { form: this.state });
-                break;
+                nav.navigate('PayScreen', { form: this.state })
+                break
         }
     }
 
@@ -149,6 +150,6 @@ export default class SaldoPayment extends Component {
                     </Button>
                 </Content>
             </Container>
-        );
+        )
     }
-};
+}

@@ -1,36 +1,32 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   StyleSheet, ScrollView, ListView,
   View, Image, TouchableHighlight, Linking
-} from 'react-native';
+} from 'react-native'
 import {
   Container, Header, Left, Body, Right, Title,
   Content, Footer, FooterTab, Button, Text, Card,
   CardItem, Thumbnail, Spinner, Icon
-} from 'native-base';
-import { cleanTag, convertToSlug, shortenDescription } from '../config/helper';
-import * as Progress from 'react-native-progress';
-import { styles } from "../config/styles";
-import { baseUrl } from "../config/variable";
+} from 'native-base'
+import { cleanTag, convertToSlug, shortenDescription } from '../config/helper'
+import * as Progress from 'react-native-progress'
+import { styles } from "../config/styles"
+import { baseUrl } from "../config/variable"
 
-var campaignArray = [];
+var campaignArray = []
 
-export default class CampaignList extends Component {
+export default class Profile extends Component {
 
   static navigationOptions = ({ navigation }) => ({
-    title: 'Galangbersama',
-    headerRight: (
-      <Button icon transparent onPress={() => { navigation.navigate('ProfileScreen') }}>
-        <Icon name='contact' />
-      </Button>
-    ),
+    title: 'Profile',
+    tabBarVisible: false,
   })
 
   constructor(props) {
-    super(props);
+    super(props)
     var dataSource = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1.guid != r2.guid
-    });
+    })
     this.state = ({
       dataSource: dataSource.cloneWithRows(campaignArray),
       isLoading: true,
@@ -39,12 +35,12 @@ export default class CampaignList extends Component {
 
   componentDidMount() {
     this.getCampaign(function (json) {
-      campaignArray = json;
+      campaignArray = json
       this.setState({
         dataSource: this.state.dataSource.cloneWithRows(campaignArray),
         isLoading: false
       })
-    }.bind(this));
+    }.bind(this))
   }
 
   getCampaign(callback) {
@@ -58,9 +54,9 @@ export default class CampaignList extends Component {
       .then((response) => response.json())
       .then(json => callback(json.data))
       .catch((error) => {
-        console.error(error);
+        console.error(error)
       })
-      .done();
+      .done()
   }
 
   renderRow(rowData, sectionID, rowID) {
@@ -101,7 +97,7 @@ export default class CampaignList extends Component {
           </Right>
         </CardItem>
       </Card>
-    );
+    )
   }
 
   render() {
@@ -109,6 +105,6 @@ export default class CampaignList extends Component {
       <Spinner /> :
       <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} />
 
-    return campaign;
+    return campaign
   }
 }

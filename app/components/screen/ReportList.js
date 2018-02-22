@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
     StyleSheet, ScrollView, ListView,
     View, Image, TouchableHighlight, Linking,
     AsyncStorage
-} from 'react-native';
+} from 'react-native'
 import {
     Container, Header, Left, Body, Right, Title,
     Content, Footer, FooterTab, Button, Text, Card,
-    CardItem, Thumbnail, Spinner, Toast,
-} from 'native-base';
-import { cleanTag, convertToSlug, shortenDescription } from '../config/helper';
-import Storage from 'react-native-storage';
-import { baseUrl } from "../config/variable";
+    CardItem, Thumbnail, Spinner, Toast, Icon,
+} from 'native-base'
+import { cleanTag, convertToSlug, shortenDescription } from '../config/helper'
+import Storage from 'react-native-storage'
+import { baseUrl } from "../config/variable"
 
-var campaignArray = [];
+var campaignArray = []
 
 var storage = new Storage({
     size: 1000,
@@ -23,12 +23,20 @@ var storage = new Storage({
 })
 
 export default class ReportList extends Component {
+    static navigationOptions = ({ navigation }) => ({
+        title: 'Galangbersama',
+        headerRight: (
+            <Button icon transparent onPress={() => { navigation.navigate('ProfileScreen') }}>
+                <Icon name='contact' />
+            </Button>
+        ),
+    })
 
     constructor(props) {
-        super(props);
+        super(props)
         var dataSource = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1.guid != r2.guid
-        });
+        })
         this.state = ({
             dataSource: dataSource.cloneWithRows(campaignArray),
             isLoading: true,
@@ -44,7 +52,7 @@ export default class ReportList extends Component {
             Toast.show({
                 text: "Login untuk melihat data anda",
                 position: 'bottom',
-                buttonText: 'Okay'
+                buttonText: 'Dismiss'
             })
             this.setState({
                 isLoading: false
@@ -74,12 +82,12 @@ export default class ReportList extends Component {
 
     loadData(data) {
         this.getReport(data.id, function (json) {
-            campaignArray = json;
+            campaignArray = json
             this.setState({
                 dataSource: this.state.dataSource.cloneWithRows(campaignArray),
                 isLoading: false
             })
-        }.bind(this));
+        }.bind(this))
     }
 
     getReport(params, callback) {
@@ -93,9 +101,9 @@ export default class ReportList extends Component {
             .then((response) => response.json())
             .then(json => callback(json))
             .catch((error) => {
-                console.error(error);
+                console.error(error)
             })
-            .done();
+            .done()
     }
 
     renderRow(rowData, sectionID, rowID) {
@@ -113,7 +121,7 @@ export default class ReportList extends Component {
                     </Left>
                 </CardItem>
             </Card>
-        );
+        )
     }
 
     render() {
@@ -121,6 +129,6 @@ export default class ReportList extends Component {
             <Spinner /> :
             <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} />
 
-        return report;
+        return report
     }
 }

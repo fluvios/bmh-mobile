@@ -14,5 +14,10 @@ export const styles = StyleSheet.create({
   },
   textInfo: {
     fontSize: 14,
-  }
+  },
+  button: {
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    padding: 8
+  },
 });

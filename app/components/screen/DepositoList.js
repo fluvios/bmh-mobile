@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { AsyncStorage } from 'react-native';
+import React, { Component } from 'react'
+import { AsyncStorage } from 'react-native'
 import {
-    Body, Button, Content, Card,
+    Body, Button, Content, Card, Icon,
     CardItem, Header, Footer, Text
-} from "native-base";
-import { styles } from "../config/styles";
-import Storage from 'react-native-storage';
-import { baseUrl } from "../config/variable";
+} from "native-base"
+import { styles } from "../config/styles"
+import Storage from 'react-native-storage'
+import { baseUrl } from "../config/variable"
 
 var storage = new Storage({
     size: 1000,
@@ -16,19 +16,29 @@ var storage = new Storage({
 })
 
 export default class DepositoList extends Component {
+
+    static navigationOptions = ({ navigation }) => ({
+        title: 'Galangbersama',
+        headerRight: (
+            <Button icon transparent onPress={() => { navigation.navigate('ProfileScreen') }}>
+                <Icon name='contact' />
+            </Button>
+        ),
+    })
+
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             saldo: 0,
-        };
+        }
     }
 
     componentWillMount() {
-        this.loadStorage();
+        this.loadStorage()
     }
 
     getAccount(params, callback) {
-        fetch(baseUrl() + "api/account/" + params + "/refresh", {
+        fetch(baseUrl + "api/account/" + params + "/refresh", {
             method: "GET",
             headers: {
                 'Accept': 'application/json',
@@ -38,9 +48,9 @@ export default class DepositoList extends Component {
             .then((response) => response.json())
             .then(json => callback(json))
             .catch((error) => {
-                console.error(error);
+                console.error(error)
             })
-            .done();
+            .done()
     }
 
     loadStorage() {
@@ -52,7 +62,7 @@ export default class DepositoList extends Component {
             })
         })).catch(err => {
             console.log(err.message)
-        });
+        })
     }
 
     deposit() {
@@ -67,15 +77,15 @@ export default class DepositoList extends Component {
             switch (err.name) {
                 case 'NotFoundError':
                     this.props.navigation.navigate('LoginScreen')
-                    break;
+                    break
                 case 'ExpiredError':
                     storage.remove({
                         key: 'user'
-                    });
+                    })
                     this.props.navigation.navigate('LoginScreen')
-                    break;
+                    break
             }
-        });
+        })
     }
 
     render() {
@@ -94,6 +104,6 @@ export default class DepositoList extends Component {
                     <Text>Add Saldo</Text>
                 </Button>
             </Content>
-        );
+        )
     }
 }

@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { Image, AsyncStorage } from 'react-native';
+import React, { Component } from 'react'
+import { Image, AsyncStorage } from 'react-native'
 import {
     Container, Header, Title, Button, Icon, Tabs, Tab,
     Left, Body, Right, Content, Footer, FooterTab, Text
-} from 'native-base';
-import CampaignDetailText from "./CampaignDetailText";
-import CampaignDetailStory from "./CampaignDetailStory";
-import CampaignDetailDonatur from "./CampaignDetailDonatur";
-import { baseUrl } from "../config/variable";
-import Storage from 'react-native-storage';
+} from 'native-base'
+import CampaignDetailText from "./CampaignDetailText"
+import CampaignDetailStory from "./CampaignDetailStory"
+import CampaignDetailDonatur from "./CampaignDetailDonatur"
+import { baseUrl } from "../config/variable"
+import Storage from 'react-native-storage'
 
 var storage = new Storage({
     size: 1000,
@@ -20,15 +20,15 @@ var storage = new Storage({
 export default class CampaignDetail extends Component {
 
     constructor(props) {
-        super(props);
+        super(props)
     }
 
-    donate() {
+    donate(item) {
         storage.load({
             key: 'user'
         }).then(ret => {
             this.props.navigation.navigate('DonateScreen', {
-                campaign: campaign,
+                campaign: item,
                 user: ret
             })
         }).catch(err => {
@@ -36,19 +36,19 @@ export default class CampaignDetail extends Component {
             switch (err.name) {
                 case 'NotFoundError':
                     this.props.navigation.navigate('LoginScreen')
-                    break;
+                    break
                 case 'ExpiredError':
                     storage.remove({
                         key: 'user'
-                    });
+                    })
                     this.props.navigation.navigate('LoginScreen')
-                    break;
+                    break
             }
-        });
+        })
     }
 
     render() {
-        let campaign = this.props.navigation.state.params.campaign;
+        let campaign = this.props.navigation.state.params.campaign
         return (
             <Container>
                 <Content>
@@ -69,12 +69,12 @@ export default class CampaignDetail extends Component {
                 <Footer>
                     <FooterTab>
                         <Button full textStyle={{ color: '#87838B' }}
-                            onPress={() => this.donate()}>
+                            onPress={() => this.donate(campaign)}>
                             <Text>Donate</Text>
                         </Button>
                     </FooterTab>
                 </Footer>
             </Container>
-        );
+        )
     }
 }

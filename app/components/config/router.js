@@ -1,29 +1,31 @@
-import React from 'react';
-import { TabNavigator, StackNavigator } from "react-navigation";
+import React from 'react'
+import { TabNavigator, StackNavigator } from "react-navigation"
 
-import CampaignList from "../screen/CampaignList";
-import CampaignDetail from "../screen/CampaignDetail";
-import DepositoList from "../screen/DepositoList";
-import NewsList from "../screen/NewsList";
-import NewsDetail from "../screen/NewsDetail";
-import CampaignDetailDonatur from '../screen/CampaignDetailDonatur';
-import CampaignDetailStory from '../screen/CampaignDetailStory';
-import CampaignDetailText from '../screen/CampaignDetailText';
-import CampaignPayment from "../screen/CampaignPayment";
-import CampaignTransferPayment from "../screen/CampaignTransferPayment";
-import CampaignDeliveryPayment from "../screen/CampaignDeliveryPayment";
-import SaldoPayment from "../screen/SaldoPayment";
-import SaldoTransferPayment from "../screen/SaldoTransferPayment";
-import SaldoDeliveryPayment from "../screen/SaldoDeliveryPayment";
-import ReportList from '../screen/ReportList';
-import Login from "../screen/Login";
+import CampaignList from "../screen/CampaignList"
+import CampaignDetail from "../screen/CampaignDetail"
+import DepositoList from "../screen/DepositoList"
+import NewsList from "../screen/NewsList"
+import NewsDetail from "../screen/NewsDetail"
+import CampaignDetailDonatur from '../screen/CampaignDetailDonatur'
+import CampaignDetailStory from '../screen/CampaignDetailStory'
+import CampaignDetailText from '../screen/CampaignDetailText'
+import CampaignPayment from "../screen/CampaignPayment"
+import CampaignTransferPayment from "../screen/CampaignTransferPayment"
+import CampaignDeliveryPayment from "../screen/CampaignDeliveryPayment"
+import SaldoPayment from "../screen/SaldoPayment"
+import SaldoTransferPayment from "../screen/SaldoTransferPayment"
+import SaldoDeliveryPayment from "../screen/SaldoDeliveryPayment"
+import ReportList from '../screen/ReportList'
+import Login from "../screen/Login"
+import Profile from "../screen/Profile"
+import { styles } from "./styles"
 
 export const CampaignStack = StackNavigator({
     ListScreen: {
         screen: CampaignList,
-        navigationOptions: {
-            title: 'Galangbersama',
-        }
+    },
+    ProfileScreen: {
+        screen: Profile,
     },
     DetailScreen: {
         screen: CampaignDetail,
@@ -60,14 +62,14 @@ export const CampaignStack = StackNavigator({
             tabBarVisible: false,
         }
     },
-});
+})
 
 export const DepositoStack = StackNavigator({
     ListScreen: {
         screen: DepositoList,
-        navigationOptions: {
-            title: 'Galangbersama',
-        }
+    },
+    ProfileScreen: {
+        screen: Profile,
     },
     LoginScreen: {
         screen: Login,
@@ -97,14 +99,14 @@ export const DepositoStack = StackNavigator({
             tabBarVisible: false,
         }
     },
-});
+})
 
 export const NewsStack = StackNavigator({
     ListScreen: {
         screen: NewsList,
-        navigationOptions: {
-            title: 'Galangbersama',
-        }
+    },
+    ProfileScreen: {
+        screen: Profile,
     },
     DetailScreen: {
         screen: NewsDetail,
@@ -113,16 +115,16 @@ export const NewsStack = StackNavigator({
             tabBarVisible: false,
         }
     },
-});
+})
 
 export const ReportStack = StackNavigator({
     ListScreen: {
         screen: ReportList,
-        navigationOptions: {
-            title: 'Galangbersama',
-        }
-    }
-});
+    },
+    ProfileScreen: {
+        screen: Profile,
+    },
+})
 
 export const HomeTabs = TabNavigator({
     Campaign: {
@@ -158,11 +160,11 @@ export const HomeTabs = TabNavigator({
                 fontSize: 11,
             }
         }
-    });
+    })
 
 export const AuthStack = StackNavigator({
     // LoginScreen: { screen: Login },
     HomeScreen: { screen: HomeTabs },
 }, {
-    headerMode: 'none',
-});
+        headerMode: 'none',
+    })

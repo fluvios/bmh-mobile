@@ -23,7 +23,7 @@ export default class SaldoTransferPayment extends Component {
         this.bankList();
     }
 
-    onBankChange(value: number) {
+    onBankChange(value) {
         this.setState({
             bank_id: value
         });
@@ -72,7 +72,7 @@ export default class SaldoTransferPayment extends Component {
             Toast.show({
                 text: response.status,
                 position: 'bottom',
-                buttonText: 'Okay'
+                buttonText: 'Dismiss'
             })
         })
     }

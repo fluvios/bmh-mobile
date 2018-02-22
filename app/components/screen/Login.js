@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { View, AsyncStorage, Image } from 'react-native';
+import React, { Component } from 'react'
+import { View, AsyncStorage, Image } from 'react-native'
 import {
     Container, Item, Input, Header, Body, Content,
     Title, Button, Text, Label, Spinner, Toast
-} from 'native-base';
-import { Field, reduxForm, submit } from 'redux-form';
-import Storage from 'react-native-storage';
-import { baseUrl } from "../config/variable";
+} from 'native-base'
+import { Field, reduxForm, submit } from 'redux-form'
+import Storage from 'react-native-storage'
+import { baseUrl } from "../config/variable"
 
 var storage = new Storage({
     size: 1000,
@@ -16,45 +16,45 @@ var storage = new Storage({
 })
 
 const validate = values => {
-    const error = {};
-    error.email = '';
-    error.password = '';
-    var ema = values.email;
-    var pass = values.password;
+    const error = {}
+    error.email = ''
+    error.password = ''
+    var ema = values.email
+    var pass = values.password
     if (values.email === undefined) {
-        ema = '';
+        ema = ''
     }
     if (values.password === undefined) {
-        pass = '';
+        pass = ''
     }
     if (ema.length < 8 && ema !== '') {
-        error.email = 'Format email belum benar';
+        error.email = 'Format email belum benar'
     }
     if (!ema.includes('@') && ema !== '') {
-        error.email = 'Format email belum benar';
+        error.email = 'Format email belum benar'
     }
     if (pass.length < 0) {
-        error.password = 'Password masih belum dinputkan';
+        error.password = 'Password masih belum dinputkan'
     }
-    return error;
-};
+    return error
+}
 
 class Login extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             isReady: false,
             showToast: false
-        };
-        this.renderInput = this.renderInput.bind(this);
+        }
+        this.renderInput = this.renderInput.bind(this)
     }
 
     async componentWillMount() {
-        this.setState({ isReady: true });
+        this.setState({ isReady: true })
     }
 
     getAccount(params, callback) {
-        fetch(baseUrl+"api/login", {
+        fetch(baseUrl + "api/login", {
             method: "POST",
             body: JSON.stringify(params),
             headers: {
@@ -65,19 +65,19 @@ class Login extends Component {
             .then((response) => response.json())
             .then(json => callback(json))
             .catch((error) => {
-                console.error(error);
+                console.error(error)
             })
-            .done();
+            .done()
     }
 
     renderInput({ input, label, type, meta: { touched, error, warning } }) {
-        var hasError = false;
+        var hasError = false
         if (error !== undefined) {
-            hasError = true;
+            hasError = true
         }
-        let isSecure = false;
+        let isSecure = false
         if (input.name == 'password') {
-            isSecure = true;
+            isSecure = true
         }
         return (
             <Item stackedLabel error={hasError}>
@@ -88,25 +88,33 @@ class Login extends Component {
     }
 
     loginAccount(data) {
+        const nav = this.props.navigation
         this.getAccount(data, function (response) {
             if (response.status === 'active') {
                 storage.save({
                     key: 'user',
                     data: response
-                });
-                this.props.navigation.navigate('HomeScreen', ({ storage: storage }))
+                })
+                nav.dispatch({
+                    type: "Navigation/BACK",
+                })
+                Toast.show({
+                    text: 'Login Success',
+                    position: 'bottom',
+                    buttonText: 'Dismiss'
+                })
             } else {
                 Toast.show({
                     text: 'Wrong username or password!',
                     position: 'bottom',
-                    buttonText: 'Okay'
+                    buttonText: 'Dismiss'
                 })
             }
-        }.bind(this));
+        }.bind(this))
     }
 
     loginForm() {
-        const { handleSubmit, reset } = this.props;
+        const { handleSubmit, reset } = this.props
         return (
             <Container>
                 <Content padder>
@@ -129,15 +137,18 @@ class Login extends Component {
     }
 
     componentWillMount() {
+        const nav = this.props.navigation
         storage.load({
             key: 'user'
         }).then(ret => {
             if (ret) {
-                this.props.navigation.navigate('HomeScreen')
+                nav.dispatch({
+                    type: "Navigation/BACK",
+                })
             }
         }).catch(err => {
-            console.log(err.message);
-        });
+            console.log(err.message)
+        })
     }
 
     render() {
