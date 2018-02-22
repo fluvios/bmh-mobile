@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { AsyncStorage } from 'react-native'
+import Storage from 'react-native-storage'
 import {
     Body, Button, Content, Card, Icon,
     CardItem, Header, Footer, Text
 } from "native-base"
 import { styles } from "../config/styles"
-import Storage from 'react-native-storage'
 import { baseUrl } from "../config/variable"
+import { convertToRupiah } from '../config/helper'
 
 var storage = new Storage({
     size: 1000,
@@ -20,7 +21,7 @@ export default class DepositoList extends Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Galangbersama',
         headerRight: (
-            <Button icon transparent onPress={() => { navigation.navigate('ProfileScreen') }}>
+            <Button icon transparent onPress={() => { navigation.state.params.handleProfile(navigation) }}>
                 <Icon name='contact' />
             </Button>
         ),
@@ -30,6 +31,16 @@ export default class DepositoList extends Component {
         super(props)
         this.state = {
             saldo: 0,
+        }
+    }
+
+    profile(navigation) {
+        if (navigation.state.params.user) {
+            navigation.navigate('ProfileScreen', {
+                user: navigation.state.params.user
+            })
+        } else {
+            navigation.navigate('LoginScreen')
         }
     }
 
@@ -56,12 +67,21 @@ export default class DepositoList extends Component {
     loadStorage() {
         storage.load({
             key: 'user'
-        }).then(ret => this.getAccount(ret.id, response => {
-            this.setState({
-                saldo: response.saldo
+        }).then(ret => {
+            this.getAccount(ret.id, response => {
+                this.setState({
+                    saldo: response.saldo
+                })
             })
-        })).catch(err => {
+            this.props.navigation.setParams({
+                handleProfile: this.profile,
+                user: ret
+            })
+        }).catch(err => {
             console.log(err.message)
+            this.props.navigation.setParams({
+                handleProfile: this.profile,
+            })
         })
     }
 
@@ -95,7 +115,7 @@ export default class DepositoList extends Component {
                     <CardItem>
                         <Body>
                             <Text style={styles.textHeader}>Saldo BMH</Text>
-                            <Text style={styles.textContent}>Rp. {this.state.saldo}</Text>
+                            <Text style={styles.textContent}>{convertToRupiah(this.state.saldo)}</Text>
                         </Body>
                     </CardItem>
                 </Card>

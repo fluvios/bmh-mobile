@@ -9,7 +9,7 @@ import {
     Content, Footer, FooterTab, Button, Text, Card,
     CardItem, Thumbnail, Spinner, Toast, Icon,
 } from 'native-base'
-import { cleanTag, convertToSlug, shortenDescription } from '../config/helper'
+import { cleanTag, convertToSlug, shortenDescription, convertToRupiah } from '../config/helper'
 import Storage from 'react-native-storage'
 import { baseUrl } from "../config/variable"
 
@@ -26,7 +26,7 @@ export default class ReportList extends Component {
     static navigationOptions = ({ navigation }) => ({
         title: 'Galangbersama',
         headerRight: (
-            <Button icon transparent onPress={() => { navigation.navigate('ProfileScreen') }}>
+            <Button icon transparent onPress={() => { navigation.state.params.handleProfile(navigation) }}>
                 <Icon name='contact' />
             </Button>
         ),
@@ -57,7 +57,20 @@ export default class ReportList extends Component {
             this.setState({
                 isLoading: false
             })
+            this.props.navigation.setParams({
+                handleProfile: this.profile,
+            })
         })
+    }
+
+    profile(navigation) {
+        if (navigation.state.params.user) {
+            navigation.navigate('ProfileScreen', {
+                user: navigation.state.params.user
+            })
+        } else {
+            navigation.navigate('LoginScreen')
+        }
     }
 
     changeStatus(status) {
@@ -88,6 +101,11 @@ export default class ReportList extends Component {
                 isLoading: false
             })
         }.bind(this))
+
+        this.props.navigation.setParams({
+            handleProfile: this.profile,
+            user: data
+        })
     }
 
     getReport(params, callback) {
@@ -114,7 +132,7 @@ export default class ReportList extends Component {
                         <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
                         <Body>
                             <Text>{rowData.campaign.title}</Text>
-                            <Text note>{rowData.donation}</Text>
+                            <Text note>{convertToRupiah(rowData.donation)}</Text>
                             <Text note>{rowData.payment_date}</Text>
                             <Text>{this.changeStatus(rowData.payment_status)}</Text>
                         </Body>

@@ -7,6 +7,7 @@ import {
 import { FlatList, AsyncStorage } from 'react-native'
 import Storage from 'react-native-storage'
 import { baseUrl } from "../config/variable"
+import { convertToRupiah } from '../config/helper'
 
 var storage = new Storage({
     size: 1000,
@@ -29,9 +30,11 @@ export default class SaldoPayment extends Component {
             amount: '50000',
             payment_gateway: '',
             user_id: 0,
+            banks: []
         }
 
         this.loadStorage()
+        this.bankList()
     }
 
     loadStorage() {
@@ -80,24 +83,9 @@ export default class SaldoPayment extends Component {
         let donation = form.amount
         form.amount = Number.parseInt(this.state.amount)
         switch (this.state.payment_gateway) {
-            case 'Transfer':
-                this.topup(form, response => {
-                    if (response.status == 'success') {
-                        nav.dispatch({
-                            type: "Navigation/NAVIGATE",
-                            routeName: 'TransferScreen',
-                            params: {
-                                depositId: response.depositId,
-                                userId: form.user_id,
-                                amount: donation
-                            }
-                        })
-                    }
-                })
-                break
             case 'Delivery':
                 this.topup(form, response => {
-                    if (response.status == 'success') {
+                    if (response.success == true) {
                         nav.dispatch({
                             type: 'Navigation/NAVIGATE',
                             routeName: 'DeliveryScreen'
@@ -108,7 +96,37 @@ export default class SaldoPayment extends Component {
             case 'Payment':
                 nav.navigate('PayScreen', { form: this.state })
                 break
+            default:
+                form.payment_gateway = Number.parseInt(this.state.payment_gateway)
+                this.topup(form, response => {
+                    if (response.success == true) {
+                        nav.dispatch({
+                            type: "Navigation/NAVIGATE",
+                            routeName: 'TransferScreen',
+                            params: {
+                                donation: response,
+                            }
+                        })
+                    }
+                })
+                break
         }
+    }
+
+    bankList() {
+        fetch(baseUrl + 'api/bank', {
+            method: "GET",
+        })
+            .then((response) => response.json())
+            .then(json => {
+                this.setState({
+                    banks: json
+                })
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+            .done()
     }
 
     render() {
@@ -127,7 +145,7 @@ export default class SaldoPayment extends Component {
                                         onPress={() => this.onCheckBoxPress(item)}
                                     />
                                     <Body>
-                                        <Text>{item.name}</Text>
+                                        <Text>{convertToRupiah(item.name)}</Text>
                                     </Body>
                                 </ListItem>
                             }}
@@ -140,7 +158,11 @@ export default class SaldoPayment extends Component {
                         onValueChange={this.onValueChange.bind(this)}
                     >
                         <Item label="Metode Pembayaran" value="0" />
-                        <Item label="Transfer Bank" value="Transfer" />
+                        {
+                            this.state.banks.map((bank, i) =>
+                                <Item key={i} label={"Transfer " + bank.name} value={bank.id} />
+                            )
+                        }
                         <Item label="Cash On Delivery" value="Delivery" />
                         <Item label="Other" value="Payment" />
                     </Picker>

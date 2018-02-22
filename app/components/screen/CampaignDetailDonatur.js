@@ -1,27 +1,27 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
     StyleSheet, ScrollView, ListView,
     View, Image, TouchableHighlight, Linking
-} from 'react-native';
+} from 'react-native'
 import {
     Container, Header, Left, Body, Right, Title,
     Content, Footer, FooterTab, Button, Text, Card,
     CardItem, Thumbnail, Spinner,
-} from 'native-base';
-import { cleanTag, convertToSlug, shortenDescription } from '../config/helper';
-import * as Progress from 'react-native-progress';
-import { styles } from "../config/styles";
-import { baseUrl } from "../config/variable";
+} from 'native-base'
+import { cleanTag, convertToSlug, shortenDescription } from '../config/helper'
+import * as Progress from 'react-native-progress'
+import { styles } from "../config/styles"
+import { baseUrl } from "../config/variable"
 
-var campaignArray = [];
+var campaignArray = []
 
 export default class CampaignDetailDonatur extends Component {
 
     constructor(props) {
-        super(props);
+        super(props)
         var dataSource = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1.guid != r2.guid
-        });
+        })
         this.state = ({
             dataSource: dataSource.cloneWithRows(campaignArray),
             isLoading: true,
@@ -50,9 +50,9 @@ export default class CampaignDetailDonatur extends Component {
             .then((response) => response.json())
             .then(json => callback(json))
             .catch((error) => {
-                console.error(error);
+                console.error(error)
             })
-            .done();
+            .done()
     }
 
     renderRow(rowData, sectionID, rowID) {
@@ -74,7 +74,7 @@ export default class CampaignDetailDonatur extends Component {
                     </Body>
                 </CardItem>
             </Card>
-        );
+        )
     }
 
     render() {
@@ -82,6 +82,6 @@ export default class CampaignDetailDonatur extends Component {
             <Spinner /> :
             <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} />
 
-        return campaign;
+        return campaign
     }
 }

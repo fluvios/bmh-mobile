@@ -1,22 +1,22 @@
 import React, { Component } from 'react'
+import { AsyncStorage, Image } from 'react-native'
+import Storage from 'react-native-storage'
 import {
-  StyleSheet, ScrollView, ListView,
-  View, Image, TouchableHighlight, Linking
-} from 'react-native'
-import {
-  Container, Header, Left, Body, Right, Title,
-  Content, Footer, FooterTab, Button, Text, Card,
-  CardItem, Thumbnail, Spinner, Icon
+  Container, Content, Card, Button,
+  CardItem, Body, Text, H2
 } from 'native-base'
-import { cleanTag, convertToSlug, shortenDescription } from '../config/helper'
-import * as Progress from 'react-native-progress'
 import { styles } from "../config/styles"
 import { baseUrl } from "../config/variable"
+import { convertToRupiah } from '../config/helper'
 
-var campaignArray = []
+var storage = new Storage({
+  size: 1000,
+  storageBackend: AsyncStorage,
+  defaultExpires: null,
+  enableCache: true,
+})
 
 export default class Profile extends Component {
-
   static navigationOptions = ({ navigation }) => ({
     title: 'Profile',
     tabBarVisible: false,
@@ -24,27 +24,14 @@ export default class Profile extends Component {
 
   constructor(props) {
     super(props)
-    var dataSource = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1.guid != r2.guid
-    })
+
     this.state = ({
-      dataSource: dataSource.cloneWithRows(campaignArray),
-      isLoading: true,
+      user: this.props.navigation.state.params.user
     })
   }
 
-  componentDidMount() {
-    this.getCampaign(function (json) {
-      campaignArray = json
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(campaignArray),
-        isLoading: false
-      })
-    }.bind(this))
-  }
-
-  getCampaign(callback) {
-    fetch(baseUrl + "api/campaigns", {
+  getAccount(params, callback) {
+    fetch(baseUrl + "api/account/" + params + "/refresh", {
       method: "GET",
       headers: {
         'Accept': 'application/json',
@@ -52,59 +39,58 @@ export default class Profile extends Component {
       }
     })
       .then((response) => response.json())
-      .then(json => callback(json.data))
+      .then(json => callback(json))
       .catch((error) => {
         console.error(error)
       })
       .done()
   }
 
-  renderRow(rowData, sectionID, rowID) {
-    const percent = rowData.total / rowData.goal
-    return (
-      <Card style={{ flex: 0 }}>
-        <CardItem>
-          <Left>
-            <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
-            <Body>
-              <Text>{rowData.title}</Text>
-              <Text note>{rowData.date}</Text>
-            </Body>
-          </Left>
-        </CardItem>
-        <CardItem>
-          <Body>
-            <Image source={{ uri: baseUrl + "public/campaigns/large/" + rowData.large_image }} style={{ height: 200, width: "95%", flex: 1 }} />
-            <Text>
-              {shortenDescription(cleanTag(rowData.description))}
-            </Text>
-          </Body>
-        </CardItem>
-        <CardItem>
-          <Left>
-            <Progress.Circle progress={percent} size={30} showsText={true} />
-          </Left>
-          <Body>
-            <Text style={styles.textInfo}>Terkumpul: {rowData.total}/{rowData.goal}</Text>
-          </Body>
-          <Right>
-            <Button textStyle={{ color: '#87838B' }}
-              onPress={() => this.props.navigation.navigate('DetailScreen', {
-                campaign: rowData,
-              })}>
-              <Text>Donate</Text>
-            </Button>
-          </Right>
-        </CardItem>
-      </Card>
-    )
+  componentWillMount() {
+    this.getAccount(this.state.user.id, response => {
+      this.setState({
+        user: response
+      })
+    })
+  }
+
+  logOut() {
+    const nav = this.props.navigation
+    storage.remove({
+      key: 'user'
+    }).then(ret => {
+      nav.dispatch({
+        type: 'Navigation/BACK',
+      })
+    })
   }
 
   render() {
-    let campaign = (this.state.isLoading) ?
-      <Spinner /> :
-      <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} />
-
-    return campaign
+    console.log(this.state.user)
+    return (
+      <Container>
+        <Content>
+          <Image source={{ uri: baseUrl + 'public/avatar/' + this.state.user.avatar }} style={{ height: 300, width: "100%", flex: 1 }} />
+          <Card>
+            <CardItem>
+              <Body>
+                <H2>{this.state.user.name}</H2>
+                <H2>{this.state.user.email}</H2>
+              </Body>
+            </CardItem>
+            <CardItem>
+              <Body>
+                <H2>Saldo:</H2>
+                <H2>{convertToRupiah(this.state.user.saldo)}</H2>
+              </Body>
+            </CardItem>
+          </Card>
+          <Button full textStyle={{ color: '#87838B' }}
+            onPress={() => this.logOut()}>
+            <Text>Log Out</Text>
+          </Button>
+        </Content>
+      </Container>
+    )
   }
 }

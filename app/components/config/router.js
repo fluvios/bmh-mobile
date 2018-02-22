@@ -108,6 +108,13 @@ export const NewsStack = StackNavigator({
     ProfileScreen: {
         screen: Profile,
     },
+    LoginScreen: {
+        screen: Login,
+        navigationOptions: {
+            tabBarVisible: false,
+            header: null,
+        }
+    },
     DetailScreen: {
         screen: NewsDetail,
         navigationOptions: {
@@ -120,6 +127,13 @@ export const NewsStack = StackNavigator({
 export const ReportStack = StackNavigator({
     ListScreen: {
         screen: ReportList,
+    },
+    LoginScreen: {
+        screen: Login,
+        navigationOptions: {
+            tabBarVisible: false,
+            header: null,
+        }
     },
     ProfileScreen: {
         screen: Profile,

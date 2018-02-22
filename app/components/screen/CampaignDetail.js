@@ -58,7 +58,7 @@ export default class CampaignDetail extends Component {
                         <Tab heading="Detail">
                             <CampaignDetailText data={{ campaign }} />
                         </Tab>
-                        <Tab heading="Story">
+                        <Tab heading="Updates">
                             <CampaignDetailStory data={{ campaign }} />
                         </Tab>
                         <Tab heading="Donatur">

@@ -1,26 +1,32 @@
-import React, { Component } from 'react';
-import { Container, Header, Content, Card, CardItem, Body, Text } from 'native-base';
-import { cleanTag, convertToSlug, shortenDescription } from '../config/helper';
+import React, { Component } from 'react'
+import { Image } from 'react-native'
+import { Container, Header, Content, Card, CardItem, Body, Text } from 'native-base'
+import { baseUrl } from "../config/variable"
 
 export default class CampaignDetailStory extends Component {
 
-    constructor(props) {
-    super(props);
+  constructor(props) {
+    super(props)
   }
 
   render() {
-    const campaign = this.props.data.campaign;
+    const campaign = this.props.data.campaign.update
 
     return (
       <Content>
-        <Card>
-          <CardItem>
-            <Body>
-              <Text>{cleanTag(campaign.description)}</Text>
-            </Body>
-          </CardItem>
-        </Card>
+        {
+          campaign.map((c) =>
+            <Card key={c.id}>
+              <CardItem>
+                <Body>
+                  <Image source={{ uri: baseUrl + "public/campaigns/updates/" + c.image }} style={{ height: 200, width: "100%", flex: 1 }} />
+                  <Text>{c.description}</Text>
+                </Body>
+              </CardItem>
+            </Card>
+          )
+        }
       </Content>
-    );
+    )
   }
 }

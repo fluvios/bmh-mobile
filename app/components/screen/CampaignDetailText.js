@@ -18,13 +18,13 @@ export default class CampaignDetailText extends Component {
 
   render() {
     const campaign = this.props.data.campaign
-    const percent = campaign.total/campaign.goal
+    const percent = campaign.total / campaign.goal
     return (
       <Content>
         <Card style={{ flex: 0 }}>
           <CardItem>
             <Left>
-              <Thumbnail source={{ uri: baseUrl+"public/avatar/default.jpg" }} />
+              <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
               <Body>
                 <Text>{campaign.title}</Text>
                 <Text note>{campaign.date}</Text>
@@ -44,6 +44,13 @@ export default class CampaignDetailText extends Component {
             </Left>
             <Body>
               <Text style={styles.textInfo}>Terkumpul: {campaign.total}/{campaign.goal}</Text>
+            </Body>
+          </CardItem>
+        </Card>
+        <Card>
+          <CardItem>
+            <Body>
+              <Text>{cleanTag(campaign.description)}</Text>
             </Body>
           </CardItem>
         </Card>

@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import { Image } from 'react-native';
+import React, { Component } from 'react'
+import { Image } from 'react-native'
 import {
-    Container, Content, Card, 
+    Container, Content, Card,
     CardItem, Body, Text,
-} from 'native-base';
-import { cleanTag } from '../config/helper';
-import { wpUrl, baseUrl } from "../config/variable";
+} from 'native-base'
+import { cleanTag } from '../config/helper'
+import { wpUrl, baseUrl } from "../config/variable"
 
 export default class NewsDetail extends Component {
 
     constructor(props) {
-        super(props);
+        super(props)
     }
 
     render() {
-        let news = this.props.navigation.state.params.campaign;
+        let news = this.props.navigation.state.params.campaign
         return (
             <Container>
                 <Content>
@@ -23,13 +23,13 @@ export default class NewsDetail extends Component {
                         <CardItem>
                             <Body>
                                 <Text>
-                                    { cleanTag(news.content.rendered) }
+                                    {cleanTag(news.content.rendered)}
                                 </Text>
                             </Body>
                         </CardItem>
                     </Card>
                 </Content>
             </Container>
-        );
+        )
     }
 }

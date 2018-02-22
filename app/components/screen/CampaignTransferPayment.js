@@ -9,6 +9,7 @@ import { Image } from "react-native"
 import _ from 'lodash'
 import ImagePicker from 'react-native-image-picker'
 import { baseUrl } from '../config/variable'
+import { convertToRupiah } from '../config/helper'
 
 export default class CampaignTransferPayment extends Component {
 
@@ -22,8 +23,6 @@ export default class CampaignTransferPayment extends Component {
             donation: this.props.navigation.state.params.donation.donation
         }
 
-        amount = "" + this.state.donation.donation
-        key = "" + this.state.donation.amount_key
         donate = "" + (this.state.donation.donation - this.state.donation.amount_key)
     }
 
@@ -38,7 +37,7 @@ export default class CampaignTransferPayment extends Component {
                                     Total Transfer
                                 </H1>
                                 <H3>
-                                    IDR. {amount}
+                                    {convertToRupiah(this.state.donation.donation)}
                                 </H3>
                                 <Text>
                                     Harap ditransfer sebelum {this.state.donation.expired_date}
