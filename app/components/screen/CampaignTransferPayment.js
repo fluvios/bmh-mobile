@@ -7,23 +7,34 @@ import {
 } from 'native-base'
 import { Image } from "react-native"
 import _ from 'lodash'
+import { NavigationActions } from 'react-navigation'
 import ImagePicker from 'react-native-image-picker'
 import { baseUrl } from '../config/variable'
 import { convertToRupiah } from '../config/helper'
+import { styles } from "../config/styles"
 
 export default class CampaignTransferPayment extends Component {
 
     constructor(props) {
         super(props)
 
-        console.log(this.props)
-
         this.state = {
-            showToast: false,
-            donation: this.props.navigation.state.params.donation.donation
+            donation: this.props.navigation.state.params.donation.donation,
         }
+    }
 
-        donate = "" + (this.state.donation.donation - this.state.donation.amount_key)
+    goBack() {
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
+        })
+        this.props.navigation.dispatch(resetAction)
+    }
+    
+    componentWillUnmount() {
+        this.setState({
+            donation: {}
+        })
     }
 
     render() {
@@ -39,7 +50,7 @@ export default class CampaignTransferPayment extends Component {
                                 <H3>
                                     {convertToRupiah(this.state.donation.donation)}
                                 </H3>
-                                <Text>
+                                <Text style={styles.textInfo}>
                                     Harap ditransfer sebelum {this.state.donation.expired_date}
                                 </Text>
                             </Body>
@@ -49,16 +60,54 @@ export default class CampaignTransferPayment extends Component {
                         <CardItem>
                             <Body>
                                 <CardItem header>
-                                    <Text>Rekening Transfer</Text>
+                                    <Text>Rincian Transfer</Text>
                                 </CardItem>
                                 <CardItem>
-                                    <Body>
-
-                                    </Body>
+                                    <Left>
+                                        <Text style={styles.textInfo}>Nominal donasi</Text>
+                                    </Left>
+                                    <Right>
+                                        <Text style={styles.textInfo}>{convertToRupiah((this.state.donation.donation - this.state.donation.amount_key))}</Text>
+                                    </Right>
+                                </CardItem>
+                                <CardItem>
+                                    <Left>
+                                        <Text style={styles.textInfo}>Kode transfer (akan disumbangkan)</Text>
+                                    </Left>
+                                    <Right>
+                                        <Text style={styles.textInfo}>{convertToRupiah(this.state.donation.amount_key)}</Text>
+                                    </Right>
+                                </CardItem>
+                                <CardItem>
+                                    <Left>
+                                        <Text style={styles.textInfo}>Total</Text>
+                                    </Left>
+                                    <Right>
+                                        <Text style={styles.textInfo}>{convertToRupiah(this.state.donation.donation)}</Text>
+                                    </Right>
                                 </CardItem>
                             </Body>
                         </CardItem>
                     </Card>
+                    <Card style={{ flex: 0 }}>
+                        <CardItem header>
+                            <Text>Rekening Tujuan</Text>
+                        </CardItem>
+                        <CardItem>
+                            <Body>
+                                <Image source={{ uri: baseUrl + "public/bank/" + this.state.donation.bank.logo }} style={{ height: 200, width: "100%", flex: 1, resizeMode: 'center' }} />
+                                <Text>
+                                    No Rekening {this.state.donation.bank.account_number}{`\n`}
+                                    Atas Nama {this.state.donation.bank.account_name}{`\n`}
+                                    {this.state.donation.bank.name} Cabang {this.state.donation.bank.branch}
+                                </Text>
+                            </Body>
+                        </CardItem>
+                    </Card>
+                    <Button full textStyle={{ color: '#87838B' }}
+                        onPress={() => this.goBack()}>
+                        <Text>Selesai</Text>
+                    </Button>
                 </Content>
             </Container>
         )

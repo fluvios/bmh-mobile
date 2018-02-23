@@ -8,7 +8,7 @@ import {
     Content, Footer, FooterTab, Button, Text, Card,
     CardItem, Thumbnail, Spinner,
 } from 'native-base'
-import { cleanTag, convertToSlug, shortenDescription } from '../config/helper'
+import { convertToRupiah } from '../config/helper'
 import * as Progress from 'react-native-progress'
 import { styles } from "../config/styles"
 import { baseUrl } from "../config/variable"
@@ -40,7 +40,7 @@ export default class CampaignDetailDonatur extends Component {
 
     getDonatur(callback) {
         const campaign = this.props.data.campaign.id
-        fetch(baseUrl+"api/donations/"+campaign, {
+        fetch(baseUrl + "api/donations/" + campaign, {
             method: "GET",
             headers: {
                 'Accept': 'application/json',
@@ -60,7 +60,7 @@ export default class CampaignDetailDonatur extends Component {
             <Card style={{ flex: 0 }}>
                 <CardItem>
                     <Left>
-                        <Thumbnail source={{ uri: baseUrl+"public/avatar/default.jpg" }} />
+                        <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
                         <Body>
                             <Text>{rowData.fullname}</Text>
                         </Body>
@@ -69,8 +69,11 @@ export default class CampaignDetailDonatur extends Component {
                 <CardItem>
                     <Body>
                         <Text>
-                            Rp. {rowData.donation}
-                         </Text>
+                            {convertToRupiah(rowData.donation)}
+                        </Text>
+                        <Text>
+                            {rowData.comment}
+                        </Text>
                     </Body>
                 </CardItem>
             </Card>

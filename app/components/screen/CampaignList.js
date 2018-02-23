@@ -113,7 +113,7 @@ export default class CampaignList extends Component {
   }
 
   renderRow(rowData, sectionID, rowID) {
-    const percent = rowData.total / rowData.goal
+    const percent = (rowData.total / rowData.goal)
     return (
       <Card style={{ flex: 0 }}>
         <CardItem>
@@ -127,7 +127,7 @@ export default class CampaignList extends Component {
         </CardItem>
         <CardItem>
           <Body>
-            <Image source={{ uri: baseUrl + "public/campaigns/large/" + rowData.large_image }} style={{ height: 200, width: "95%", flex: 1 }} />
+            <Image source={{ uri: baseUrl + "public/campaigns/large/" + rowData.large_image }} style={{ height: 200, width: "100%", flex: 1 }} />
             <Text>
               {shortenDescription(cleanTag(rowData.description))}{`\n`}
             </Text>
@@ -136,15 +136,23 @@ export default class CampaignList extends Component {
         </CardItem>
         <CardItem>
           <Left>
-            <Progress.Circle progress={percent} size={30} showsText={true} />
+            <Progress.Pie progress={percent} size={35} />
           </Left>
           <Right>
-            <Button textStyle={{ color: '#87838B' }}
-              onPress={() => this.props.navigation.navigate('DetailScreen', {
-                campaign: rowData,
-              })}>
-              <Text>Donate</Text>
-            </Button>
+            {
+              rowData.finalized == '0' ?
+                <Button textStyle={{ color: '#87838B' }}
+                  onPress={() => this.props.navigation.navigate('DetailScreen', {
+                    campaign: rowData,
+                  })}>
+                  <Text>Donate</Text>
+                </Button> :
+                <Button textStyle={{ color: '#87838B' }}
+                  onPress={() => {}}>
+                  <Text>Finish</Text>
+                </Button>
+            }
+
           </Right>
         </CardItem>
       </Card>

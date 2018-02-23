@@ -66,14 +66,10 @@ export default class CampaignDetail extends Component {
                         </Tab>
                     </Tabs>
                 </Content>
-                <Footer>
-                    <FooterTab>
-                        <Button full textStyle={{ color: '#87838B' }}
-                            onPress={() => this.donate(campaign)}>
-                            <Text>Donate</Text>
-                        </Button>
-                    </FooterTab>
-                </Footer>
+                <Button full textStyle={{ color: '#87838B' }}
+                    onPress={() => this.donate(campaign)}>
+                    <Text>Donate</Text>
+                </Button>
             </Container>
         )
     }
