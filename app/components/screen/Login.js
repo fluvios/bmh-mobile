@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, AsyncStorage, Image, Text, } from 'react-native'
+import { View, AsyncStorage, Image, Text, WebView, } from 'react-native'
 import {
     Container, Item, Input, Header, Body, Content,
     Title, Button, Label, Spinner, Toast, H1
@@ -136,12 +136,26 @@ class Login extends Component {
                     </View>
                     <View style={styles.deviderColumnDouble}>
                         <View style={styles.deviderRowLeft}>
-                            <Button block primary>
+                            <Button block primary onPress={() => {
+                                return (
+                                    <View>
+                                        <WebView
+                                            source={{ uri: baseUrl }}
+                                            style={{ marginTop: 20 }}
+                                        />
+                                    </View>
+                                )
+                            }}>
                                 <Text style={styles.buttonText}>Daftar</Text>
                             </Button>
                         </View>
                         <View style={styles.deviderRowRight}>
-                            <Button block primary>
+                            <Button block primary onPress={() => {
+                                return (<WebView
+                                    source={{ uri: baseUrl }}
+                                    style={{ marginTop: 20 }}
+                                />)
+                            }}>
                                 <Text style={styles.buttonText}>Lupa Password</Text>
                             </Button>
                         </View>

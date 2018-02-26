@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Platform, AsyncStorage, FlatList, Image } from "react-native"
+import { Platform, AsyncStorage, FlatList, Image, WebView } from "react-native"
 import {
     Container, Header, Title, Button, ListItem, View,
     Icon, Card, CardItem, Input, Picker,
@@ -33,11 +33,13 @@ export default class CampaignPayment extends Component {
             campaign_id: this.props.navigation.state.params.campaign.id,
             banks: [
                 { id: 'Delivery', name: 'Jemput Cash' },
-                { id: 'Payment', name: 'Midtrans' },
+                { id: 'Midtrans', name: 'Midtrans' },
             ],
             payment_gateway: 'Delivery',
             user_id: 0,
-            showToast: false
+            showToast: false,
+            is_mobile: 1,
+            token: ''
         }
 
         this.bankList()
@@ -59,6 +61,26 @@ export default class CampaignPayment extends Component {
         this.setState({
             donation_type: value
         })
+    }
+
+    openMidtrans() {
+        const html = "<html>" +
+            "<head>" +
+            "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
+            "<script type='text/javascript' src='https://app.sandbox.midtrans.com/snap/snap.js' data-client-key='VT-client-IXR9xdybkl8pqC-L'></script>" +
+            "</head>" +
+            "<body>" +
+            "<script type='text/javascript'>" +
+            "snap.pay('" + this.state.token + "');" +
+            "</script>" +
+            "</body>" +
+            "</html>"
+
+        return (
+            <WebView
+                style={{ marginTop: 20 }}
+                source={{ html: html }} />
+        )
     }
 
     paymentMethod() {
@@ -92,8 +114,14 @@ export default class CampaignPayment extends Component {
                     }
                 })
                 break
-            case 'Payment':
-                nav.navigate('PayScreen', { form: form })
+            case 'Midtrans':
+                this.donate(this.state.campaign_id, form, response => {
+                    if (response.success == true) {
+                        this.state.token = response.token
+                        this.openMidtrans()
+                    }
+                })
+
                 break
             default:
                 form.payment_gateway = Number.parseInt(this.state.payment_gateway)

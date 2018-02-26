@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FlatList, AsyncStorage, Image } from 'react-native'
+import { FlatList, AsyncStorage, Image, WebView } from 'react-native'
 import Storage from 'react-native-storage'
 import {
     Body, Button, Content, Card, Icon, View, Item, ListItem, Right,
@@ -37,11 +37,13 @@ export default class DepositoList extends Component {
             index: 0,
             banks: [
                 { id: 'Delivery', name: 'Jemput Cash' },
-                { id: 'Payment', name: 'Midtrans' },
+                { id: 'Midtrans', name: 'Midtrans' },
             ],
             payment_gateway: 'Delivery',
             user_id: 0,
-            amount: 50000
+            amount: 50000,
+            is_mobile: 1,
+            token: ''
         }
 
         this.bankList()
@@ -143,6 +145,26 @@ export default class DepositoList extends Component {
         })
     }
 
+    openMidtrans() {
+        const html = "<html>" +
+            "<head>" +
+            "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
+            "<script type='text/javascript' src='https://app.sandbox.midtrans.com/snap/snap.js' data-client-key='VT-client-IXR9xdybkl8pqC-L'></script>" +
+            "</head>" +
+            "<body>" +
+            "<script type='text/javascript'>" +
+            "snap.pay('" + this.state.token + "');" +
+            "</script>" +
+            "</body>" +
+            "</html>"
+
+        return (
+            <WebView
+                style={{ marginTop: 20 }}
+                source={{ html: html }} />
+        )
+    }
+
     topup(data, callback) {
         fetch(baseUrl + "api/topup", {
             method: "POST",
@@ -176,8 +198,14 @@ export default class DepositoList extends Component {
                     }
                 })
                 break
-            case 'Payment':
-                nav.navigate('PayScreen', { form: this.state })
+            case 'Midtrans':
+                this.topup(form, response => {
+                    if (response.success == true) {
+                        console.log(response)
+                        this.state.token = response.token
+                        this.openMidtrans()
+                    }
+                })
                 break
             default:
                 form.payment_gateway = Number.parseInt(this.state.payment_gateway)
