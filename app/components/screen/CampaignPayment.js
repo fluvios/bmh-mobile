@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import { Platform, AsyncStorage } from "react-native"
+import { Platform, AsyncStorage, FlatList, Image } from "react-native"
 import {
-    Container, Header, Title, Button, ListItem,
+    Container, Header, Title, Button, ListItem, View,
     Icon, Card, CardItem, Input, Picker,
     Left, Body, Right, Content, CheckBox,
-    Footer, FooterTab, Text, Form, Item, Toast,
+    Footer, FooterTab, Text, Form, Item, Toast, StyleProvider
 } from 'native-base'
+import getTheme from '../../../native-base-theme/components'
+import material from '../../../native-base-theme/variables/material'
 import _ from 'lodash'
 import Storage from 'react-native-storage'
 import { baseUrl } from '../config/variable'
@@ -26,11 +28,14 @@ export default class CampaignPayment extends Component {
             full_name: this.props.navigation.state.params.user.name,
             email: this.props.navigation.state.params.user.email,
             donation_type: '',
-            payment_gateway: '',
             comment: '',
             anonymous: '',
             campaign_id: this.props.navigation.state.params.campaign.id,
-            banks: [],
+            banks: [
+                { id: 'Delivery', name: 'Jemput Cash' },
+                { id: 'Payment', name: 'Midtrans' },
+            ],
+            payment_gateway: 'Delivery',
             user_id: 0,
             showToast: false
         }
@@ -107,6 +112,47 @@ export default class CampaignPayment extends Component {
         }
     }
 
+    onCheckBoxPress(value) {
+        this.setState({
+            payment_gateway: value.id,
+        })
+    }
+
+    nominal(index) {
+        switch (index) {
+            case 0:
+                this.setState({
+                    amount: 50000
+                })
+                break
+            case 1:
+                this.setState({
+                    amount: 100000
+                })
+                break
+            case 2:
+                this.setState({
+                    amount: 250000
+                })
+                break
+            case 3:
+                this.setState({
+                    amount: 500000
+                })
+                break
+            case 4:
+                this.setState({
+                    amount: 1000000
+                })
+                break
+        }
+    }
+
+    updateIndex = (index) => {
+        this.setState({ index })
+        this.nominal(index)
+    }
+
     donate(params, data, callback) {
         fetch(baseUrl + "api/donate/" + params, {
             method: "POST",
@@ -130,9 +176,10 @@ export default class CampaignPayment extends Component {
         })
             .then((response) => response.json())
             .then(json => {
-                this.setState({
-                    banks: json
-                })
+                let temp = json
+                temp.map((bank, i) => (
+                    this.state.banks.push(bank)
+                ))
             })
             .catch((error) => {
                 console.error(error)
@@ -142,67 +189,79 @@ export default class CampaignPayment extends Component {
 
     render() {
         return (
-            <Container>
-                <Content>
-                    <Form>
-                        <Text>Informasi Donatur</Text>
-                        <Item>
-                            <Input placeholder="Donasi"
-                                onChangeText={(text) => this.setState({ amount: text })}
-                                value={this.state.amount} />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Fullname"
-                                onChangeText={(text) => this.setState({ full_name: text })}
-                                value={this.state.full_name} />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Email"
-                                onChangeText={(text) => this.setState({ email: text })}
-                                value={this.state.email} />
-                        </Item>
-                        <Item>
-                            <Input placeholder="Pesan"
-                                onChangeText={(text) => this.setState({ comment: text })}
-                                value={this.state.comment} />
-                        </Item>
-                        <Picker
-                            mode="dropdown"
-                            selectedValue={this.state.donation_type}
-                            onValueChange={this.onDonationChange.bind(this)}>
-                            <Item label="Tipe Donasi" value="" />
-                            <Item label="Routine" value="Routine" />
-                            <Item label="Isidentil" value="Isidentil" />
-                        </Picker>
-                        <Picker
-                            mode="dropdown"
-                            selectedValue={this.state.anonymous}
-                            onValueChange={this.onAnonimChange.bind(this)}>
-                            <Item label="Donasi sebagai anonim?" value="" />
-                            <Item label="Ya" value="1" />
-                            <Item label="Tidak" value="0" />
-                        </Picker>
-                        <Picker
-                            mode="dropdown"
-                            selectedValue={this.state.payment_gateway}
-                            onValueChange={this.onPaymentChange.bind(this)}>
-                            <Item label="Metode Pembayaran" value="" />
-                            {
-                                this.state.banks.map((bank, i) =>
-                                    <Item key={i} label={"Transfer " + bank.name} value={bank.id} />
-                                )
-                            }
-                            <Item label="Cash On Delivery" value="Delivery" />
-                            <Item label="Potong Saldo BMH" value="Deposit" />
-                            <Item label="Other" value="Payment" />
-                        </Picker>
-                        <Button block textStyle={{ color: '#87838B' }}
-                            onPress={() => this.paymentMethod()}>
-                            <Text>Donate</Text>
-                        </Button>
-                    </Form>
-                </Content>
-            </Container>
+            <StyleProvider style={getTheme(material)}>
+                <Container>
+                    <Content>
+                        <View style={{ backgroundColor: '#FFFFFF' }}>
+                            <Form>
+                                <Text>Informasi Donatur</Text>
+                                <Item>
+                                    <Input placeholder="Donasi"
+                                        onChangeText={(text) => this.setState({ amount: text })}
+                                        value={this.state.amount} />
+                                </Item>
+                                <Item>
+                                    <Input placeholder="Fullname"
+                                        onChangeText={(text) => this.setState({ full_name: text })}
+                                        value={this.state.full_name} />
+                                </Item>
+                                <Item>
+                                    <Input placeholder="Email"
+                                        onChangeText={(text) => this.setState({ email: text })}
+                                        value={this.state.email} />
+                                </Item>
+                                <Item>
+                                    <Input placeholder="Pesan"
+                                        onChangeText={(text) => this.setState({ comment: text })}
+                                        value={this.state.comment} />
+                                </Item>
+                                <Picker
+                                    mode="dropdown"
+                                    selectedValue={this.state.donation_type}
+                                    onValueChange={this.onDonationChange.bind(this)}>
+                                    <Item label="Tipe Donasi" value="" />
+                                    <Item label="Routine" value="Routine" />
+                                    <Item label="Isidentil" value="Isidentil" />
+                                </Picker>
+                                <Picker
+                                    mode="dropdown"
+                                    selectedValue={this.state.anonymous}
+                                    onValueChange={this.onAnonimChange.bind(this)}>
+                                    <Item label="Donasi sebagai anonim?" value="" />
+                                    <Item label="Ya" value="1" />
+                                    <Item label="Tidak" value="0" />
+                                </Picker>
+                                <Text style={{ marginLeft: 10 }}>Metode Pembayaran</Text>
+                                <Item>
+                                    <FlatList
+                                        extraData={this.state}
+                                        keyExtractor={(item, index) => item.id}
+                                        data={this.state.banks}
+                                        renderItem={({ item }) => {
+                                            return <ListItem>
+                                                <CheckBox
+                                                    checked={this.state.payment_gateway == item.id}
+                                                    onPress={() => this.onCheckBoxPress(item)}
+                                                />
+                                                <Body>
+                                                    <Text>{item.name}</Text>
+                                                </Body>
+                                                <Right>
+                                                    <Image source={{ uri: baseUrl + "public/bank/" + item.logo }} style={{ height: 50, width: "100%", flex: 1, resizeMode: 'center' }} />
+                                                </Right>
+                                            </ListItem>
+                                        }}
+                                    />
+                                </Item>
+                                <Button block textStyle={{ color: '#87838B' }}
+                                    onPress={() => this.paymentMethod()}>
+                                    <Text>Donate</Text>
+                                </Button>
+                            </Form>
+                        </View>
+                    </Content>
+                </Container>
+            </StyleProvider>
         )
     }
 }

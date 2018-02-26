@@ -11,12 +11,15 @@ export default class CampaignDetailStory extends Component {
 
   render() {
     const campaign = this.props.data.campaign.update
-
+    console.log(campaign)
     return (
       <Content>
         {
           campaign.map((c) =>
             <Card key={c.id}>
+              <CardItem header>
+                <Text>#update {c.id} ({c.date})</Text>
+              </CardItem>
               <CardItem>
                 <Body>
                   <Image source={{ uri: baseUrl + "public/campaigns/updates/" + c.image }} style={{ height: 200, width: "100%", flex: 1 }} />
