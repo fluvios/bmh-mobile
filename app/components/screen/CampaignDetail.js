@@ -64,7 +64,6 @@ export default class CampaignDetail extends Component {
                                 <Icon name="share" />
                             </Fab>
                         </View>
-                        {/* <CampaignTabs /> */}
                         <Tabs>
                             <Tab heading="Detail">
                                 <CampaignDetailText data={{ campaign }} />
