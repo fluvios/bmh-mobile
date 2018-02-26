@@ -3,8 +3,10 @@ import { AsyncStorage } from 'react-native'
 import Storage from 'react-native-storage'
 import {
     Container, Header, Title, Button, Icon, Tabs, Tab,
-    Left, Body, Right, Content, Footer, FooterTab, Text
+    Left, Body, Right, Content, Footer, FooterTab, Text, StyleProvider
 } from 'native-base'
+import getTheme from '../../../native-base-theme/components'
+import material from '../../../native-base-theme/variables/material'
 import NewsListBerita from "./NewsListBerita"
 import NewsListInspirasi from "./NewsListInspirasi"
 import NewsListKonsultasi from "./NewsListKonsultasi"
@@ -20,7 +22,7 @@ var storage = new Storage({
 export default class NewsList extends Component {
 
     static navigationOptions = ({ navigation }) => ({
-        title: 'Galangbersama',
+        title: 'Berbagi Kebaikan',
         headerRight: (
             <Button icon transparent onPress={() => { navigation.state.params.handleProfile(navigation) }}>
                 <Icon name='contact' />
@@ -65,24 +67,26 @@ export default class NewsList extends Component {
     render() {
         const propies = this.props
         return (
-            <Container>
-                <Content>
-                    <Tabs >
-                        <Tab heading="News" textStyle={{ fontSize: 11 }} activeTextStyle={{ fontSize: 11 }}>
-                            <NewsListBerita data={{ propies }} />
-                        </Tab>
-                        <Tab heading="Inspiration" textStyle={{ fontSize: 11 }} activeTextStyle={{ fontSize: 11 }}>
-                            <NewsListInspirasi data={{ propies }} />
-                        </Tab>
-                        <Tab heading="Consultation" textStyle={{ fontSize: 11 }} activeTextStyle={{ fontSize: 11 }}>
-                            <NewsListKonsultasi data={{ propies }} />
-                        </Tab>
-                        <Tab heading="I-Magazine" textStyle={{ fontSize: 11 }} activeTextStyle={{ fontSize: 11 }}>
-                            <NewsListMagazine data={{ propies }} />
-                        </Tab>
-                    </Tabs>
-                </Content>
-            </Container>
+            <StyleProvider style={getTheme(material)}>
+                <Container>
+                    <Content>
+                        <Tabs >
+                            <Tab heading="Berita" textStyle={{ fontSize: 12 }} activeTextStyle={{ fontSize: 11 }}>
+                                <NewsListBerita data={{ propies }} />
+                            </Tab>
+                            <Tab heading="Inspirasi" textStyle={{ fontSize: 12 }} activeTextStyle={{ fontSize: 11 }}>
+                                <NewsListInspirasi data={{ propies }} />
+                            </Tab>
+                            <Tab heading="Konsultasi" textStyle={{ fontSize: 12 }} activeTextStyle={{ fontSize: 11 }}>
+                                <NewsListKonsultasi data={{ propies }} />
+                            </Tab>
+                            <Tab heading="I-Magazine" textStyle={{ fontSize: 12 }} activeTextStyle={{ fontSize: 11 }}>
+                                <NewsListMagazine data={{ propies }} />
+                            </Tab>
+                        </Tabs>
+                    </Content>
+                </Container>
+            </StyleProvider>
         )
     }
 }

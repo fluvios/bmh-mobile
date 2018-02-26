@@ -4,12 +4,14 @@ import Storage from 'react-native-storage'
 import {
   Container, Header, Left, Body, Right, Title,
   Content, Footer, FooterTab, Button, Text, Card,
-  CardItem, Thumbnail, Spinner, Icon
+  CardItem, Thumbnail, Spinner, Icon, StyleProvider
 } from 'native-base'
+import getTheme from '../../../native-base-theme/components'
+import material from '../../../native-base-theme/variables/material'
 import { cleanTag, convertToSlug, shortenDescription, convertToRupiah } from '../config/helper'
 import * as Progress from 'react-native-progress'
 import { styles } from "../config/styles"
-import { baseUrl } from "../config/variable"
+import { baseUrl, color } from "../config/variable"
 
 var campaignArray = []
 
@@ -23,9 +25,9 @@ var storage = new Storage({
 export default class CampaignList extends Component {
 
   static navigationOptions = ({ navigation }) => ({
-    title: 'Galangbersama',
+    title: 'Berbagi Kebaikan',
     headerRight: (
-      <Button icon transparent onPress={() => { navigation.state.params.handleProfile(navigation) }}>
+      <Button icon transparent primary onPress={() => { navigation.state.params.handleProfile(navigation) }}>
         <Icon name='contact' />
       </Button>
     ),
@@ -115,47 +117,54 @@ export default class CampaignList extends Component {
   renderRow(rowData, sectionID, rowID) {
     const percent = (rowData.total / rowData.goal)
     return (
-      <Card style={{ flex: 0 }}>
-        <CardItem>
-          <Left>
-            <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
+      <StyleProvider style={getTheme(material)}>
+        <Card style={{ flex: 0 }}>
+          <CardItem>
+            <Left>
+              <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
+              <Body>
+                <Text>{rowData.title}</Text>
+                <Text note>{rowData.date}</Text>
+              </Body>
+            </Left>
+          </CardItem>
+          <CardItem>
             <Body>
-              <Text>{rowData.title}</Text>
-              <Text note>{rowData.date}</Text>
+              <Image source={{ uri: baseUrl + "public/campaigns/large/" + rowData.large_image }} style={{ height: 200, width: "100%", flex: 1 }} />
             </Body>
-          </Left>
-        </CardItem>
-        <CardItem>
-          <Body>
-            <Image source={{ uri: baseUrl + "public/campaigns/large/" + rowData.large_image }} style={{ height: 200, width: "100%", flex: 1 }} />
-            <Text>
-              {shortenDescription(cleanTag(rowData.description))}{`\n`}
-            </Text>
-            <Text style={styles.textInfo}>{`Dana Terkumpul: \n`}{convertToRupiah(rowData.total)}/{convertToRupiah(rowData.goal)}</Text>
-          </Body>
-        </CardItem>
-        <CardItem>
-          <Left>
-            <Progress.Pie progress={percent} size={35} />
-          </Left>
-          <Right>
-            {
-              rowData.finalized == '0' ?
-                <Button textStyle={{ color: '#87838B' }}
-                  onPress={() => this.props.navigation.navigate('DetailScreen', {
-                    campaign: rowData,
-                  })}>
-                  <Text>Donate</Text>
-                </Button> :
-                <Button textStyle={{ color: '#87838B' }}
-                  onPress={() => {}}>
-                  <Text>Finish</Text>
-                </Button>
-            }
+          </CardItem>
+          <CardItem>
+            <Left>
+              <Text style={styles.textInfo}>{`Dana Terkumpul: \n`}{convertToRupiah(rowData.total)}/{convertToRupiah(rowData.goal)}</Text>
+            </Left>
+            <Right>
+              <Text style={styles.textDate}>{rowData.days_remaining > 0 ? rowData.days_remaining : 0} {`\n`}</Text>
+              <Text style={styles.textInfo}>Hari lagi</Text>
+            </Right>
+          </CardItem>
+          <CardItem>
+            <Left>
+              <Progress.Circle progress={percent} size={50} showsText={true} color={color.lightColor} />
+            </Left>
+            <Right>
+              {
+                rowData.finalized == '0' ?
+                  <Button textStyle={{ color: '#87838B' }}
+                    onPress={() => this.props.navigation.navigate('DetailScreen', {
+                      campaign: rowData,
+                    })}>
+                    <Text>Donate</Text>
+                  </Button> :
+                  <Button textStyle={{ color: '#87838B' }}
+                    onPress={() => { }}>
+                    <Text>Finish</Text>
+                  </Button>
+              }
 
-          </Right>
-        </CardItem>
-      </Card>
+            </Right>
+          </CardItem>
+        </Card>
+      </StyleProvider>
     )
   }
 

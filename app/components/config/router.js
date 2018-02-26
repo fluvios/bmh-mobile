@@ -1,5 +1,6 @@
 import React from 'react'
-import { TabNavigator, StackNavigator } from "react-navigation"
+import { TabNavigator, StackNavigator, TabBarBottom } from "react-navigation"
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import CampaignList from "../screen/CampaignList"
 import CampaignDetail from "../screen/CampaignDetail"
@@ -19,6 +20,7 @@ import ReportList from '../screen/ReportList'
 import Login from "../screen/Login"
 import Profile from "../screen/Profile"
 import { styles } from "./styles"
+import { color } from "./variable"
 
 export const CampaignStack = StackNavigator({
     ListScreen: {
@@ -145,36 +147,66 @@ export const HomeTabs = TabNavigator({
         screen: CampaignStack,
         navigationOptions: {
             title: 'Campaign',
+            tabBarIcon: ({ tintColor, focused }) => (
+                <Ionicons
+                    name={focused ? 'ios-megaphone' : 'ios-megaphone-outline'}
+                    size={30}
+                    style={{ color: tintColor }}
+                />
+            ),
         }
     },
     Deposito: {
         screen: DepositoStack,
         navigationOptions: {
             title: 'Deposito',
+            tabBarIcon: ({ tintColor, focused }) => (
+                <Ionicons
+                    name={focused ? 'ios-card' : 'ios-card-outline'}
+                    size={30}
+                    style={{ color: tintColor }}
+                />
+            ),
         }
     },
     News: {
         screen: NewsStack,
         navigationOptions: {
             title: 'News',
+            tabBarIcon: ({ tintColor, focused }) => (
+                <Ionicons
+                    name={focused ? 'ios-book' : 'ios-book-outline'}
+                    size={30}
+                    style={{ color: tintColor }}
+                />
+            ),
         }
     },
     Report: {
         screen: ReportStack,
         navigationOptions: {
             title: 'Report',
+            tabBarIcon: ({ tintColor, focused }) => (
+                <Ionicons
+                    name={focused ? 'ios-cash' : 'ios-cash-outline'}
+                    size={30}
+                    style={{ color: tintColor }}
+                />
+            ),
         }
     },
 }, {
-        tabBarPosition: 'bottom',
-        animationEnabled: false,
-        swipeEnabled: false,
-        tabBarOptions: {
-            labelStyle: {
-                fontSize: 11,
-            }
-        }
-    })
+    tabBarPosition: 'bottom',
+    tabBarComponent: TabBarBottom,
+    animationEnabled: false,
+    swipeEnabled: false,
+    tabBarOptions: {
+        labelStyle: {
+            fontSize: 12,
+        },
+        activeTintColor: color.lightColor
+    }
+})
 
 export const AuthStack = StackNavigator({
     // LoginScreen: { screen: Login },

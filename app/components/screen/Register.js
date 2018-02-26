@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
-import { View, AsyncStorage, Image, Text, } from 'react-native'
+import { View, AsyncStorage, Image } from 'react-native'
 import {
     Container, Item, Input, Header, Body, Content,
-    Title, Button, Label, Spinner, Toast, H1
+    Title, Button, Text, Label, Spinner, Toast
 } from 'native-base'
 import { Field, reduxForm, submit } from 'redux-form'
 import Storage from 'react-native-storage'
 import { baseUrl } from "../config/variable"
-import { styles } from "../config/styles"
 
 var storage = new Storage({
     size: 1000,
@@ -40,7 +39,7 @@ const validate = values => {
     return error
 }
 
-class Login extends Component {
+class Register extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -119,43 +118,19 @@ class Login extends Component {
         return (
             <Container>
                 <Content padder>
-                    <View style={styles.wrapCenter}>
-                        <Image source={require('./../../../asset/img/Logo-2.png')} style={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flex: 2
-                        }} />
-                        <Text style={styles.middleText}>Berbagi Kebaikan</Text>
-                    </View>
+                    <Image source={require('./../../../asset/img/Logo-2.png')} style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }} />
+                    <Image source={require('./../../../asset/img/Logo-3.png')} style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }} />
                     <Field name="email" component={this.renderInput} />
                     <Field name="password" component={this.renderInput} />
-                    <View style={styles.deviderColumn}>
-                        <Button block primary onPress={handleSubmit(this.loginAccount.bind(this))}>
-                            <Text style={styles.buttonText}>Masuk</Text>
-                        </Button>
-                    </View>
-                    <View style={styles.deviderColumnDouble}>
-                        <View style={styles.deviderRowLeft}>
-                            <Button block primary>
-                                <Text style={styles.buttonText}>Daftar</Text>
-                            </Button>
-                        </View>
-                        <View style={styles.deviderRowRight}>
-                            <Button block primary>
-                                <Text style={styles.buttonText}>Lupa Password</Text>
-                            </Button>
-                        </View>
-                    </View>
-                    <View style={styles.deviderColumn}>
-                        <Button block primary>
-                            <Text style={styles.buttonText}>Masuk Menggunakan Facebook</Text>
-                        </Button>
-                    </View>
-                    <View style={styles.deviderColumn}>
-                        <Button block info>
-                            <Text style={styles.buttonText}>Masuk Menggunakan Twitter</Text>
-                        </Button>
-                    </View>
+                    <Button block primary onPress={handleSubmit(this.loginAccount.bind(this))}>
+                        <Text>Login</Text>
+                    </Button>
                 </Content>
             </Container>
         )

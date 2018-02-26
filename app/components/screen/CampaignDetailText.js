@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
 import { styles } from "../config/styles"
 import {
-  Container, Header, Left, Body, Right, Title,
+  Container, Header, Left, Body, Right, Title, Icon,
   Content, Footer, FooterTab, Button, Text, Card,
-  CardItem, Thumbnail, Spinner,
+  CardItem, Thumbnail, Spinner
 } from 'native-base'
 import { cleanTag, convertToRupiah } from '../config/helper'
 import * as Progress from 'react-native-progress'
-import { baseUrl } from "../config/variable"
-
+import { baseUrl, color } from "../config/variable"
 
 export default class CampaignDetailText extends Component {
 
@@ -41,7 +40,7 @@ export default class CampaignDetailText extends Component {
           </CardItem>
           <CardItem>
             <Body>
-              <Progress.Bar progress={percent} />
+              <Progress.Bar progress={percent} color={color.lightColor} />
             </Body>
           </CardItem>
         </Card>

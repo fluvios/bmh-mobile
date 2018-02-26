@@ -3,8 +3,10 @@ import { AsyncStorage } from 'react-native'
 import Storage from 'react-native-storage'
 import {
     Body, Button, Content, Card, Icon,
-    CardItem, Header, Footer, Text
+    CardItem, Header, Footer, Text, StyleProvider
 } from "native-base"
+import getTheme from '../../../native-base-theme/components'
+import material from '../../../native-base-theme/variables/material'
 import { styles } from "../config/styles"
 import { baseUrl } from "../config/variable"
 import { convertToRupiah } from '../config/helper'
@@ -19,7 +21,7 @@ var storage = new Storage({
 export default class DepositoList extends Component {
 
     static navigationOptions = ({ navigation }) => ({
-        title: 'Galangbersama',
+        title: 'Berbagi Kebaikan',
         headerRight: (
             <Button icon transparent onPress={() => { navigation.state.params.handleProfile(navigation) }}>
                 <Icon name='contact' />
@@ -110,20 +112,22 @@ export default class DepositoList extends Component {
 
     render() {
         return (
-            <Content>
-                <Card>
-                    <CardItem>
-                        <Body>
-                            <Text style={styles.textHeader}>Saldo BMH</Text>
-                            <Text style={styles.textContent}>{convertToRupiah(this.state.saldo)}</Text>
-                        </Body>
-                    </CardItem>
-                </Card>
-                <Button full textStyle={{ color: '#87838B' }}
-                    onPress={() => this.deposit()}>
-                    <Text>Add Saldo</Text>
-                </Button>
-            </Content>
+            <StyleProvider style={getTheme(material)}>
+                <Content>
+                    <Card>
+                        <CardItem>
+                            <Body>
+                                <Text style={styles.textHeader}>Saldo BMH</Text>
+                                <Text style={styles.textContent}>{convertToRupiah(this.state.saldo)}</Text>
+                            </Body>
+                        </CardItem>
+                    </Card>
+                    <Button full textStyle={{ color: '#87838B' }}
+                        onPress={() => this.deposit()}>
+                        <Text>Add Saldo</Text>
+                    </Button>
+                </Content>
+            </StyleProvider>
         )
     }
 }

@@ -24,7 +24,7 @@ var storage = new Storage({
 
 export default class ReportList extends Component {
     static navigationOptions = ({ navigation }) => ({
-        title: 'Galangbersama',
+        title: 'Berbagi Kebaikan',
         headerRight: (
             <Button icon transparent onPress={() => { navigation.state.params.handleProfile(navigation) }}>
                 <Icon name='contact' />
