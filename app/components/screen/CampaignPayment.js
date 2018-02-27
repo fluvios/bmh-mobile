@@ -8,7 +8,7 @@ import {
 } from 'native-base'
 import getTheme from '../../../native-base-theme/components'
 import material from '../../../native-base-theme/variables/material'
-import _ from 'lodash'
+import { NavigationActions } from 'react-navigation'
 import Storage from 'react-native-storage'
 import { baseUrl } from '../config/variable'
 
@@ -34,9 +34,10 @@ export default class CampaignPayment extends Component {
             banks: [
                 { id: 'Delivery', name: 'Jemput Cash' },
                 { id: 'Midtrans', name: 'Midtrans' },
+                { id: 'Deposit', name: 'Potong Saldo' },
             ],
             payment_gateway: 'Delivery',
-            user_id: 0,
+            user_id: this.props.navigation.state.params.user.id,
             showToast: false,
             is_mobile: 1,
             token: ''
@@ -79,8 +80,17 @@ export default class CampaignPayment extends Component {
         return (
             <WebView
                 style={{ marginTop: 20 }}
-                source={{ html: html }} />
+                source={{ html: html }}
+                onError={error => console.log(error)} />
         )
+    }
+
+    goBack() {
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
+        })
+        this.props.navigation.dispatch(resetAction)
     }
 
     paymentMethod() {
@@ -111,6 +121,8 @@ export default class CampaignPayment extends Component {
                             position: 'bottom',
                             buttonText: 'Dismiss'
                         })
+
+                        this.goBack()
                     }
                 })
                 break
@@ -121,7 +133,6 @@ export default class CampaignPayment extends Component {
                         this.openMidtrans()
                     }
                 })
-
                 break
             default:
                 form.payment_gateway = Number.parseInt(this.state.payment_gateway)
