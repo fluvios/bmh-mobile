@@ -40,7 +40,10 @@ export default class CampaignDetailText extends Component {
           </CardItem>
           <CardItem>
             <Body>
-              <Progress.Bar progress={percent} color={color.lightColor} />
+              <Text>
+                {(percent * 100).toFixed(2)} % Dana Terkumpul
+              </Text>
+              <Progress.Bar progress={percent} width={300} height={10} color={color.lightColor} />
             </Body>
           </CardItem>
         </Card>

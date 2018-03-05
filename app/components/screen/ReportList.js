@@ -1,19 +1,14 @@
 import React, { Component } from 'react'
-import {
-    StyleSheet, ScrollView, ListView,
-    View, Image, TouchableHighlight, Linking,
-    AsyncStorage
-} from 'react-native'
-import {
-    Container, Header, Left, Body, Right, Title,
-    Content, Footer, FooterTab, Button, Text, Card,
-    CardItem, Thumbnail, Spinner, Toast, Icon,
-} from 'native-base'
-import { cleanTag, convertToSlug, shortenDescription, convertToRupiah } from '../config/helper'
+import { AsyncStorage } from 'react-native'
 import Storage from 'react-native-storage'
-import { baseUrl } from "../config/variable"
-
-var campaignArray = []
+import {
+    Container, Header, Title, Button, Icon, Tabs, Tab,
+    Left, Body, Right, Content, Footer, FooterTab, Text, StyleProvider
+} from 'native-base'
+import getTheme from '../../../native-base-theme/components'
+import material from '../../../native-base-theme/variables/material'
+import SaldoReportList from "./SaldoReportList"
+import DonationReportList from "./DonationReportList"
 
 var storage = new Storage({
     size: 1000,
@@ -22,7 +17,8 @@ var storage = new Storage({
     enableCache: true,
 })
 
-export default class ReportList extends Component {
+export default class NewsList extends Component {
+
     static navigationOptions = ({ navigation }) => ({
         title: 'Berbagi Kebaikan',
         headerRight: (
@@ -34,33 +30,23 @@ export default class ReportList extends Component {
 
     constructor(props) {
         super(props)
-        var dataSource = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1.guid != r2.guid
-        })
-        this.state = ({
-            dataSource: dataSource.cloneWithRows(campaignArray),
-            isLoading: true,
-            showToast: false
+    }
+
+    loadStorage() {
+        storage.load({
+            key: 'user'
+        }).then(ret => {
+            this.props.navigation.setParams({
+                handleProfile: this.profile,
+                user: ret
+            })
+        }).catch(err => {
+            console.log(err.message)
         })
     }
 
-    componentDidMount() {
-        storage.load({
-            key: 'user'
-        }).then(ret => this.loadData(ret)).catch(err => {
-            console.log(err.message)
-            Toast.show({
-                text: "Login untuk melihat data anda",
-                position: 'bottom',
-                buttonText: 'Dismiss'
-            })
-            this.setState({
-                isLoading: false
-            })
-            this.props.navigation.setParams({
-                handleProfile: this.profile,
-            })
-        })
+    componentWillMount() {
+        this.loadStorage()
     }
 
     profile(navigation) {
@@ -70,83 +56,29 @@ export default class ReportList extends Component {
             })
         } else {
             navigation.navigate('LoginScreen')
-        }
-    }
-
-    changeStatus(status) {
-        let translate
-        switch (status) {
-            case 'paid':
-                translate = 'Sudah dibayarkan'
-                break
-            case 'unpaid':
-                translate = 'Belum dibayarkan'
-                break
-            case 'expired':
-                translate = 'Belum dibayarkan'
-                break
-            case 'denied':
-                translate = 'Pembayaran ditolak'
-                break
-        }
-
-        return translate
-    }
-
-    loadData(data) {
-        this.getReport(data.id, function (json) {
-            campaignArray = json
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(campaignArray),
-                isLoading: false
+            this.props.navigation.setParams({
+                handleProfile: this.profile,
             })
-        }.bind(this))
-
-        this.props.navigation.setParams({
-            handleProfile: this.profile,
-            user: data
-        })
-    }
-
-    getReport(params, callback) {
-        fetch(baseUrl + "api/history/" + params, {
-            method: "GET",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            }
-        })
-            .then((response) => response.json())
-            .then(json => callback(json))
-            .catch((error) => {
-                console.error(error)
-            })
-            .done()
-    }
-
-    renderRow(rowData, sectionID, rowID) {
-        return (
-            <Card style={{ flex: 0 }}>
-                <CardItem>
-                    <Left>
-                        <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
-                        <Body>
-                            <Text>{rowData.campaign.title}</Text>
-                            <Text note>{convertToRupiah(rowData.donation)}</Text>
-                            <Text note>{rowData.payment_date}</Text>
-                            <Text>{this.changeStatus(rowData.payment_status)}</Text>
-                        </Body>
-                    </Left>
-                </CardItem>
-            </Card>
-        )
+        }
     }
 
     render() {
-        let report = (this.state.isLoading) ?
-            <Spinner /> :
-            <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} />
-
-        return report
+        const propies = this.props
+        return (
+            <StyleProvider style={getTheme(material)}>
+                <Container>
+                    <Content>
+                        <Tabs >
+                            <Tab heading="Donasi" textStyle={{ fontSize: 16 }} activeTextStyle={{ fontSize: 18 }}>
+                                <DonationReportList data={{ propies }}/>
+                            </Tab>
+                            <Tab heading="Saldo" textStyle={{ fontSize: 16 }} activeTextStyle={{ fontSize: 18 }}>
+                                <SaldoReportList data={{ propies }}/>
+                            </Tab>
+                        </Tabs>
+                    </Content>
+                </Container>
+            </StyleProvider>
+        )
     }
 }

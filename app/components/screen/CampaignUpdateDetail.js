@@ -13,7 +13,7 @@ import {
 } from "../config/variable"
 import Share, { ShareSheet, Button } from 'react-native-share'
 
-export default class NewsDetail extends Component {
+export default class CampaignUpdateDetail extends Component {
 
     constructor(props) {
         super(props)
@@ -33,18 +33,18 @@ export default class NewsDetail extends Component {
     }
 
     render() {
-        let news = this.props.navigation.state.params.campaign
+        let campaign = this.props.navigation.state.params.campaign
 
         let shareOptions = {
-            title: news.title.rendered,
-            message: news.title.rendered,
-            url: wpUrl,
+            title: campaign.title,
+            message: campaign.description,
+            url: baseUrl,
             subject: "Share Link" //  for email
         }
 
         let shareImageBase64 = {
-            title: news.title.rendered,
-            message: news.title.rendered,
+            title: campaign.title,
+            message: campaign.description,
             url: REACT_ICON,
             subject: "Share Link" //  for email
         }
@@ -53,11 +53,13 @@ export default class NewsDetail extends Component {
             <Container>
                 <Content>
                     <View style={{ flex: 1 }}>
-                        <Image source={{ uri: news.better_featured_image.source_url }} style={{ height: 200, width: "100%", flex: 1 }} />
+                        {campaign.image != '' &&
+                            <Image source={{ uri: baseUrl + "public/campaigns/updates/" + campaign.image }} style={{ height: 200, width: "100%", flex: 1 }} />
+                        }
                         <Fab
                             containerStyle={{}}
                             style={{ backgroundColor: '#5067FF', zIndex: 1 }}
-                            position="bottomRight" 
+                            position="bottomRight"
                             onPress={() => {
                                 Share.open(shareOptions);
                             }}>
@@ -66,19 +68,22 @@ export default class NewsDetail extends Component {
                     </View>
                     <Card>
                         <CardItem header>
-                            <Text style={{ fontWeight: 'bold' }}>{news.title.rendered}</Text>
+                            <Body>
+                                <Text>{campaign.title}</Text>
+                                <Text>{campaign.date}</Text>
+                            </Body>
                         </CardItem>
                         <CardItem>
                             <Body>
-                                <Text>
-                                    {cleanTag(news.content.rendered)}
-                                </Text>
+                                <Text>{shortenDescription(campaign.description)}</Text>
                             </Body>
                         </CardItem>
                     </Card>
                 </Content>
                 <View>
-                    <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>                    </ShareSheet>
+                    <View>
+                        <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}></ShareSheet>
+                    </View>
                 </View>
             </Container>
         )

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Image, AsyncStorage } from 'react-native'
 import {
-    Container, Header, Title, Icon, Tabs, Tab, View, Fab,
+    Container, Header, Title, Icon, Tabs, Tab, View, Fab, Button,
     Left, Body, Right, Content, Footer, FooterTab, Text, StyleProvider
 } from 'native-base'
 import CampaignDetailText from "./CampaignDetailText"
@@ -16,7 +16,7 @@ import {
     GOOGLE_PLUS_ICON, EMAIL_ICON, CLIPBOARD_ICON,
     MORE_ICON, REACT_ICON
 } from "../config/variable"
-import Share, { ShareSheet, Button } from 'react-native-share'
+import Share, { ShareSheet } from 'react-native-share'
 import Storage from 'react-native-storage'
 
 var storage = new Storage({
@@ -74,7 +74,7 @@ export default class CampaignDetail extends Component {
         let shareOptions = {
             title: campaign.title,
             message: cleanTag(campaign.description),
-            url: "http://bdv-hostmaster.com/",
+            url: baseUrl,
             subject: "Share Link" //  for email
         }
 
@@ -113,80 +113,12 @@ export default class CampaignDetail extends Component {
                             </Tab>
                         </Tabs>
                     </Content>
-                    <Button full style={{ backgroundColor: color.lightColor }}
+                    <Button full style={{ backgroundColor: '#f38d1f' }}
                         onPress={() => this.donate(campaign)}>
-                        <Text>Donate Now</Text>
+                        <Text>Donasi Sekarang</Text>
                     </Button>
                     <View>
-                        <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>
-                            <Button iconSrc={{ uri: TWITTER_ICON }}
-                                onPress={() => {
-                                    this.onCancel();
-                                    setTimeout(() => {
-                                        Share.shareSingle(Object.assign(shareOptions, {
-                                            "social": "twitter"
-                                        }));
-                                    }, 300);
-                                }}>Twitter</Button>
-                            <Button iconSrc={{ uri: FACEBOOK_ICON }}
-                                onPress={() => {
-                                    this.onCancel();
-                                    setTimeout(() => {
-                                        Share.shareSingle(Object.assign(shareOptions, {
-                                            "social": "facebook"
-                                        }));
-                                    }, 300);
-                                }}>Facebook</Button>
-                            <Button iconSrc={{ uri: WHATSAPP_ICON }}
-                                onPress={() => {
-                                    this.onCancel();
-                                    setTimeout(() => {
-                                        Share.shareSingle(Object.assign(shareOptions, {
-                                            "social": "whatsapp"
-                                        }));
-                                    }, 300);
-                                }}>Whatsapp</Button>
-                            <Button iconSrc={{ uri: GOOGLE_PLUS_ICON }}
-                                onPress={() => {
-                                    this.onCancel();
-                                    setTimeout(() => {
-                                        Share.shareSingle(Object.assign(shareOptions, {
-                                            "social": "googleplus"
-                                        }));
-                                    }, 300);
-                                }}>Google +</Button>
-                            <Button iconSrc={{ uri: EMAIL_ICON }}
-                                onPress={() => {
-                                    this.onCancel();
-                                    setTimeout(() => {
-                                        Share.shareSingle(Object.assign(shareOptions, {
-                                            "social": "email"
-                                        }));
-                                    }, 300);
-                                }}>Email</Button>
-                            <Button
-                                iconSrc={{ uri: CLIPBOARD_ICON }}
-                                onPress={() => {
-                                    this.onCancel();
-                                    setTimeout(() => {
-                                        if (typeof shareOptions["url"] !== undefined) {
-                                            Clipboard.setString(shareOptions["url"]);
-                                            if (Platform.OS === "android") {
-                                                ToastAndroid.show('Link copiado al portapapeles', ToastAndroid.SHORT);
-                                            } else if (Platform.OS === "ios") {
-                                                AlertIOS.alert('Link copiado al portapapeles');
-                                            }
-                                        }
-                                    }, 300);
-                                }}>Copy Link</Button>
-                            <Button iconSrc={{ uri: MORE_ICON }}
-                                onPress={() => {
-                                    this.onCancel();
-                                    setTimeout(() => {
-                                        Share.open(shareOptions)
-                                    }, 300);
-                                }}>More</Button>
-                        </ShareSheet>
+                        <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}></ShareSheet>
                     </View>
                 </Container>
             </StyleProvider>

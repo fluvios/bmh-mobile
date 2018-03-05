@@ -59,20 +59,38 @@ export default class CampaignDetailDonatur extends Component {
         return (
             <Card style={{ flex: 0 }}>
                 <CardItem>
-                    <Left>
-                        <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
-                        <Body>
-                            <Text>{rowData.fullname}</Text>
-                        </Body>
-                    </Left>
-                </CardItem>
-                <CardItem>
-                    <Body>
+                    {rowData.anonymous != '1' ?
+                        <Left>
+                            <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
+                            <Body>
+                                <Text style={{ color: '#00B7C2' }}>{rowData.fullname}</Text>
+                            </Body>
+                        </Left> :
+                        <Left>
+                            <Body>
+                                <Text style={{ color: '#00B7C2' }}>Anonim</Text>
+                            </Body>
+                        </Left>
+                    }
+                    <Right>
                         <Text>
                             {convertToRupiah(rowData.donation)}
                         </Text>
+                    </Right>
+                </CardItem>
+                {rowData.comment != '' &&
+                    <CardItem style={{ backgroundColor: '#ECECEB' }}>
+                        <Body>
+                            <Text>
+                                {rowData.comment}
+                            </Text>
+                        </Body>
+                    </CardItem>
+                }
+                <CardItem>
+                    <Body>
                         <Text>
-                            {rowData.comment}
+                            {rowData.payment_date}
                         </Text>
                     </Body>
                 </CardItem>

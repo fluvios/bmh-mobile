@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { Image } from 'react-native'
-import { Container, Header, Content, Card, CardItem, Body, Text } from 'native-base'
+import {
+  Container, Header, Content, Card, CardItem,
+  Body, Text, Left, Right, Button
+} from 'native-base'
+import { cleanTag, convertToSlug, shortenDescription, convertToRupiah } from '../config/helper'
 import { baseUrl } from "../config/variable"
 
 export default class CampaignDetailStory extends Component {
@@ -18,13 +22,31 @@ export default class CampaignDetailStory extends Component {
           campaign.map((c) =>
             <Card key={c.id}>
               <CardItem header>
-                <Text>#update {c.id} ({c.date})</Text>
+                <Body>
+                  <Text>{c.title}</Text>
+                  <Text>{c.date}</Text>
+                </Body>
               </CardItem>
               <CardItem>
                 <Body>
-                  <Image source={{ uri: baseUrl + "public/campaigns/updates/" + c.image }} style={{ height: 200, width: "100%", flex: 1 }} />
-                  <Text>{c.description}</Text>
+                  {c.image != '' &&
+                    <Image source={{ uri: baseUrl + "public/campaigns/updates/" + c.image }} style={{ height: 200, width: "100%", flex: 1 }} />
+                  }
+                  <Text>{shortenDescription(c.description)}</Text>
                 </Body>
+              </CardItem>
+              <CardItem>
+                <Left>
+                  
+                </Left>
+                <Right>
+                  <Button textStyle={{ color: '#87838B' }}
+                    onPress={() => this.props.navigation.navigate('DetailUpdateScreen', {
+                      campaign: campaign,
+                    })}>
+                    <Text>Selengkapnya</Text>
+                  </Button>
+                </Right>
               </CardItem>
             </Card>
           )

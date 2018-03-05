@@ -68,7 +68,7 @@ export default class CampaignPayment extends Component {
         const html = "<html>" +
             "<head>" +
             "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
-            "<script type='text/javascript' src='https://app.sandbox.midtrans.com/snap/snap.js' data-client-key='VT-client-IXR9xdybkl8pqC-L'></script>" +
+            "<script type='text/javascript' src='https://app.sandbox.midtrans.com/snap/snap.js' data-client-key='<CLIENT-KEY>'></script>" +
             "</head>" +
             "<body>" +
             "<script type='text/javascript'>" +
@@ -235,6 +235,7 @@ export default class CampaignPayment extends Component {
                             <Form>
                                 <Text>Informasi Donatur</Text>
                                 <Item>
+                                    <Text>IDR. </Text>
                                     <Input placeholder="Donasi"
                                         onChangeText={(text) => this.setState({ amount: text })}
                                         value={this.state.amount} />
@@ -254,6 +255,9 @@ export default class CampaignPayment extends Component {
                                         onChangeText={(text) => this.setState({ comment: text })}
                                         value={this.state.comment} />
                                 </Item>
+                                <View style={{ marginTop: 15, marginBottom: 15 }}>
+                                    <View style={{ backgroundColor: '#AAAAAA', height: 20, width: '100%' }}></View>
+                                </View>
                                 <Picker
                                     mode="dropdown"
                                     selectedValue={this.state.donation_type}

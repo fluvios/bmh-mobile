@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { FlatList, AsyncStorage, Image, WebView } from 'react-native'
 import Storage from 'react-native-storage'
 import {
-    Body, Button, Content, Card, Icon, View, Item, ListItem, Right,
-    CardItem, Header, Footer, Text, StyleProvider, CheckBox
+    Body, Button, Content, Card, Icon, View, Item, ListItem, Left, Right,
+    CardItem, Header, Footer, Text, StyleProvider, CheckBox, Input, Form
 } from "native-base"
 import getTheme from '../../../native-base-theme/components'
 import material from '../../../native-base-theme/variables/material'
@@ -34,7 +34,8 @@ export default class DepositoList extends Component {
         super(props)
         this.state = {
             saldo: 0,
-            index: 0,
+            indexTop: -1,
+            indexBottom: -1,
             banks: [
                 { id: 'Delivery', name: 'Jemput Cash' },
                 { id: 'Midtrans', name: 'Midtrans' },
@@ -42,8 +43,10 @@ export default class DepositoList extends Component {
             payment_gateway: 'Delivery',
             user_id: 0,
             amount: 50000,
+            nominal: '',
             is_mobile: 1,
-            token: ''
+            token: '',
+            usingNominal: false
         }
 
         this.bankList()
@@ -70,6 +73,20 @@ export default class DepositoList extends Component {
         this.setState({
             payment_gateway: value.id,
         })
+    }
+
+    onNominalPress() {
+        if (!this.state.usingNominal) {
+            this.setState({
+                usingNominal: true,
+            })
+        } else {
+            this.setState({
+                usingNominal: false,
+            })
+        }
+        this.state.indexTop > 0 && this.setState({ indexTop: -1 })
+        this.state.indexBottom > 0 && this.setState({ indexBottom: -1 })
     }
 
     profile(navigation) {
@@ -186,7 +203,11 @@ export default class DepositoList extends Component {
         const nav = this.props.navigation
         const form = this.state
         let donation = form.amount
-        form.amount = Number.parseInt(this.state.amount)
+        if (this.state.usingNominal) {
+            form.amount = Number.parseInt(this.state.nominal)
+        } else {
+            form.amount = Number.parseInt(this.state.amount)
+        }
         switch (this.state.payment_gateway) {
             case 'Delivery':
                 this.topup(form, response => {
@@ -225,7 +246,7 @@ export default class DepositoList extends Component {
         }
     }
 
-    nominal(index) {
+    nominalTop(index) {
         switch (index) {
             case 0:
                 this.setState({
@@ -255,9 +276,31 @@ export default class DepositoList extends Component {
         }
     }
 
-    updateIndex = (index) => {
-        this.setState({ index })
-        this.nominal(index)
+    nominalBottom(index) {
+        switch (index) {
+            case 0:
+                this.setState({
+                    amount: 500000
+                })
+                break
+            case 1:
+                this.setState({
+                    amount: 1000000
+                })
+                break
+        }
+    }
+
+    updateIndexTop = (indexTop) => {
+        this.setState({ indexTop })
+        this.state.indexBottom > 0 && this.setState({ indexBottom: -1 })
+        this.nominalTop(indexTop)
+    }
+
+    updateIndexBottom = (indexBottom) => {
+        this.setState({ indexBottom })
+        this.state.indexTop > 0 && this.setState({ indexTop: -1 })
+        indexBottom != 'Voucher' && this.nominalBottom(indexBottom)
     }
 
     render() {
@@ -266,10 +309,11 @@ export default class DepositoList extends Component {
                 <Content>
                     <Card>
                         <CardItem>
-                            <Body>
-                                <Text style={styles.textHeader}>Saldo BMH</Text>
+                            <Left>
+                                <Image source={require('./../../../asset/img/wallet.png')} />
+                                <Text style={styles.textContent}>Saldo Dompet: </Text>
                                 <Text style={styles.textContent}>{convertToRupiah(this.state.saldo)}</Text>
-                            </Body>
+                            </Left>
                         </CardItem>
                     </Card>
                     <View style={{ backgroundColor: '#FFFFFF' }}>
@@ -277,16 +321,43 @@ export default class DepositoList extends Component {
                         <Text style={{ marginLeft: 10 }}>Nominal Deposit</Text>
                         <ButtonGroup
                             selectedBackgroundColor="pink"
-                            onPress={this.updateIndex}
-                            selectedIndex={this.state.index}
+                            onPress={this.updateIndexTop}
+                            selectedIndex={this.state.indexTop}
                             buttons={[
                                 convertToRupiah('50000'),
                                 convertToRupiah('100000'),
-                                convertToRupiah('250000'),
-                                convertToRupiah('500000'),
-                                convertToRupiah('1000000')
+                                convertToRupiah('250000')
                             ]}
                             containerStyle={{ height: 40 }} />
+                        <ButtonGroup
+                            selectedBackgroundColor="pink"
+                            onPress={this.updateIndexBottom}
+                            selectedIndex={this.state.indexBottom}
+                            buttons={[
+                                convertToRupiah('500000'),
+                                convertToRupiah('1000000'),
+                                'Voucher'
+                            ]}
+                            containerStyle={{ height: 40 }} />
+                    </View>
+                    <View style={{ backgroundColor: '#FFFFFF' }}>
+                        <ListItem>
+                            <CheckBox
+                                checked={this.state.usingNominal}
+                                onPress={() => this.onNominalPress()}
+                            />
+                            <Body>
+                                <Text>Nominal Lainnya (Min IDR. 20.000,-)</Text>
+                            </Body>
+                        </ListItem>
+                        <Form>
+                            <Item>
+                                <Text>IDR. </Text>
+                                <Input placeholder="Nominal"
+                                    onChangeText={(text) => this.setState({ nominal: text })}
+                                    value={this.state.nominal} />
+                            </Item>
+                        </Form>
                     </View>
                     <View style={{ backgroundColor: '#FFFFFF' }}>
                         <Text style={{ marginLeft: 10 }}>Metode Pembayaran</Text>

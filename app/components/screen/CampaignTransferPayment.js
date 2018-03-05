@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import {
     Container, Header, Title, Button, ListItem,
-    Icon, Card, CardItem, Input, Picker,
+    Icon, Card, CardItem, Input, Picker, View,
     Left, Body, Right, Content, CheckBox,
     Footer, FooterTab, Text, Form, Item, H1, H3, Toast,
 } from 'native-base'
-import { Image } from "react-native"
+import { Image, Clipboard } from "react-native"
 import _ from 'lodash'
 import { NavigationActions } from 'react-navigation'
 import ImagePicker from 'react-native-image-picker'
@@ -30,76 +30,96 @@ export default class CampaignTransferPayment extends Component {
         })
         this.props.navigation.dispatch(resetAction)
     }
-    
+
     componentWillUnmount() {
         this.setState({
             donation: {}
         })
     }
 
+    writeAccountToClipboard = async () => {
+        await Clipboard.setString(this.state.donation.bank.account_number);
+        // alert('Copied to Clipboard!');
+    };
+
+    writeTotalToClipboard = async () => {
+        await Clipboard.setString(this.state.donation.donation);
+        // alert('Copied to Clipboard!');
+    };
+
     render() {
+        console.log(this.state.donation)
         return (
             <Container>
                 <Content>
                     <Card>
                         <CardItem>
-                            <Body>
+                            <Body style={styles.wrapCenter}>
+                                <Image source={require('./../../../asset/img/wallet-add.png')} style={{
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    flex: 1
+                                }} />
+                            </Body>
+                        </CardItem>
+                        <CardItem>
+                            <Body style={styles.wrapCenter}>
+                                <Text>
+                                    Silahkan transfer sebesar :
+                                </Text>
+                            </Body>
+                        </CardItem>
+                        <CardItem>
+                            <Left>
                                 <H1>
-                                    Total Transfer
-                                </H1>
-                                <H3>
                                     {convertToRupiah(this.state.donation.donation)}
-                                </H3>
-                                <Text style={styles.textInfo}>
-                                    Harap ditransfer sebelum {this.state.donation.expired_date}
+                                </H1>
+                            </Left>
+                            <Right>
+                                <Button icon transparent onPress={this.writeToClipboard}>
+                                    <Icon name='clipboard' />
+                                </Button>
+                            </Right>
+                        </CardItem>
+                        <CardItem>
+                            <Body style={styles.wrapCenter}>
+                                <Text>
+                                    Pembayaran dapat dilakukan ke rekening atas nama berbagi kebaikan: 
                                 </Text>
                             </Body>
                         </CardItem>
                     </Card>
-                    <Card>
-                        <CardItem>
-                            <Body>
-                                <CardItem header>
-                                    <Text>Rincian Transfer</Text>
-                                </CardItem>
-                                <CardItem>
-                                    <Left>
-                                        <Text style={styles.textInfo}>Nominal donasi</Text>
-                                    </Left>
-                                    <Right>
-                                        <Text style={styles.textInfo}>{convertToRupiah((this.state.donation.donation - this.state.donation.amount_key))}</Text>
-                                    </Right>
-                                </CardItem>
-                                <CardItem>
-                                    <Left>
-                                        <Text style={styles.textInfo}>Kode transfer (akan disumbangkan)</Text>
-                                    </Left>
-                                    <Right>
-                                        <Text style={styles.textInfo}>{convertToRupiah(this.state.donation.amount_key)}</Text>
-                                    </Right>
-                                </CardItem>
-                                <CardItem>
-                                    <Left>
-                                        <Text style={styles.textInfo}>Total</Text>
-                                    </Left>
-                                    <Right>
-                                        <Text style={styles.textInfo}>{convertToRupiah(this.state.donation.donation)}</Text>
-                                    </Right>
-                                </CardItem>
-                            </Body>
-                        </CardItem>
-                    </Card>
-                    <Card style={{ flex: 0 }}>
-                        <CardItem header>
+                    <Card style={{ flex: 1 }}>
+                        <CardItem header style={styles.wrapCenter}>
                             <Text>Rekening Tujuan</Text>
                         </CardItem>
                         <CardItem>
-                            <Body>
-                                <Image source={{ uri: baseUrl + "public/bank/" + this.state.donation.bank.logo }} style={{ height: 200, width: "100%", flex: 1, resizeMode: 'center' }} />
+                            <Left>
+                                <Image source={{ uri: baseUrl + "public/bank/" + this.state.donation.bank.logo }} style={{ height: 50, width: 50, flex: 1, resizeMode: 'center' }} />
+                            </Left>
+                            <Body style={styles.wrapCenter}>
                                 <Text>
-                                    No Rekening {this.state.donation.bank.account_number}{`\n`}
-                                    Atas Nama {this.state.donation.bank.account_name}{`\n`}
-                                    {this.state.donation.bank.name} Cabang {this.state.donation.bank.branch}
+                                    {this.state.donation.bank.branch}{`\n`}
+                                    {this.state.donation.bank.account_number}
+                                </Text>
+                            </Body>
+                            <Right>
+                                <Button icon transparent onPress={this.writeToClipboard}>
+                                    <Icon name='clipboard' />
+                                </Button>
+                            </Right>
+                        </CardItem>
+                        <CardItem style={styles.wrapCenter}>
+                            <Body style={{backgroundColor: '#FFAA64', padding: 5}}>
+                                <Text>
+                                    Mohon transfer tepat hingga <Text style={{fontWeight: 'bold'}}>3 digit terakhir</Text> agar tidak menghambat proses verifikasi 
+                                </Text>
+                            </Body>
+                        </CardItem>
+                        <CardItem style={styles.wrapCenter}>
+                            <Body>
+                                <Text>
+                                    Pastikan anda transfer sebelum {this.state.donation.expired_date} atau transaksi akan langsung dibatalkan 
                                 </Text>
                             </Body>
                         </CardItem>

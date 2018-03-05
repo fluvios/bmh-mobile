@@ -45,7 +45,9 @@ class Login extends Component {
         super(props)
         this.state = {
             isReady: false,
-            showToast: false
+            showToast: false,
+            showRegister: false,
+            showForgot: false
         }
         this.renderInput = this.renderInput.bind(this)
     }
@@ -114,18 +116,57 @@ class Login extends Component {
         }.bind(this))
     }
 
+    showRegister() {
+        if (!this.state.showRegister) {
+            this.setState({
+                showRegister: true,
+            })
+        } else {
+            this.setState({
+                showRegister: false,
+            })
+        }
+    }
+
+    showForgot() {
+        if (!this.state.showForgot) {
+            this.setState({
+                showForgot: true,
+            })
+        } else {
+            this.setState({
+                showForgot: false,
+            })
+        }
+    }
+
     loginForm() {
         const { handleSubmit, reset } = this.props
         return (
             <Container>
+                {this.state.showRegister &&
+                    <View>
+                        <WebView
+                            source={{ uri: baseUrl + '/register' }}
+                            style={{ marginTop: 20 }}
+                        />
+                    </View>
+                }
+                {this.state.showForgot &&
+                    <View>
+                        <WebView
+                            source={{ uri: baseUrl + '/password/reset' }}
+                            style={{ marginTop: 20 }}
+                        />
+                    </View>
+                }
                 <Content padder>
                     <View style={styles.wrapCenter}>
-                        <Image source={require('./../../../asset/img/Logo-2.png')} style={{
+                        <Image source={require('./../../../asset/img/Logo.png')} style={{
                             justifyContent: 'center',
                             alignItems: 'center',
                             flex: 2
                         }} />
-                        <Text style={styles.middleText}>Berbagi Kebaikan</Text>
                     </View>
                     <Field name="email" component={this.renderInput} />
                     <Field name="password" component={this.renderInput} />
@@ -136,26 +177,12 @@ class Login extends Component {
                     </View>
                     <View style={styles.deviderColumnDouble}>
                         <View style={styles.deviderRowLeft}>
-                            <Button block primary onPress={() => {
-                                return (
-                                    <View>
-                                        <WebView
-                                            source={{ uri: baseUrl }}
-                                            style={{ marginTop: 20 }}
-                                        />
-                                    </View>
-                                )
-                            }}>
+                            <Button block primary onPress={() => this.showRegister()}>
                                 <Text style={styles.buttonText}>Daftar</Text>
                             </Button>
                         </View>
                         <View style={styles.deviderRowRight}>
-                            <Button block primary onPress={() => {
-                                return (<WebView
-                                    source={{ uri: baseUrl }}
-                                    style={{ marginTop: 20 }}
-                                />)
-                            }}>
+                            <Button block primary onPress={() => this.showForgot()}>
                                 <Text style={styles.buttonText}>Lupa Password</Text>
                             </Button>
                         </View>

@@ -4,6 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import CampaignList from "../screen/CampaignList"
 import CampaignDetail from "../screen/CampaignDetail"
+import CampaignUpdateDetail from "../screen/CampaignUpdateDetail"
 import DepositoList from "../screen/DepositoList"
 import NewsList from "../screen/NewsList"
 import NewsDetail from "../screen/NewsDetail"
@@ -33,6 +34,13 @@ export const CampaignStack = StackNavigator({
         screen: CampaignDetail,
         navigationOptions: {
             title: 'Campaign',
+            tabBarVisible: false,
+        }
+    },
+    DetailUpdateScreen: {
+        screen: CampaignUpdateDetail,
+        navigationOptions: {
+            title: 'Update',
             tabBarVisible: false,
         }
     },
@@ -196,17 +204,17 @@ export const HomeTabs = TabNavigator({
         }
     },
 }, {
-    tabBarPosition: 'bottom',
-    tabBarComponent: TabBarBottom,
-    animationEnabled: false,
-    swipeEnabled: false,
-    tabBarOptions: {
-        labelStyle: {
-            fontSize: 12,
-        },
-        activeTintColor: color.lightColor
-    }
-})
+        tabBarPosition: 'bottom',
+        tabBarComponent: TabBarBottom,
+        animationEnabled: false,
+        swipeEnabled: false,
+        tabBarOptions: {
+            labelStyle: {
+                fontSize: 12,
+            },
+            activeTintColor: color.lightColor
+        }
+    })
 
 export const AuthStack = StackNavigator({
     // LoginScreen: { screen: Login },

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { AsyncStorage, Image } from 'react-native'
+import { AsyncStorage, Image, WebView } from 'react-native'
 import Storage from 'react-native-storage'
 import {
   Container, Content, Card, Button, List, ListItem, Icon, Switch,
@@ -28,7 +28,10 @@ export default class Profile extends Component {
     super(props)
 
     this.state = ({
-      user: this.props.navigation.state.params.user
+      user: this.props.navigation.state.params.user,
+      showEdit: false,
+      isZakat: false,
+      isNotification: false
     })
   }
 
@@ -51,7 +54,7 @@ export default class Profile extends Component {
   componentWillMount() {
     this.getAccount(this.state.user.id, response => {
       this.setState({
-        user: response
+        user: response,
       })
     })
   }
@@ -67,9 +70,29 @@ export default class Profile extends Component {
     })
   }
 
+  showEdit() {
+    if (!this.state.showEdit) {
+      this.setState({
+        showEdit: true,
+      })
+    } else {
+      this.setState({
+        showEdit: false,
+      })
+    }
+  }
+
   render() {
     return (
       <Container>
+        {this.state.showEdit &&
+          <View>
+            <WebView
+              source={{ uri: baseUrl + '/login' }}
+              style={{ marginTop: 20 }}
+            />
+          </View>
+        }
         <Content>
           <Card>
             <CardItem>
@@ -96,7 +119,9 @@ export default class Profile extends Component {
                   <Icon name="settings" />
                 </Left>
                 <Body>
-                  <Text>Edit Profile</Text>
+                  <Button transparent textStyle={{ color: '#000000' }} onPress={() => this.showEdit()}>
+                    <Text>Edit Profile</Text>
+                  </Button>
                 </Body>
               </ListItem>
               <ListItem icon>
@@ -107,7 +132,9 @@ export default class Profile extends Component {
                   <Text>Edit Preferensi Zakat</Text>
                 </Body>
                 <Right>
-                  <Switch value={false} />
+                  <Switch
+                    value={this.state.isZakat}
+                    onValueChange={() => { !this.state.isZakat ? this.setState({ isZakat: true }) : this.setState({ isZakat: false }) }} />
                 </Right>
               </ListItem>
               <ListItem icon>
@@ -118,7 +145,9 @@ export default class Profile extends Component {
                   <Text>Push Notification</Text>
                 </Body>
                 <Right>
-                  <Switch value={false} />
+                  <Switch
+                    value={this.state.isNotification}
+                    onValueChange={() => { !this.state.isNotification ? this.setState({ isNotification: true }) : this.setState({ isNotification: false }) }} />
                 </Right>
               </ListItem>
             </List>

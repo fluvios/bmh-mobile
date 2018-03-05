@@ -12,7 +12,7 @@ import { cleanTag, convertToSlug, shortenDescription, convertToRupiah } from '..
 import * as Progress from 'react-native-progress'
 import { styles } from "../config/styles"
 import { baseUrl, color } from "../config/variable"
-
+import Moment from 'react-moment'
 var campaignArray = []
 
 var storage = new Storage({
