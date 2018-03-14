@@ -3,12 +3,14 @@ import { Platform, AsyncStorage, FlatList, Image, WebView } from "react-native"
 import {
     Container, Header, Title, Button, ListItem, View,
     Icon, Card, CardItem, Input, Picker,
-    Left, Body, Right, Content, CheckBox,
-    Footer, FooterTab, Text, Form, Item, Toast, StyleProvider
+    Left, Body, Right, Content, Footer, FooterTab,
+    Text, Form, Item, Toast, StyleProvider
 } from 'native-base'
 import getTheme from '../../../native-base-theme/components'
 import material from '../../../native-base-theme/variables/material'
 import { NavigationActions } from 'react-navigation'
+import { CheckBox } from 'react-native-elements'
+import { convertToAngka, convertToRupiah } from '../config/helper'
 import Storage from 'react-native-storage'
 import { baseUrl } from '../config/variable'
 
@@ -29,11 +31,11 @@ export default class CampaignPayment extends Component {
             email: this.props.navigation.state.params.user.email,
             donation_type: '',
             comment: '',
-            anonymous: '',
+            anonymous: false,
             campaign_id: this.props.navigation.state.params.campaign.id,
             banks: [
                 { id: 'Delivery', name: 'Jemput Cash' },
-                { id: 'Midtrans', name: 'Midtrans' },
+                { id: 'Midtrans', name: 'Payment Gateway' },
                 { id: 'Deposit', name: 'Potong Saldo' },
             ],
             payment_gateway: 'Delivery',
@@ -49,12 +51,6 @@ export default class CampaignPayment extends Component {
     onPaymentChange(value) {
         this.setState({
             payment_gateway: value
-        })
-    }
-
-    onAnonimChange(value) {
-        this.setState({
-            anonymous: value
         })
     }
 
@@ -97,6 +93,7 @@ export default class CampaignPayment extends Component {
         const nav = this.props.navigation
         const form = this.state
         form.amount = Number.parseInt(this.state.amount)
+        form.anonymous = this.state.anonymous ? '1' : '0'
         switch (this.state.payment_gateway) {
             case 'Delivery':
                 this.donate(this.state.campaign_id, form, response => {
@@ -235,10 +232,9 @@ export default class CampaignPayment extends Component {
                             <Form>
                                 <Text>Informasi Donatur</Text>
                                 <Item>
-                                    <Text>IDR. </Text>
                                     <Input placeholder="Donasi"
-                                        onChangeText={(text) => this.setState({ amount: text })}
-                                        value={this.state.amount} />
+                                        onChangeText={(text) => this.setState({ amount: convertToAngka(text) })}
+                                        value={this.state.amount ? convertToRupiah(this.state.amount) : ''} />
                                 </Item>
                                 <Item>
                                     <Input placeholder="Fullname"
@@ -266,14 +262,13 @@ export default class CampaignPayment extends Component {
                                     <Item label="Routine" value="Routine" />
                                     <Item label="Isidentil" value="Isidentil" />
                                 </Picker>
-                                <Picker
-                                    mode="dropdown"
-                                    selectedValue={this.state.anonymous}
-                                    onValueChange={this.onAnonimChange.bind(this)}>
-                                    <Item label="Donasi sebagai anonim?" value="" />
-                                    <Item label="Ya" value="1" />
-                                    <Item label="Tidak" value="0" />
-                                </Picker>
+                                <CheckBox
+                                    checked={this.state.anonymous}
+                                    title={'Donasi sebagai anonim'}
+                                    onPress={() => this.setState({anonymous: !this.state.anonymous})}
+                                    onIconPress={() => this.setState({anonymous: !this.state.anonymous})}
+                                    containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                                />
                                 <Text style={{ marginLeft: 10 }}>Metode Pembayaran</Text>
                                 <Item>
                                     <FlatList
@@ -285,10 +280,10 @@ export default class CampaignPayment extends Component {
                                                 <CheckBox
                                                     checked={this.state.payment_gateway == item.id}
                                                     onPress={() => this.onCheckBoxPress(item)}
+                                                    title={item.name}
+                                                    onIconPress={() => this.onCheckBoxPress(item)}
+                                                    containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
                                                 />
-                                                <Body>
-                                                    <Text>{item.name}</Text>
-                                                </Body>
                                                 <Right>
                                                     <Image source={{ uri: baseUrl + "public/bank/" + item.logo }} style={{ height: 50, width: "100%", flex: 1, resizeMode: 'center' }} />
                                                 </Right>

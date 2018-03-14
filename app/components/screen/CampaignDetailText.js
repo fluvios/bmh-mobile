@@ -17,7 +17,7 @@ export default class CampaignDetailText extends Component {
 
   render() {
     const campaign = this.props.data.campaign
-    const percent = campaign.total / campaign.goal
+    const percent = (campaign.total / (campaign.goal ? campaign.goal : 1))
     return (
       <Content>
         <Card style={{ flex: 0 }}>

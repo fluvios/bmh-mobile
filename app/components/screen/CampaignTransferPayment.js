@@ -20,6 +20,7 @@ export default class CampaignTransferPayment extends Component {
 
         this.state = {
             donation: this.props.navigation.state.params.donation.donation,
+            showToast: false,
         }
     }
 
@@ -38,14 +39,22 @@ export default class CampaignTransferPayment extends Component {
     }
 
     writeAccountToClipboard = async () => {
-        await Clipboard.setString(this.state.donation.bank.account_number);
-        // alert('Copied to Clipboard!');
-    };
+        await Clipboard.setString('' + this.state.donation.bank.account_number)
+        Toast.show({
+            text: 'Copied to Clipboard!',
+            position: 'bottom',
+            buttonText: 'Dismiss'
+        })
+    }
 
     writeTotalToClipboard = async () => {
-        await Clipboard.setString(this.state.donation.donation);
-        // alert('Copied to Clipboard!');
-    };
+        await Clipboard.setString('' + this.state.donation.donation)
+        Toast.show({
+            text: 'Copied to Clipboard!',
+            position: 'bottom',
+            buttonText: 'Dismiss'
+        })
+    }
 
     render() {
         console.log(this.state.donation)
@@ -76,7 +85,7 @@ export default class CampaignTransferPayment extends Component {
                                 </H1>
                             </Left>
                             <Right>
-                                <Button icon transparent onPress={this.writeToClipboard}>
+                                <Button icon transparent onPress={this.writeTotalToClipboard}>
                                     <Icon name='clipboard' />
                                 </Button>
                             </Right>
@@ -84,7 +93,7 @@ export default class CampaignTransferPayment extends Component {
                         <CardItem>
                             <Body style={styles.wrapCenter}>
                                 <Text>
-                                    Pembayaran dapat dilakukan ke rekening atas nama berbagi kebaikan: 
+                                    Pembayaran dapat dilakukan ke rekening atas nama berbagi kebaikan:
                                 </Text>
                             </Body>
                         </CardItem>
@@ -104,22 +113,22 @@ export default class CampaignTransferPayment extends Component {
                                 </Text>
                             </Body>
                             <Right>
-                                <Button icon transparent onPress={this.writeToClipboard}>
+                                <Button icon transparent onPress={this.writeAccountToClipboard}>
                                     <Icon name='clipboard' />
                                 </Button>
                             </Right>
                         </CardItem>
                         <CardItem style={styles.wrapCenter}>
-                            <Body style={{backgroundColor: '#FFAA64', padding: 5}}>
+                            <Body style={{ backgroundColor: '#FFAA64', padding: 5 }}>
                                 <Text>
-                                    Mohon transfer tepat hingga <Text style={{fontWeight: 'bold'}}>3 digit terakhir</Text> agar tidak menghambat proses verifikasi 
+                                    Mohon transfer tepat hingga <Text style={{ fontWeight: 'bold' }}>3 digit terakhir</Text> agar tidak menghambat proses verifikasi
                                 </Text>
                             </Body>
                         </CardItem>
                         <CardItem style={styles.wrapCenter}>
                             <Body>
                                 <Text>
-                                    Pastikan anda transfer sebelum {this.state.donation.expired_date} atau transaksi akan langsung dibatalkan 
+                                    Pastikan anda transfer sebelum {this.state.donation.expired_date} atau transaksi akan langsung dibatalkan
                                 </Text>
                             </Body>
                         </CardItem>

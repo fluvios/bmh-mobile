@@ -115,7 +115,7 @@ export default class CampaignList extends Component {
   }
 
   renderRow(rowData, sectionID, rowID) {
-    const percent = (rowData.total / rowData.goal)
+    const percent = (rowData.total / (rowData.goal ? rowData.goal : 1))
     return (
       <StyleProvider style={getTheme(material)}>
         <Card style={{ flex: 0 }}>

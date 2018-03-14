@@ -3,14 +3,14 @@ import { FlatList, AsyncStorage, Image, WebView } from 'react-native'
 import Storage from 'react-native-storage'
 import {
     Body, Button, Content, Card, Icon, View, Item, ListItem, Left, Right,
-    CardItem, Header, Footer, Text, StyleProvider, CheckBox, Input, Form
+    CardItem, Header, Footer, Text, StyleProvider, Input, Form
 } from "native-base"
 import getTheme from '../../../native-base-theme/components'
 import material from '../../../native-base-theme/variables/material'
 import { styles } from "../config/styles"
 import { baseUrl } from "../config/variable"
-import { convertToRupiah } from '../config/helper'
-import { ButtonGroup } from 'react-native-elements'
+import { convertToRupiah, convertToAngka } from '../config/helper'
+import { ButtonGroup, CheckBox } from 'react-native-elements'
 
 var storage = new Storage({
     size: 1000,
@@ -38,7 +38,7 @@ export default class DepositoList extends Component {
             indexBottom: -1,
             banks: [
                 { id: 'Delivery', name: 'Jemput Cash' },
-                { id: 'Midtrans', name: 'Midtrans' },
+                { id: 'Midtrans', name: 'Payment Gateway' },
             ],
             payment_gateway: 'Delivery',
             user_id: 0,
@@ -222,7 +222,6 @@ export default class DepositoList extends Component {
             case 'Midtrans':
                 this.topup(form, response => {
                     if (response.success == true) {
-                        console.log(response)
                         this.state.token = response.token
                         this.openMidtrans()
                     }
@@ -230,7 +229,6 @@ export default class DepositoList extends Component {
                 break
             default:
                 form.payment_gateway = Number.parseInt(this.state.payment_gateway)
-                console.log(form)
                 this.topup(form, response => {
                     if (response.success == true) {
                         nav.dispatch({
@@ -341,21 +339,16 @@ export default class DepositoList extends Component {
                             containerStyle={{ height: 40 }} />
                     </View>
                     <View style={{ backgroundColor: '#FFFFFF' }}>
-                        <ListItem>
-                            <CheckBox
-                                checked={this.state.usingNominal}
-                                onPress={() => this.onNominalPress()}
-                            />
-                            <Body>
-                                <Text>Nominal Lainnya (Min IDR. 20.000,-)</Text>
-                            </Body>
-                        </ListItem>
+                        <CheckBox
+                            checked={this.state.usingNominal}
+                            onPress={() => this.onNominalPress()}
+                            title='Nominal Lainnya (Min IDR. 20.000,-)'
+                        />
                         <Form>
                             <Item>
-                                <Text>IDR. </Text>
                                 <Input placeholder="Nominal"
-                                    onChangeText={(text) => this.setState({ nominal: text })}
-                                    value={this.state.nominal} />
+                                    onChangeText={(text) => this.setState({ nominal: convertToAngka(text) })}
+                                    value={this.state.nominal ? convertToRupiah(this.state.nominal) : ''} />
                             </Item>
                         </Form>
                     </View>
@@ -371,10 +364,10 @@ export default class DepositoList extends Component {
                                         <CheckBox
                                             checked={this.state.payment_gateway == item.id}
                                             onPress={() => this.onCheckBoxPress(item)}
+                                            title={item.name}
+                                            onIconPress={() => this.onCheckBoxPress(item)}
+                                            containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
                                         />
-                                        <Body>
-                                            <Text>{item.name}</Text>
-                                        </Body>
                                         <Right>
                                             <Image source={{ uri: baseUrl + "public/bank/" + item.logo }} style={{ height: 50, width: "100%", flex: 1, resizeMode: 'center' }} />
                                         </Right>
