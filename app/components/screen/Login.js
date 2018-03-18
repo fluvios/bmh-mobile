@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import { View, AsyncStorage, Image, Text, WebView, } from 'react-native'
 import {
     Container, Item, Input, Header, Body, Content,
-    Title, Button, Label, Spinner, Toast, H1
+    Title, Button, Label, Spinner, Toast, H1, Form,
 } from 'native-base'
-import { Field, reduxForm, submit } from 'redux-form'
 import Storage from 'react-native-storage'
 import { baseUrl } from "../config/variable"
 import { styles } from "../config/styles"
+import PasswordInputText from 'react-native-hide-show-password-input'
 
 var storage = new Storage({
     size: 1000,
@@ -16,44 +16,16 @@ var storage = new Storage({
     enableCache: true,
 })
 
-const validate = values => {
-    const error = {}
-    error.email = ''
-    error.password = ''
-    var ema = values.email
-    var pass = values.password
-    if (values.email === undefined) {
-        ema = ''
-    }
-    if (values.password === undefined) {
-        pass = ''
-    }
-    if (ema.length < 8 && ema !== '') {
-        error.email = 'Format email belum benar'
-    }
-    if (!ema.includes('@') && ema !== '') {
-        error.email = 'Format email belum benar'
-    }
-    if (pass.length < 0) {
-        error.password = 'Password masih belum dinputkan'
-    }
-    return error
-}
-
-class Login extends Component {
+export default class Login extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            isReady: false,
             showToast: false,
             showRegister: false,
-            showForgot: false
+            showForgot: false,
+            email: '',
+            password: ''
         }
-        this.renderInput = this.renderInput.bind(this)
-    }
-
-    async componentWillMount() {
-        this.setState({ isReady: true })
     }
 
     getAccount(params, callback) {
@@ -73,23 +45,6 @@ class Login extends Component {
             .done()
     }
 
-    renderInput({ input, label, type, meta: { touched, error, warning } }) {
-        var hasError = false
-        if (error !== undefined) {
-            hasError = true
-        }
-        let isSecure = false
-        if (input.name == 'password') {
-            isSecure = true
-        }
-        return (
-            <Item stackedLabel error={hasError}>
-                <Label>{input.name}</Label>
-                <Input {...input} secureTextEntry={isSecure} />
-            </Item>
-        )
-    }
-
     loginAccount(data) {
         const nav = this.props.navigation
         this.getAccount(data, function (response) {
@@ -98,14 +53,26 @@ class Login extends Component {
                     key: 'user',
                     data: response
                 })
-                nav.dispatch({
-                    type: "Navigation/BACK",
-                })
-                Toast.show({
-                    text: 'Login Success',
-                    position: 'bottom',
-                    buttonText: 'Dismiss'
-                })
+                if (nav.state.params) {
+                    nav.navigate(nav.state.params.goto, {
+                        campaign: nav.state.params.item,
+                        user: response 
+                    })                    
+                    Toast.show({
+                        text: 'Login Success',
+                        position: 'bottom',
+                        buttonText: 'Dismiss'
+                    })
+                } else {
+                    nav.dispatch({
+                        type: "Navigation/BACK",
+                    })
+                    Toast.show({
+                        text: 'Login Success',
+                        position: 'bottom',
+                        buttonText: 'Dismiss'
+                    })
+                }
             } else {
                 Toast.show({
                     text: 'Wrong username or password!',
@@ -113,7 +80,7 @@ class Login extends Component {
                     buttonText: 'Dismiss'
                 })
             }
-        }.bind(this))
+        })
     }
 
     showRegister() {
@@ -140,8 +107,38 @@ class Login extends Component {
         }
     }
 
-    loginForm() {
-        const { handleSubmit, reset } = this.props
+    componentWillMount() {
+        const nav = this.props.navigation
+        storage.load({
+            key: 'user'
+        }).then(ret => {
+            if (typeof(nav.state.params.goto) !== 'undefined' || nav.state.params.goto !== null) {
+                nav.navigate(nav.state.params.goto, {
+                    campaign: nav.state.params.item,
+                    user: ret 
+                })                    
+                Toast.show({
+                    text: 'Login Success',
+                    position: 'bottom',
+                    buttonText: 'Dismiss'
+                })
+            } else {
+                nav.dispatch({
+                    type: "Navigation/BACK",
+                })
+                Toast.show({
+                    text: 'Login Success',
+                    position: 'bottom',
+                    buttonText: 'Dismiss'
+                })
+            }
+        }).catch(err => {
+            console.log(err.message)
+        })
+    }
+
+    render() {
+        const nav = this.props.navigation
         return (
             <Container>
                 {this.state.showRegister &&
@@ -168,21 +165,33 @@ class Login extends Component {
                             flex: 2
                         }} />
                     </View>
-                    <Field name="email" component={this.renderInput} />
-                    <Field name="password" component={this.renderInput} />
+                    <Form>
+                        <Item floatingLabel last>
+                            <Label>Email Address</Label>
+                            <Input
+                                onChangeText={(email) => this.setState({ email })}
+                                value={this.state.email} />
+                        </Item>
+                    </Form>
+                    <View>
+                        <PasswordInputText
+                            value={this.state.password}
+                            onChangeText={(password) => this.setState({ password })}
+                        />
+                    </View>
                     <View style={styles.deviderColumn}>
-                        <Button block primary onPress={handleSubmit(this.loginAccount.bind(this))}>
+                        <Button block style={{ backgroundColor: '#f38d1f' }} onPress={() => this.loginAccount(this.state)}>
                             <Text style={styles.buttonText}>Masuk</Text>
                         </Button>
                     </View>
                     <View style={styles.deviderColumnDouble}>
                         <View style={styles.deviderRowLeft}>
-                            <Button block primary onPress={() => this.showRegister()}>
+                            <Button block style={{ backgroundColor: '#f38d1f' }} onPress={() => nav.navigate('RegisterScreen')}>
                                 <Text style={styles.buttonText}>Daftar</Text>
                             </Button>
                         </View>
                         <View style={styles.deviderRowRight}>
-                            <Button block primary onPress={() => this.showForgot()}>
+                            <Button block style={{ backgroundColor: '#f38d1f' }} onPress={() => nav.navigate('ForgotScreen')}>
                                 <Text style={styles.buttonText}>Lupa Password</Text>
                             </Button>
                         </View>
@@ -201,28 +210,4 @@ class Login extends Component {
             </Container>
         )
     }
-
-    componentWillMount() {
-        const nav = this.props.navigation
-        storage.load({
-            key: 'user'
-        }).then(ret => {
-            if (ret) {
-                nav.dispatch({
-                    type: "Navigation/BACK",
-                })
-            }
-        }).catch(err => {
-            console.log(err.message)
-        })
-    }
-
-    render() {
-        return this.loginForm()
-    }
 }
-
-export default reduxForm({
-    form: 'login',
-    validate
-})(Login)

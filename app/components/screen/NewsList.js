@@ -3,7 +3,7 @@ import { AsyncStorage } from 'react-native'
 import Storage from 'react-native-storage'
 import {
     Container, Header, Title, Button, Icon, Tabs, Tab,
-    Left, Body, Right, Content, Footer, FooterTab, Text, StyleProvider
+    Left, Body, Right, View, Footer, FooterTab, Text, StyleProvider
 } from 'native-base'
 import getTheme from '../../../native-base-theme/components'
 import material from '../../../native-base-theme/variables/material'
@@ -19,13 +19,15 @@ var storage = new Storage({
     enableCache: true,
 })
 
+var isLogin = false
+
 export default class NewsList extends Component {
 
     static navigationOptions = ({ navigation }) => ({
         title: 'Berbagi Kebaikan',
         headerRight: (
             <Button icon transparent onPress={() => { navigation.state.params.handleProfile(navigation) }}>
-                <Icon name='contact' />
+                {isLogin ? <Icon name='contact' style={{ color: '#f38d1f' }} /> : <Text style={{ color: '#f38d1f' }}>Login</Text>}
             </Button>
         ),
     })
@@ -38,12 +40,16 @@ export default class NewsList extends Component {
         storage.load({
             key: 'user'
         }).then(ret => {
+            isLogin = true
             this.props.navigation.setParams({
                 handleProfile: this.profile,
                 user: ret
             })
         }).catch(err => {
             console.log(err.message)
+            this.props.navigation.setParams({
+                handleProfile: this.profile,
+            })
         })
     }
 
@@ -69,8 +75,8 @@ export default class NewsList extends Component {
         return (
             <StyleProvider style={getTheme(material)}>
                 <Container>
-                    <Content>
-                        <Tabs >
+                    <View style={{ flex: 1 }}>
+                        <Tabs>
                             <Tab heading="Berita" textStyle={{ fontSize: 12 }} activeTextStyle={{ fontSize: 11 }}>
                                 <NewsListBerita data={{ propies }} />
                             </Tab>
@@ -84,7 +90,7 @@ export default class NewsList extends Component {
                                 <NewsListMagazine data={{ propies }} />
                             </Tab>
                         </Tabs>
-                    </Content>
+                    </View>
                 </Container>
             </StyleProvider>
         )

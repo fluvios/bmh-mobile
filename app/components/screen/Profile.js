@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { AsyncStorage, Image, WebView } from 'react-native'
+import { AsyncStorage, Image, WebView, BackHandler } from 'react-native'
 import Storage from 'react-native-storage'
 import {
   Container, Content, Card, Button, List, ListItem, Icon, Switch,
@@ -57,6 +57,12 @@ export default class Profile extends Component {
         user: response,
       })
     })
+
+    BackHandler.addEventListener('hardwareBackPress', this.logOut)
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.logOut)
   }
 
   logOut() {
@@ -64,35 +70,15 @@ export default class Profile extends Component {
     storage.remove({
       key: 'user'
     }).then(ret => {
-      nav.dispatch({
-        type: 'Navigation/BACK',
-      })
+      BackHandler.exitApp()
+      return true
     })
   }
 
-  showEdit() {
-    if (!this.state.showEdit) {
-      this.setState({
-        showEdit: true,
-      })
-    } else {
-      this.setState({
-        showEdit: false,
-      })
-    }
-  }
-
   render() {
+    const nav = this.props.navigation
     return (
       <Container>
-        {this.state.showEdit &&
-          <View>
-            <WebView
-              source={{ uri: baseUrl + '/login' }}
-              style={{ marginTop: 20 }}
-            />
-          </View>
-        }
         <Content>
           <Card>
             <CardItem>
@@ -119,8 +105,18 @@ export default class Profile extends Component {
                   <Icon name="settings" />
                 </Left>
                 <Body>
-                  <Button transparent textStyle={{ color: '#000000' }} onPress={() => this.showEdit()}>
-                    <Text>Edit Profile</Text>
+                  <Button transparent onPress={() => nav.navigate('EditProfileScreen',{ user: this.state.user })}>
+                    <Text style={{ color: '#000000' }}>Edit Profile</Text>
+                  </Button>
+                </Body>
+              </ListItem>
+              <ListItem icon>
+                <Left>
+                  <Icon name="exit" />
+                </Left>
+                <Body>
+                  <Button transparent onPress={() => this.logOut()}>
+                    <Text style={{ color: '#000000' }}>Log Out</Text>
                   </Button>
                 </Body>
               </ListItem>
@@ -180,10 +176,6 @@ export default class Profile extends Component {
               </ListItem>
             </List>
           </View>
-          <Button full textStyle={{ color: '#87838B' }}
-            onPress={() => this.logOut()}>
-            <Text>Log Out</Text>
-          </Button>
         </Content>
       </Container>
     )

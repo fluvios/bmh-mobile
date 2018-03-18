@@ -31,8 +31,7 @@ export default class SaldoPayment extends Component {
             amount: '50000',
             payment_gateway: '',
             user_id: 0,
-            banks: [],
-            token: ''
+            banks: []
         }
 
         this.loadStorage()
@@ -60,27 +59,6 @@ export default class SaldoPayment extends Component {
         this.setState({
             payment_gateway: value
         })
-    }
-
-    openMidtrans() {
-        const html = "<html>" +
-            "<head>" +
-            "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
-            "<script type='text/javascript' src='https://app.sandbox.midtrans.com/snap/snap.js' data-client-key='<CLIENT-KEY>'></script>" +
-            "</head>" +
-            "<body>" +
-            "<script type='text/javascript'>" +
-            "snap.pay('" + this.state.token + "');" +
-            "</script>" +
-            "</body>" +
-            "</html>"
-
-        return (
-            <WebView
-                style={{ marginTop: 20 }}
-                source={{ html: html }}
-                onError={error => console.log(error)} />
-        )
     }
 
     topup(data, callback) {
@@ -119,8 +97,14 @@ export default class SaldoPayment extends Component {
             case 'Midtrans':
                 this.topup(form, response => {
                     if (response.success == true) {
-                        this.state.token = response.token
-                        this.openMidtrans()
+                        const token = response.token
+                        nav.dispatch({
+                            type: "Navigation/NAVIGATE",
+                            routeName: 'MidtransScreen',
+                            params: {
+                                token: token,
+                            }
+                        })
                     }
                 })
                 break

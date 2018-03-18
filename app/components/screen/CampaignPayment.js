@@ -41,8 +41,7 @@ export default class CampaignPayment extends Component {
             payment_gateway: 'Delivery',
             user_id: this.props.navigation.state.params.user.id,
             showToast: false,
-            is_mobile: 1,
-            token: ''
+            is_mobile: 1
         }
 
         this.bankList()
@@ -58,27 +57,6 @@ export default class CampaignPayment extends Component {
         this.setState({
             donation_type: value
         })
-    }
-
-    openMidtrans() {
-        const html = "<html>" +
-            "<head>" +
-            "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
-            "<script type='text/javascript' src='https://app.sandbox.midtrans.com/snap/snap.js' data-client-key='<CLIENT-KEY>'></script>" +
-            "</head>" +
-            "<body>" +
-            "<script type='text/javascript'>" +
-            "snap.pay('" + this.state.token + "');" +
-            "</script>" +
-            "</body>" +
-            "</html>"
-
-        return (
-            <WebView
-                style={{ marginTop: 20 }}
-                source={{ html: html }}
-                onError={error => console.log(error)} />
-        )
     }
 
     goBack() {
@@ -126,8 +104,14 @@ export default class CampaignPayment extends Component {
             case 'Midtrans':
                 this.donate(this.state.campaign_id, form, response => {
                     if (response.success == true) {
-                        this.state.token = response.token
-                        this.openMidtrans()
+                        const token = response.token
+                        nav.dispatch({
+                            type: "Navigation/NAVIGATE",
+                            routeName: 'MidtransScreen',
+                            params: {
+                                token: token,
+                            }
+                        })
                     }
                 })
                 break
@@ -254,19 +238,27 @@ export default class CampaignPayment extends Component {
                                 <View style={{ marginTop: 15, marginBottom: 15 }}>
                                     <View style={{ backgroundColor: '#AAAAAA', height: 20, width: '100%' }}></View>
                                 </View>
-                                <Picker
-                                    mode="dropdown"
-                                    selectedValue={this.state.donation_type}
-                                    onValueChange={this.onDonationChange.bind(this)}>
-                                    <Item label="Tipe Donasi" value="" />
-                                    <Item label="Routine" value="Routine" />
-                                    <Item label="Isidentil" value="Isidentil" />
-                                </Picker>
+                                <Text style={{ marginLeft: 10 }}>Tipe Donasi</Text>
+                                <CheckBox
+                                    checked={this.state.donation_type == 'Routine'}
+                                    title='Routine'
+                                    onPress={() => this.onDonationChange('Routine')}
+                                    onIconPress={() => this.onDonationChange('Routine')}
+                                    containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                                />
+                                <CheckBox
+                                    checked={this.state.donation_type == 'Isidentil'}
+                                    title='Isidentil'
+                                    onPress={() => this.onDonationChange('Isidentil')}
+                                    onIconPress={() => this.onDonationChange('Isidentil')}
+                                    containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                                />
+                                <Text style={{ marginLeft: 10 }}>Donasi Anonim</Text>
                                 <CheckBox
                                     checked={this.state.anonymous}
                                     title={'Donasi sebagai anonim'}
-                                    onPress={() => this.setState({anonymous: !this.state.anonymous})}
-                                    onIconPress={() => this.setState({anonymous: !this.state.anonymous})}
+                                    onPress={() => this.setState({ anonymous: !this.state.anonymous })}
+                                    onIconPress={() => this.setState({ anonymous: !this.state.anonymous })}
                                     containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
                                 />
                                 <Text style={{ marginLeft: 10 }}>Metode Pembayaran</Text>
@@ -279,8 +271,8 @@ export default class CampaignPayment extends Component {
                                             return <ListItem>
                                                 <CheckBox
                                                     checked={this.state.payment_gateway == item.id}
-                                                    onPress={() => this.onCheckBoxPress(item)}
                                                     title={item.name}
+                                                    onPress={() => this.onCheckBoxPress(item)}
                                                     onIconPress={() => this.onCheckBoxPress(item)}
                                                     containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
                                                 />

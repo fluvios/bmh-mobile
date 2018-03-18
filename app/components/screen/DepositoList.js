@@ -19,13 +19,15 @@ var storage = new Storage({
     enableCache: true,
 })
 
+var isLogin = false
+
 export default class DepositoList extends Component {
 
     static navigationOptions = ({ navigation }) => ({
         title: 'Berbagi Kebaikan',
         headerRight: (
             <Button icon transparent onPress={() => { navigation.state.params.handleProfile(navigation) }}>
-                <Icon name='contact' />
+                {isLogin ? <Icon name='contact' style={{ color: '#f38d1f' }} /> : <Text style={{ color: '#f38d1f' }}>Login</Text>}
             </Button>
         ),
     })
@@ -123,6 +125,7 @@ export default class DepositoList extends Component {
         storage.load({
             key: 'user'
         }).then(ret => {
+            isLogin = true
             this.getAccount(ret.id, response => {
                 this.setState({
                     saldo: response.saldo,

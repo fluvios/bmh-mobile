@@ -19,9 +19,13 @@ import SaldoTransferPayment from "../screen/SaldoTransferPayment"
 import SaldoDeliveryPayment from "../screen/SaldoDeliveryPayment"
 import ReportList from '../screen/ReportList'
 import Login from "../screen/Login"
+import Register from "../screen/Register"
 import Profile from "../screen/Profile"
 import { styles } from "./styles"
 import { color } from "./variable"
+import ForgotPassword from '../screen/ForgotPassword'
+import MidtransPayment from '../screen/MidtransPayment'
+import EditProfile from "../screen/EditProfile"
 
 export const CampaignStack = StackNavigator({
     ListScreen: {
@@ -29,6 +33,13 @@ export const CampaignStack = StackNavigator({
     },
     ProfileScreen: {
         screen: Profile,
+    },
+    EditProfileScreen: {
+        screen: EditProfile,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Edit Profile',
+        }
     },
     DetailScreen: {
         screen: CampaignDetail,
@@ -58,6 +69,20 @@ export const CampaignStack = StackNavigator({
             header: null,
         }
     },
+    RegisterScreen: {
+        screen: Register,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Register',
+        }
+    },
+    ForgotScreen: {
+        screen: ForgotPassword,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Forgot Password',
+        }
+    },
     TransferScreen: {
         screen: CampaignTransferPayment,
         navigationOptions: {
@@ -72,6 +97,13 @@ export const CampaignStack = StackNavigator({
             tabBarVisible: false,
         }
     },
+    MidtransScreen: {
+        screen: MidtransPayment,
+        navigationOptions: {
+            title: 'Midtrans',
+            tabBarVisible: false,
+        }
+    },
 })
 
 export const DepositoStack = StackNavigator({
@@ -81,11 +113,32 @@ export const DepositoStack = StackNavigator({
     ProfileScreen: {
         screen: Profile,
     },
+    EditProfileScreen: {
+        screen: EditProfile,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Edit Profile',
+        }
+    },
     LoginScreen: {
         screen: Login,
         navigationOptions: {
             tabBarVisible: false,
             header: null,
+        }
+    },
+    RegisterScreen: {
+        screen: Register,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Register',
+        }
+    },
+    ForgotScreen: {
+        screen: ForgotPassword,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Forgot Password',
         }
     },
     DonateScreen: {
@@ -109,6 +162,13 @@ export const DepositoStack = StackNavigator({
             tabBarVisible: false,
         }
     },
+    MidtransScreen: {
+        screen: MidtransPayment,
+        navigationOptions: {
+            title: 'Midtrans',
+            tabBarVisible: false,
+        }
+    },
 })
 
 export const NewsStack = StackNavigator({
@@ -118,11 +178,32 @@ export const NewsStack = StackNavigator({
     ProfileScreen: {
         screen: Profile,
     },
+    EditProfileScreen: {
+        screen: EditProfile,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Edit Profile',
+        }
+    },
     LoginScreen: {
         screen: Login,
         navigationOptions: {
             tabBarVisible: false,
             header: null,
+        }
+    },
+    RegisterScreen: {
+        screen: Register,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Register',
+        }
+    },
+    ForgotScreen: {
+        screen: ForgotPassword,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Forgot Password',
         }
     },
     DetailScreen: {
@@ -145,8 +226,29 @@ export const ReportStack = StackNavigator({
             header: null,
         }
     },
+    RegisterScreen: {
+        screen: Register,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Register',
+        }
+    },
+    ForgotScreen: {
+        screen: ForgotPassword,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Forgot Password',
+        }
+    },
     ProfileScreen: {
         screen: Profile,
+    },
+    EditProfileScreen: {
+        screen: EditProfile,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Edit Profile',
+        }
     },
 })
 

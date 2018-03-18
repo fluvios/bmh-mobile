@@ -57,13 +57,19 @@ export default class CampaignDetail extends Component {
             // console.error(err.message)
             switch (err.name) {
                 case 'NotFoundError':
-                    this.props.navigation.navigate('LoginScreen')
+                    this.props.navigation.navigate('LoginScreen', {
+                        goto: 'DonateScreen',
+                        item: item
+                    })
                     break
                 case 'ExpiredError':
                     storage.remove({
                         key: 'user'
                     })
-                    this.props.navigation.navigate('LoginScreen')
+                    this.props.navigation.navigate('LoginScreen', {
+                        goto: 'DonateScreen',
+                        item: item
+                    })
                     break
             }
         })
@@ -88,7 +94,7 @@ export default class CampaignDetail extends Component {
         return (
             <StyleProvider style={getTheme(material)}>
                 <Container>
-                    <Content>
+                    <View style={{ flex: 1 }}>
                         <View style={{ flex: 1 }}>
                             <Image source={{ uri: baseUrl + "public/campaigns/large/" + campaign.large_image }} style={{ height: 200, width: "100%", flex: 1 }} />
                             <Fab
@@ -101,18 +107,20 @@ export default class CampaignDetail extends Component {
                                 <Icon name="share" />
                             </Fab>
                         </View>
-                        <Tabs>
-                            <Tab heading="Detail">
-                                <CampaignDetailText data={{ campaign }} />
-                            </Tab>
-                            <Tab heading="Updates">
-                                <CampaignDetailStory data={{ campaign }} />
-                            </Tab>
-                            <Tab heading="Donatur">
-                                <CampaignDetailDonatur data={{ campaign }} />
-                            </Tab>
-                        </Tabs>
-                    </Content>
+                        <View style={{ flex: 1 }}>
+                            <Tabs>
+                                <Tab heading="Detail">
+                                    <CampaignDetailText data={{ campaign }} />
+                                </Tab>
+                                <Tab heading="Updates">
+                                    <CampaignDetailStory data={{ campaign }} />
+                                </Tab>
+                                <Tab heading="Donatur">
+                                    <CampaignDetailDonatur data={{ campaign }} />
+                                </Tab>
+                            </Tabs>
+                        </View>
+                    </View>
                     <Button full style={{ backgroundColor: '#f38d1f' }}
                         onPress={() => this.donate(campaign)}>
                         <Text>Donasi Sekarang</Text>

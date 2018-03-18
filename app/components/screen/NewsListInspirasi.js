@@ -59,7 +59,6 @@ export default class NewsListInspirasi extends Component {
       <Card style={{ flex: 0 }}>
         <CardItem>
           <Left>
-            <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
             <Body>
               <Text>{rowData.title.rendered}</Text>
               <Text note>{rowData.date}</Text>

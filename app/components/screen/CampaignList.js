@@ -22,13 +22,15 @@ var storage = new Storage({
   enableCache: true,
 })
 
+var isLogin = false
+
 export default class CampaignList extends Component {
 
   static navigationOptions = ({ navigation }) => ({
     title: 'Berbagi Kebaikan',
     headerRight: (
-      <Button icon transparent primary onPress={() => { navigation.state.params.handleProfile(navigation) }}>
-        <Icon name='contact' />
+      <Button icon transparent onPress={() => { navigation.state.params.handleProfile(navigation) }}>
+        {isLogin ? <Icon name='contact' style={{ color: '#f38d1f' }} /> : <Text style={{ color: '#f38d1f' }}>Login</Text>}
       </Button>
     ),
   })
@@ -42,6 +44,8 @@ export default class CampaignList extends Component {
       dataSource: dataSource.cloneWithRows(campaignArray),
       isLoading: true,
     })
+
+    this.loadStorage()
   }
 
   getAccount(params, callback) {
@@ -64,6 +68,7 @@ export default class CampaignList extends Component {
     storage.load({
       key: 'user'
     }).then(ret => {
+      isLogin = true
       this.props.navigation.setParams({
         handleProfile: this.profile,
         user: ret
@@ -72,8 +77,13 @@ export default class CampaignList extends Component {
       console.log(err.message)
       this.props.navigation.setParams({
         handleProfile: this.profile,
+        user: null
       })
     })
+  }
+
+  componentWillMount() {
+    this.loadStorage()
   }
 
   componentDidMount() {
@@ -84,8 +94,6 @@ export default class CampaignList extends Component {
         isLoading: false
       })
     }.bind(this))
-
-    this.loadStorage()
   }
 
   profile(navigation) {
@@ -160,7 +168,6 @@ export default class CampaignList extends Component {
                     <Text>Finish</Text>
                   </Button>
               }
-
             </Right>
           </CardItem>
         </Card>
