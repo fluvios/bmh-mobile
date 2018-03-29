@@ -8,6 +8,7 @@ import {
 import { cleanTag, convertToRupiah } from '../config/helper'
 import * as Progress from 'react-native-progress'
 import { baseUrl, color } from "../config/variable"
+import HTML from 'react-native-render-html'
 
 export default class CampaignDetailText extends Component {
 
@@ -25,7 +26,8 @@ export default class CampaignDetailText extends Component {
             <Left>
               <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
               <Body>
-                <Text>{campaign.title}</Text>
+                {/* <Text>{campaign.title}</Text> */}
+                <HTML html={campaign.title} />
                 <Text note>{campaign.date}</Text>
               </Body>
             </Left>
@@ -50,7 +52,8 @@ export default class CampaignDetailText extends Component {
         <Card>
           <CardItem>
             <Body>
-              <Text>{cleanTag(campaign.description)}</Text>
+              {/* <Text>{cleanTag(campaign.description)}</Text> */}
+              <HTML html={campaign.description} />
             </Body>
           </CardItem>
         </Card>

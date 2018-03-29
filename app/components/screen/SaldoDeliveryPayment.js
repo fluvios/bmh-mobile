@@ -13,6 +13,7 @@ import { cleanTag, convertToSlug, shortenDescription } from '../config/helper'
 import { baseUrl } from "../config/variable"
 import Storage from 'react-native-storage'
 import MapView from 'react-native-maps'
+import Geolocation from 'react-native-geolocation-service'
 
 var storage = new Storage({
     size: 1000,
@@ -55,8 +56,27 @@ export default class SaldoDeliveryPayment extends Component {
         })
     }
 
-    onRegionChange(region) {
+    onRegionChange = (region) => {
         this.setState({ region })
+    }
+
+    componentDidMount() {
+        navigator.geolocation.getCurrentPosition((position) => {
+            this.setState({
+                region: {
+                    longitude: position.longitude, 
+                    latitude: position.latitude, 
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                }
+            })
+        }, (error) => {
+            console.log(JSON.stringify(error))
+        }, {
+                enableHighAccuracy: true,
+                timeout: 20000,
+                maximumAge: 1000
+            })
     }
 
     render() {
@@ -65,7 +85,12 @@ export default class SaldoDeliveryPayment extends Component {
                 <MapView
                     style={styles.map}
                     region={this.state.region}
-                    onRegionChange={this.onRegionChange.bind(this)}
+                    onRegionChangeComplete={this.onRegionChange}
+                    provider={this.props.provider}
+                    zoomEnabled={true}
+                    pitchEnabled={true}
+                    showsUserLocation={true}
+                    followsUserLocation={true}
                 />
             </View>
         )

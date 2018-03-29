@@ -26,6 +26,7 @@ import { color } from "./variable"
 import ForgotPassword from '../screen/ForgotPassword'
 import MidtransPayment from '../screen/MidtransPayment'
 import EditProfile from "../screen/EditProfile"
+import NewsDownload from '../screen/NewsDownload'
 
 export const CampaignStack = StackNavigator({
     ListScreen: {
@@ -210,6 +211,13 @@ export const NewsStack = StackNavigator({
         screen: NewsDetail,
         navigationOptions: {
             title: 'News',
+            tabBarVisible: false,
+        }
+    },
+    DownloadScreen: {
+        screen: NewsDownload,
+        navigationOptions: {
+            title: 'Download',
             tabBarVisible: false,
         }
     },

@@ -78,9 +78,9 @@ export default class CampaignDetail extends Component {
     render() {
         let campaign = this.props.navigation.state.params.campaign
         let shareOptions = {
-            title: campaign.title,
-            message: cleanTag(campaign.description),
-            url: baseUrl,
+            title: "Share Campaign",
+            message: campaign.title,
+            url: baseUrl + 'campaign/' + campaign.id + '/' + campaign.slug,
             subject: "Share Link" //  for email
         }
 
@@ -94,7 +94,7 @@ export default class CampaignDetail extends Component {
         return (
             <StyleProvider style={getTheme(material)}>
                 <Container>
-                    <View style={{ flex: 1 }}>
+                    <Content>
                         <View style={{ flex: 1 }}>
                             <Image source={{ uri: baseUrl + "public/campaigns/large/" + campaign.large_image }} style={{ height: 200, width: "100%", flex: 1 }} />
                             <Fab
@@ -120,7 +120,7 @@ export default class CampaignDetail extends Component {
                                 </Tab>
                             </Tabs>
                         </View>
-                    </View>
+                    </Content>
                     <Button full style={{ backgroundColor: '#f38d1f' }}
                         onPress={() => this.donate(campaign)}>
                         <Text>Donasi Sekarang</Text>

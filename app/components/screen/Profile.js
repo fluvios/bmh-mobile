@@ -70,8 +70,16 @@ export default class Profile extends Component {
     storage.remove({
       key: 'user'
     }).then(ret => {
-      BackHandler.exitApp()
-      return true
+      nav.dispatch({
+        type: "Navigation/BACK",
+      })
+      Toast.show({
+        text: 'Logout Success',
+        position: 'bottom',
+        buttonText: 'Dismiss'
+      })
+      // BackHandler.exitApp()
+      // return true
     })
   }
 
@@ -105,7 +113,7 @@ export default class Profile extends Component {
                   <Icon name="settings" />
                 </Left>
                 <Body>
-                  <Button transparent onPress={() => nav.navigate('EditProfileScreen',{ user: this.state.user })}>
+                  <Button transparent onPress={() => nav.navigate('EditProfileScreen', { user: this.state.user })}>
                     <Text style={{ color: '#000000' }}>Edit Profile</Text>
                   </Button>
                 </Body>

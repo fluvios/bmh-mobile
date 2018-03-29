@@ -12,6 +12,7 @@ import {
     MORE_ICON, REACT_ICON
 } from "../config/variable"
 import Share, { ShareSheet, Button } from 'react-native-share'
+import HTML from 'react-native-render-html'
 
 export default class NewsDetail extends Component {
 
@@ -57,7 +58,7 @@ export default class NewsDetail extends Component {
                         <Fab
                             containerStyle={{}}
                             style={{ backgroundColor: '#5067FF', zIndex: 1 }}
-                            position="bottomRight" 
+                            position="bottomRight"
                             onPress={() => {
                                 Share.open(shareOptions);
                             }}>
@@ -66,19 +67,21 @@ export default class NewsDetail extends Component {
                     </View>
                     <Card>
                         <CardItem header>
-                            <Text style={{ fontWeight: 'bold' }}>{news.title.rendered}</Text>
+                            {/* <Text style={{ fontWeight: 'bold' }}>{news.title.rendered}</Text> */}
+                            <HTML html={news.title.rendered} />
                         </CardItem>
                         <CardItem>
                             <Body>
-                                <Text>
+                                {/* <Text>
                                     {cleanTag(news.content.rendered)}
-                                </Text>
+                                </Text> */}
+                                <HTML html={news.content.rendered} />
                             </Body>
                         </CardItem>
                     </Card>
                 </Content>
                 <View>
-                    <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}>                    </ShareSheet>
+                    <ShareSheet visible={this.state.visible} onCancel={this.onCancel.bind(this)}></ShareSheet>
                 </View>
             </Container>
         )

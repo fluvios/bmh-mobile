@@ -40,7 +40,7 @@ export default class DepositoList extends Component {
             indexBottom: -1,
             banks: [
                 { id: 'Delivery', name: 'Jemput Cash' },
-                { id: 'Midtrans', name: 'Payment Gateway' },
+                { id: 'Midtrans', name: 'Multipayment' },
             ],
             payment_gateway: 'Delivery',
             user_id: 0,
@@ -225,8 +225,16 @@ export default class DepositoList extends Component {
             case 'Midtrans':
                 this.topup(form, response => {
                     if (response.success == true) {
-                        this.state.token = response.token
-                        this.openMidtrans()
+                        // this.state.token = response.token
+                        // this.openMidtrans()
+                        const token = response.token
+                        nav.dispatch({
+                            type: "Navigation/NAVIGATE",
+                            routeName: 'MidtransScreen',
+                            params: {
+                                token: token,
+                            }
+                        })
                     }
                 })
                 break
@@ -378,7 +386,7 @@ export default class DepositoList extends Component {
                                 }}
                             />
                         </Item>
-                        <Button full textStyle={{ color: '#87838B' }}
+                        <Button full style={{ backgroundColor: '#f38d1f' }}
                             onPress={() => this.deposit()}>
                             <Text>Tambah Saldo</Text>
                         </Button>

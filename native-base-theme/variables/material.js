@@ -212,9 +212,9 @@ export default {
 
   // Tab
   // tabDefaultBg: "#3F51B5",
-  tabDefaultBg: "#8cc543",
+  tabDefaultBg: "#f38d1f",
   // topTabBarTextColor: "#b3c7f9",
-  topTabBarTextColor: "#70ab24",
+  topTabBarTextColor: "#c66f11",
   topTabBarActiveTextColor: "#fff",
   topTabBarBorderColor: "#fff",
   topTabBarActiveBorderColor: "#fff",
@@ -225,7 +225,8 @@ export default {
   tabFontSize: 18,
 
   // Text
-  textColor: "#000",
+  // textColor: "#000",
+  textColor: "#575757",
   inverseTextColor: "#fff",
   noteFontSize: 14,
   get defaultTextColor() {

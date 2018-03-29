@@ -9,7 +9,8 @@ export const wpUrl = "http://www.bmh.or.id/wp-json/wp/v2/"
 
 // Define Color Theme
 export const color = {
-    lightColor: "#8cc543",
+    // lightColor: "#8cc543",
+    lightColor: "#f38d1f",
     dangerColor: "#f48120",
     acceptColor: "#139292"
 }

@@ -55,17 +55,35 @@ export default class CampaignDeliveryPayment extends Component {
         })
     }
 
-    onRegionChange(region) {
+    onRegionChange = (region) => {
         this.setState({ region })
     }
 
     render() {
+        navigator.geolocation.getCurrentPosition((position) => {
+            this.setState({ position: { longitude: position.longitude, latitude: position.latitude } })
+        }, (error) => {
+            alert(JSON.stringify(error))
+        }, {
+                enableHighAccuracy: true,
+                timeout: 20000,
+                maximumAge: 1000
+            })
+
         return (
             <View style={styles.container}>
                 <MapView
                     style={styles.map}
-                    region={this.state.region}
-                    onRegionChange={this.onRegionChange.bind(this)}
+                    region={this.state.position}
+                    onRegionChangeComplete={this.onRegionChange}
+                    zoomEnabled={true}
+                    pitchEnabled={true}
+                    showsUserLocation={true}
+                    followsUserLocation={true}
+                    showsCompass={true}
+                    showsBuildings={true}
+                    showsTraffic={true}
+                    showsIndoors={true}
                 />
             </View>
         )

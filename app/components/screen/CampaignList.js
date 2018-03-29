@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { ListView, AsyncStorage, Image } from 'react-native'
+import { ListView, AsyncStorage, Image, AppState } from 'react-native'
 import Storage from 'react-native-storage'
 import {
   Container, Header, Left, Body, Right, Title,
   Content, Footer, FooterTab, Button, Text, Card,
-  CardItem, Thumbnail, Spinner, Icon, StyleProvider
+  CardItem, Thumbnail, Spinner, Icon, StyleProvider,
+  Item, Input, View,
 } from 'native-base'
 import getTheme from '../../../native-base-theme/components'
 import material from '../../../native-base-theme/variables/material'
@@ -43,9 +44,40 @@ export default class CampaignList extends Component {
     this.state = ({
       dataSource: dataSource.cloneWithRows(campaignArray),
       isLoading: true,
+      appState: AppState.currentState
     })
 
+    this.tempArray = []
+  }
+
+  componentWillMount() {
     this.loadStorage()
+  }
+
+  componentDidMount() {
+    this.getCampaign(function (json) {
+      campaignArray = json
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(campaignArray),
+        isLoading: false
+      })
+      this.tempArray = campaignArray
+    }.bind(this))
+
+    this.loadStorage()
+    AppState.addEventListener('change', this.handleAppStateChange)
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this.handleAppStateChange)
+  }
+
+  handleAppStateChange = (nextAppState) => {
+    // if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+    //   this.forceUpdate()
+    // }
+    this.forceUpdate()
+    this.setState({ appState: nextAppState })
   }
 
   getAccount(params, callback) {
@@ -82,20 +114,6 @@ export default class CampaignList extends Component {
     })
   }
 
-  componentWillMount() {
-    this.loadStorage()
-  }
-
-  componentDidMount() {
-    this.getCampaign(function (json) {
-      campaignArray = json
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(campaignArray),
-        isLoading: false
-      })
-    }.bind(this))
-  }
-
   profile(navigation) {
     if (navigation.state.params.user) {
       navigation.navigate('ProfileScreen', {
@@ -120,6 +138,23 @@ export default class CampaignList extends Component {
         console.error(error)
       })
       .done()
+  }
+
+  SearchFilterFunction(text) {
+    const newData = this.tempArray.filter(function (item) {
+      const itemData = item.title.toUpperCase()
+      const textData = text.toUpperCase()
+      return itemData.indexOf(textData) > -1
+    })
+    
+    var tempDataSource = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1.guid != r2.guid
+    })
+
+    this.setState({
+      dataSource: tempDataSource.cloneWithRows(newData),
+      text: text
+    })
   }
 
   renderRow(rowData, sectionID, rowID) {
@@ -157,13 +192,13 @@ export default class CampaignList extends Component {
             <Right>
               {
                 rowData.finalized == '0' ?
-                  <Button textStyle={{ color: '#87838B' }}
+                  <Button style={{ backgroundColor: '#f38d1f' }}
                     onPress={() => this.props.navigation.navigate('DetailScreen', {
                       campaign: rowData,
                     })}>
                     <Text>Donate</Text>
                   </Button> :
-                  <Button textStyle={{ color: '#87838B' }}
+                  <Button style={{ backgroundColor: '#f38d1f' }}
                     onPress={() => { }}>
                     <Text>Finish</Text>
                   </Button>
@@ -178,7 +213,14 @@ export default class CampaignList extends Component {
   render() {
     let campaign = (this.state.isLoading) ?
       <Spinner /> :
-      <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} />
+      <View>
+        <Item regular>
+          <Input placeholder='Search' onChangeText={(text) => this.SearchFilterFunction(text)}
+            value={this.state.text} />
+        </Item>
+
+        <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} removeClippedSubviews={false} />
+      </View>
 
     return campaign
   }

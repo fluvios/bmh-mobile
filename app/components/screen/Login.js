@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { View, AsyncStorage, Image, Text, WebView, } from 'react-native'
 import {
-    Container, Item, Input, Header, Body, Content,
-    Title, Button, Label, Spinner, Toast, H1, Form,
+    Container, Item, Input, Header, Body, Content, Icon,
+    Title, Button, Label, Spinner, Toast, H1, Form, StyleProvider
 } from 'native-base'
+import getTheme from '../../../native-base-theme/components'
+import material from '../../../native-base-theme/variables/material'
 import Storage from 'react-native-storage'
 import { baseUrl } from "../config/variable"
 import { styles } from "../config/styles"
@@ -56,8 +58,8 @@ export default class Login extends Component {
                 if (nav.state.params) {
                     nav.navigate(nav.state.params.goto, {
                         campaign: nav.state.params.item,
-                        user: response 
-                    })                    
+                        user: response
+                    })
                     Toast.show({
                         text: 'Login Success',
                         position: 'bottom',
@@ -112,11 +114,11 @@ export default class Login extends Component {
         storage.load({
             key: 'user'
         }).then(ret => {
-            if (typeof(nav.state.params.goto) !== 'undefined' || nav.state.params.goto !== null) {
+            if (typeof (nav.state.params.goto) !== 'undefined' || nav.state.params.goto !== null) {
                 nav.navigate(nav.state.params.goto, {
                     campaign: nav.state.params.item,
-                    user: ret 
-                })                    
+                    user: ret
+                })
                 Toast.show({
                     text: 'Login Success',
                     position: 'bottom',
@@ -140,74 +142,63 @@ export default class Login extends Component {
     render() {
         const nav = this.props.navigation
         return (
-            <Container>
-                {this.state.showRegister &&
-                    <View>
-                        <WebView
-                            source={{ uri: baseUrl + '/register' }}
-                            style={{ marginTop: 20 }}
-                        />
-                    </View>
-                }
-                {this.state.showForgot &&
-                    <View>
-                        <WebView
-                            source={{ uri: baseUrl + '/password/reset' }}
-                            style={{ marginTop: 20 }}
-                        />
-                    </View>
-                }
-                <Content padder>
-                    <View style={styles.wrapCenter}>
-                        <Image source={require('./../../../asset/img/Logo.png')} style={{
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flex: 2
-                        }} />
-                    </View>
-                    <Form>
-                        <Item floatingLabel last>
-                            <Label>Email Address</Label>
-                            <Input
-                                onChangeText={(email) => this.setState({ email })}
-                                value={this.state.email} />
-                        </Item>
-                    </Form>
-                    <View>
-                        <PasswordInputText
-                            value={this.state.password}
-                            onChangeText={(password) => this.setState({ password })}
-                        />
-                    </View>
-                    <View style={styles.deviderColumn}>
-                        <Button block style={{ backgroundColor: '#f38d1f' }} onPress={() => this.loginAccount(this.state)}>
-                            <Text style={styles.buttonText}>Masuk</Text>
-                        </Button>
-                    </View>
-                    <View style={styles.deviderColumnDouble}>
-                        <View style={styles.deviderRowLeft}>
-                            <Button block style={{ backgroundColor: '#f38d1f' }} onPress={() => nav.navigate('RegisterScreen')}>
-                                <Text style={styles.buttonText}>Daftar</Text>
+            <StyleProvider style={getTheme(material)}>
+                <Container>
+                    <Content padder>
+                        <View style={styles.wrapCenter}>
+                            <Image source={require('./../../../asset/img/Logo.png')} style={{
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flex: 2
+                            }} />
+                        </View>
+                        <Form>
+                            <Item floatingLabel style={{ width: '100%', marginLeft: 0, paddingLeft: 0, paddingRight: 0, marginRight: 0 }}>
+                                <Label style={{ color: "#999" }}>Email</Label>
+                                <Input
+                                    keyboardType='email-address'
+                                    onChangeText={(email) => this.setState({ email })}
+                                    value={this.state.email} />
+                            </Item>
+                            <View>
+                                <PasswordInputText
+                                    value={this.state.password}
+                                    onChangeText={(password) => this.setState({ password })}
+                                />
+                            </View>
+                        </Form>
+                        <View style={styles.deviderColumn}>
+                            <Button block style={{ backgroundColor: '#f38d1f' }} onPress={() => this.loginAccount(this.state)}>
+                                <Text style={styles.buttonText}>Masuk</Text>
                             </Button>
                         </View>
-                        <View style={styles.deviderRowRight}>
-                            <Button block style={{ backgroundColor: '#f38d1f' }} onPress={() => nav.navigate('ForgotScreen')}>
-                                <Text style={styles.buttonText}>Lupa Password</Text>
+                        <View style={styles.deviderColumnDouble}>
+                            <View style={styles.deviderRowLeft}>
+                                <Button block style={{ backgroundColor: '#f38d1f' }} onPress={() => nav.navigate('RegisterScreen')}>
+                                    <Text style={styles.buttonText}>Daftar</Text>
+                                </Button>
+                            </View>
+                            <View style={styles.deviderRowRight}>
+                                <Button block style={{ backgroundColor: '#f38d1f' }} onPress={() => nav.navigate('ForgotScreen')}>
+                                    <Text style={styles.buttonText}>Lupa Password</Text>
+                                </Button>
+                            </View>
+                        </View>
+                        <View style={styles.deviderColumn}>
+                            <Button iconLeft block style={{ backgroundColor: '#3b5998' }}>
+                                <Icon name='logo-facebook' />
+                                <Text style={styles.buttonText}>Masuk Menggunakan Facebook</Text>
                             </Button>
                         </View>
-                    </View>
-                    <View style={styles.deviderColumn}>
-                        <Button block primary>
-                            <Text style={styles.buttonText}>Masuk Menggunakan Facebook</Text>
-                        </Button>
-                    </View>
-                    <View style={styles.deviderColumn}>
-                        <Button block info>
-                            <Text style={styles.buttonText}>Masuk Menggunakan Twitter</Text>
-                        </Button>
-                    </View>
-                </Content>
-            </Container>
+                        <View style={styles.deviderColumn}>
+                            <Button iconLeft block style={{ backgroundColor: '#00aced' }}>
+                                <Icon name='logo-twitter' />
+                                <Text style={styles.buttonText}>Masuk Menggunakan Twitter</Text>
+                            </Button>
+                        </View>
+                    </Content>
+                </Container>
+            </StyleProvider>
         )
     }
 }

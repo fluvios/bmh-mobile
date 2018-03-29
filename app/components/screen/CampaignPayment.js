@@ -35,7 +35,7 @@ export default class CampaignPayment extends Component {
             campaign_id: this.props.navigation.state.params.campaign.id,
             banks: [
                 { id: 'Delivery', name: 'Jemput Cash' },
-                { id: 'Midtrans', name: 'Payment Gateway' },
+                { id: 'Midtrans', name: 'Multipayment' },
                 { id: 'Deposit', name: 'Potong Saldo' },
             ],
             payment_gateway: 'Delivery',

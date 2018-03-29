@@ -114,25 +114,25 @@ export default class EditProfile extends Component {
             <Container>
                 <Content padder>
                     <Form>
-                        <Item floatingLabel last>
+                        <Item floatingLabel style={{ width: '100%', marginLeft: 0, paddingLeft: 0, paddingRight: 0, marginRight: 0 }}>
                             <Label>Nama</Label>
                             <Input
                                 onChangeText={(name) => this.setState({ name })}
                                 value={this.state.name} />
                         </Item>
-                        <Item floatingLabel last>
+                        <Item floatingLabel style={{ width: '100%', marginLeft: 0, paddingLeft: 0, paddingRight: 0, marginRight: 0 }}>
                             <Label>Nomor HP 1</Label>
                             <Input
                                 onChangeText={(phone_number_1) => this.setState({ phone_number_1 })}
                                 value={this.state.phone_number_1} />
                         </Item>
-                        <Item floatingLabel last>
-                            <Label>Nama</Label>
+                        <Item floatingLabel style={{ width: '100%', marginLeft: 0, paddingLeft: 0, paddingRight: 0, marginRight: 0 }}>
+                            <Label>Nomor HP 2</Label>
                             <Input
                                 onChangeText={(phone_number_2) => this.setState({ phone_number_2 })}
                                 value={this.state.phone_number_2} />
                         </Item>
-                        <Item floatingLabel last>
+                        <Item floatingLabel style={{ width: '100%', marginLeft: 0, paddingLeft: 0, paddingRight: 0, marginRight: 0 }}>
                             <Label>Email Address</Label>
                             <Input
                                 onChangeText={(email) => this.setState({ email })}

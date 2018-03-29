@@ -2,11 +2,13 @@ import React, { Component } from 'react'
 import { WebView } from 'react-native'
 import { baseUrl } from "../config/variable"
 
-export default class NewsListMagazine extends Component {
+export default class NewsDownload extends Component {
     render() {
+        const nav = this.props.navigation
+
         return (
             <WebView
-                source={{ uri: "http://www.bmh.or.id/download-majalah-mulia/" }}
+                source={{ uri: nav.state.params.url }}
             />
         )
     }

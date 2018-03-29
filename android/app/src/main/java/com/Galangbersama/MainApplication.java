@@ -12,6 +12,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.airbnb.android.react.maps.MapsPackage;
+import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new ImagePickerPackage(),
             new MapsPackage(),
+            new RNFusedLocationPackage(),
             new CodePush(null, getApplicationContext(), BuildConfig.DEBUG)
       );
     }
