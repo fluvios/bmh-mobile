@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { Platform, AsyncStorage, FlatList, Image, WebView } from "react-native"
+import { Platform, AsyncStorage, FlatList, Image, WebView, Modal } from "react-native"
 import {
     Container, Header, Title, Button, ListItem, View,
     Icon, Card, CardItem, Input, Picker,
     Left, Body, Right, Content, Footer, FooterTab,
-    Text, Form, Item, Toast, StyleProvider
+    Text, Form, Item, Toast, StyleProvider, Tabs, Tab
 } from 'native-base'
 import getTheme from '../../../native-base-theme/components'
 import material from '../../../native-base-theme/variables/material'
@@ -32,6 +32,8 @@ export default class CampaignPayment extends Component {
             donation_type: '',
             comment: '',
             anonymous: false,
+            modalVisible: false,
+            buttonVisible: false,
             campaign_id: this.props.navigation.state.params.campaign.id,
             banks: [
                 { id: 'Delivery', name: 'Jemput Cash' },
@@ -41,7 +43,28 @@ export default class CampaignPayment extends Component {
             payment_gateway: 'Delivery',
             user_id: this.props.navigation.state.params.user.id,
             showToast: false,
-            is_mobile: 1
+            is_mobile: 1,
+            // Zakat Fitrah
+            jumlahKeluarga: '',
+            hargaBeras: '8900',
+            jumlahZakatFitrah: '0',
+            // Zakat Maal
+            cash: '',
+            asset: '',
+            debt: '',
+            gold: '',
+            stock: '',
+            invest: '',
+            hargaEmas: '586933',
+            nishabEmas: '49889305',
+            hartaTotal: '0',
+            jumlahZakatMal: '0',
+            // Zakat Profesi
+            gaji: '',
+            tunjangan: '',
+            pendapatanTotal: '0',
+            nishabBeras: '4628000',
+            jumlahZakatProfesi: '0'
         }
 
         this.bankList()
@@ -207,11 +230,154 @@ export default class CampaignPayment extends Component {
             .done()
     }
 
+    setModalVisible(visible) {
+        this.setState({ modalVisible: visible });
+    }
+
+    calculateMal() {
+        let total = parseInt(this.state.cash) + parseInt(this.state.asset) + parseInt(this.state.debt) + parseInt(this.state.gold) + parseInt(this.state.stock) + parseInt(this.state.invest)
+        this.setState({ hartaTotal: total.toString() })
+        let jumlah = ''
+        if(total >= this.state.nishabEmas ) {
+            jumlah = total.toString()
+        } else {
+            jumlah = 'Tidak Mencukupi Nishab'
+        }
+
+        return jumlah
+    }
+
     render() {
+        let campaign = this.props.navigation.state.params.campaign
+
         return (
             <StyleProvider style={getTheme(material)}>
                 <Container>
                     <Content>
+                        <Modal
+                            animationType={'slide'}
+                            transparent={false}
+                            visible={this.state.modalVisible} onRequestClose={() => {
+                                console.log('Modal has been closed.');
+                            }}>
+                            <Container>
+                                <Content>
+                                    <Tabs>
+                                        <Tab heading="Fitrah">
+                                            <Form>
+                                                <Item>
+                                                    <Input placeholder="Jumlah Anggota Keluarga"
+                                                        onChangeText={(text) => this.setState({ jumlahKeluarga: text, jumlahZakatFitrah: (parseInt(text) * parseInt(this.state.hargaBeras)).toString() })}
+                                                        value={this.state.jumlahKeluarga} />
+                                                </Item>
+                                                <Item>
+                                                    <Input disabled placeholder="Harga Beras"
+                                                        value={this.state.hargaBeras} />
+                                                </Item>
+                                                <Item>
+                                                    <Input disabled placeholder="Jumlah Zakat Fitrah"
+                                                        value={this.state.jumlahZakatFitrah ? this.state.jumlahZakatFitrah : '0'} />
+                                                </Item>
+                                                <Button block textStyle={{ color: '#87838B' }}
+                                                    onPress={() => {
+                                                        this.setModalVisible(!this.state.modalVisible);
+                                                        this.setState({ amount: convertToAngka(this.state.jumlahZakatFitrah) })
+                                                    }}>
+                                                    <Text>Hitung</Text>
+                                                </Button>
+                                            </Form>
+                                        </Tab>
+                                        <Tab heading="Maal">
+                                            <Form>
+                                                <Item>
+                                                    <Input placeholder="Uang Kas & Bank"
+                                                        onChangeText={(text) => this.setState({ cash: text, 
+                                                            jumlahZakatMal: this.calculateMal() })}
+                                                        value={this.state.cash} />
+                                                </Item>
+                                                <Item>
+                                                    <Input placeholder="Total Asset (yg digunakan tidak perlu dihitung)"
+                                                        onChangeText={(text) => this.setState({ asset: text, 
+                                                            jumlahZakatMal: this.calculateMal() })}
+                                                        value={this.state.asset} />
+                                                </Item>
+                                                <Item>
+                                                    <Input placeholder="Piutang Tertagih"
+                                                        onChangeText={(text) => this.setState({ debt: text, 
+                                                            jumlahZakatMal: this.calculateMal() })}
+                                                        value={this.state.debt} />
+                                                </Item>
+                                                <Item>
+                                                    <Input placeholder="Emas & Perhiasan lain"
+                                                        onChangeText={(text) => this.setState({ gold: text, 
+                                                            jumlahZakatMal: this.calculateMal() })}
+                                                        value={this.state.gold} />
+                                                </Item>
+                                                <Item>
+                                                    <Input placeholder="Saham, obligasi, dana pensiun, asuransi yang diterima"
+                                                        onChangeText={(text) => this.setState({ stock: text, 
+                                                            jumlahZakatMal: this.calculateMal() })}
+                                                        value={this.state.stock} />
+                                                </Item>
+                                                <Item>
+                                                    <Input placeholder="Dana yg diinvestasikan"
+                                                        onChangeText={(text) => this.setState({ invest: text, 
+                                                            jumlahZakatMal: this.calculateMal() })}
+                                                        value={this.state.invest} />
+                                                </Item>
+                                                <Item>
+                                                    <Input disabled placeholder="Harga Emas"
+                                                        value={this.state.hargaEmas} />
+                                                </Item>
+                                                <Item>
+                                                    <Input disabled placeholder="NISHAB (85 Gram)"
+                                                        value={this.state.nishabEmas} />
+                                                </Item>
+                                                <Item>
+                                                    <Input disabled placeholder="Jumlah Harta"
+                                                        value={this.state.hartaTotal} />
+                                                </Item>
+                                                <Item>
+                                                    <Input disabled placeholder="Jumlah Zakat Maal"
+                                                        value={this.state.jumlahZakatMal} />
+                                                </Item>
+                                                <Button block textStyle={{ color: '#87838B' }}
+                                                    onPress={() => {
+                                                        this.setModalVisible(!this.state.modalVisible);
+                                                        this.setState({ amount: convertToAngka(this.state.jumlahZakatFitrah) })
+                                                    }}>
+                                                    <Text>Hitung</Text>
+                                                </Button>
+                                            </Form>
+                                        </Tab>
+                                        <Tab heading="Profesi">
+                                            <Form>
+                                                <Item>
+                                                    <Input placeholder="Jumlah Anggota Keluarga"
+                                                        onChangeText={(text) => this.setState({ jumlahKeluarga: text, jumlahZakatFitrah: (parseInt(text) * parseInt(this.state.hargaBeras)).toString() })}
+                                                        value={this.state.jumlahKeluarga} />
+                                                </Item>
+                                                <Item>
+                                                    <Input disabled placeholder="Harga Beras"
+                                                        value={this.state.hargaBeras} />
+                                                </Item>
+                                                <Item>
+                                                    <Input disabled placeholder="Jumlah Zakat Fitrah"
+                                                        value={this.state.jumlahZakatFitrah ? this.state.jumlahZakatFitrah : '0'} />
+                                                </Item>
+                                                <Button block textStyle={{ color: '#87838B' }}
+                                                    onPress={() => {
+                                                        this.setModalVisible(!this.state.modalVisible);
+                                                        this.setState({ amount: convertToAngka(this.state.jumlahZakatFitrah) })
+                                                    }}>
+                                                    <Text>Hitung</Text>
+                                                </Button>
+                                            </Form>
+                                        </Tab>
+                                    </Tabs>
+                                </Content>
+                            </Container>
+                        </Modal>
                         <View style={{ backgroundColor: '#FFFFFF' }}>
                             <Form>
                                 <Text>Informasi Donatur</Text>
@@ -283,6 +449,16 @@ export default class CampaignPayment extends Component {
                                         }}
                                     />
                                 </Item>
+                                {campaign.categories_id == 21 &&
+                                    <View style={{ marginBottom: 5, marginTop: 5 }}>
+                                        <Button block textStyle={{ color: '#87838B' }}
+                                            onPress={() => {
+                                                this.setModalVisible(!this.state.modalVisible);
+                                            }}>
+                                            <Text>Kalkulator</Text>
+                                        </Button>
+                                    </View>
+                                }
                                 <Button block textStyle={{ color: '#87838B' }}
                                     onPress={() => this.paymentMethod()}>
                                     <Text>Donate</Text>

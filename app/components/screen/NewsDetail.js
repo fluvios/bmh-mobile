@@ -37,9 +37,9 @@ export default class NewsDetail extends Component {
         let news = this.props.navigation.state.params.campaign
 
         let shareOptions = {
-            title: news.title.rendered,
+            title: 'Share News',
             message: news.title.rendered,
-            url: wpUrl,
+            url: news.guid.rendered,
             subject: "Share Link" //  for email
         }
 

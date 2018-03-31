@@ -213,14 +213,16 @@ export default class CampaignList extends Component {
   render() {
     let campaign = (this.state.isLoading) ?
       <Spinner /> :
-      <View>
+      <Container>
+        <Content>
         <Item regular>
           <Input placeholder='Search' onChangeText={(text) => this.SearchFilterFunction(text)}
             value={this.state.text} />
         </Item>
 
         <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} removeClippedSubviews={false} />
-      </View>
+        </Content>
+      </Container>
 
     return campaign
   }

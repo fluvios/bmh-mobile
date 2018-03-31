@@ -10,6 +10,20 @@ import Storage from 'react-native-storage'
 import { baseUrl } from "../config/variable"
 import { styles } from "../config/styles"
 import PasswordInputText from 'react-native-hide-show-password-input'
+import OAuthManager from 'react-native-oauth'
+
+const manager = new OAuthManager('Berbagikebaikan')
+manager.configure({
+    twitter: {
+        consumer_key: 'jCsPnR8eQ1lLP3KC9XlPCRUJo',
+        consumer_secret: '7MwZHve1fX2ThCJnOR6CxHHHp9OHnTTWAUAPV4y5lymP7N78AO'
+    },
+    facebook: {
+        client_id: '1030581603764130',
+        client_secret: '6bfdffc28bd657bb3496ae1fd66d354f'
+    }
+})
+
 
 var storage = new Storage({
     size: 1000,
@@ -139,6 +153,18 @@ export default class Login extends Component {
         })
     }
 
+    loginFacebook() {
+        // manager.authorize('facebook')
+        //     .then(resp => console.log(resp))
+        //     .catch(err => console.log(err));
+    }
+
+    loginTwitter() {
+        // manager.authorize('twitter')
+        //     .then(resp => console.log(resp))
+        //     .catch(err => console.log(err));
+    }
+
     render() {
         const nav = this.props.navigation
         return (
@@ -185,13 +211,13 @@ export default class Login extends Component {
                             </View>
                         </View>
                         <View style={styles.deviderColumn}>
-                            <Button iconLeft block style={{ backgroundColor: '#3b5998' }}>
+                            <Button iconLeft block style={{ backgroundColor: '#3b5998' }} onPress={() => this.loginFacebook()}>
                                 <Icon name='logo-facebook' />
                                 <Text style={styles.buttonText}>Masuk Menggunakan Facebook</Text>
                             </Button>
                         </View>
                         <View style={styles.deviderColumn}>
-                            <Button iconLeft block style={{ backgroundColor: '#00aced' }}>
+                            <Button iconLeft block style={{ backgroundColor: '#00aced' }} onPress={() => this.loginTwitter()}>
                                 <Icon name='logo-twitter' />
                                 <Text style={styles.buttonText}>Masuk Menggunakan Twitter</Text>
                             </Button>

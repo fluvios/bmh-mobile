@@ -13,7 +13,6 @@ import { cleanTag, convertToSlug, shortenDescription } from '../config/helper'
 import { baseUrl } from "../config/variable"
 import Storage from 'react-native-storage'
 import MapView from 'react-native-maps'
-import Geolocation from 'react-native-geolocation-service'
 
 var storage = new Storage({
     size: 1000,

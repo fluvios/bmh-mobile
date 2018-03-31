@@ -12,7 +12,7 @@ import { baseUrl, color } from "../config/variable"
 import Share, { ShareSheet } from 'react-native-share'
 import HTML from 'react-native-render-html'
 
-export default class CampaignDetailText extends Component {
+export default class CampaignDetailInfo extends Component {
 
   constructor(props) {
     super(props)
@@ -31,8 +31,8 @@ export default class CampaignDetailText extends Component {
 
     return (
       <Container>
-        <Content>
-          <View style={{ flex: 0 }}>
+        <Content contentContainerStyle={{ flex: 1 }}>
+          <View style={{ flex:0.755 }}>
             <Image source={{ uri: baseUrl + "public/campaigns/large/" + campaign.large_image }} style={{ height: 200, width: "100%", flex: 1 }} />
             <Fab
               containerStyle={{}}
@@ -44,34 +44,14 @@ export default class CampaignDetailText extends Component {
               <Icon name="share" />
             </Fab>
           </View>
-          <Card style={{ flex: 0 }}>
-            <CardItem>
-              <Left>
-                <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
-                <Body>
-                  {/* <Text>{campaign.title}</Text> */}
-                  <HTML html={campaign.title} />
-                  <Text note>{campaign.date}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Text>
-                  Deadline: {campaign.deadline}
-                </Text>
-                <Text style={styles.textInfo}>Dana Terkumpul: {convertToRupiah(campaign.total)}/{convertToRupiah(campaign.goal)}</Text>
-              </Body>
-            </CardItem>
-            <CardItem>
-              <Body>
-                <Text>
-                  {(percent * 100).toFixed(2)} % Dana Terkumpul
-              </Text>
-                <Progress.Bar progress={percent} width={300} height={10} color={color.lightColor} />
-              </Body>
-            </CardItem>
-          </Card>
+          <View style={{ flex:1 }}>
+            <WebView
+              source={{ html: campaign.description }}
+              automaticallyAdjustContentInsets={false}
+              javaScriptEnabled={true}
+              scrollEnabled={true}
+              style={{ flex: 1 }} />
+          </View>
         </Content>
       </Container>
     )
