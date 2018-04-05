@@ -5,7 +5,6 @@ import {
   Container, Header, Left, Body, Right, Title,
   Content, Footer, FooterTab, Button, Text, Card,
   CardItem, Thumbnail, Spinner, Icon, StyleProvider,
-  Item, Input, View,
 } from 'native-base'
 import getTheme from '../../../native-base-theme/components'
 import material from '../../../native-base-theme/variables/material'
@@ -46,8 +45,6 @@ export default class CampaignList extends Component {
       isLoading: true,
       appState: AppState.currentState
     })
-
-    this.tempArray = []
   }
 
   componentWillMount() {
@@ -61,7 +58,6 @@ export default class CampaignList extends Component {
         dataSource: this.state.dataSource.cloneWithRows(campaignArray),
         isLoading: false
       })
-      this.tempArray = campaignArray
     }.bind(this))
 
     this.loadStorage()
@@ -140,23 +136,6 @@ export default class CampaignList extends Component {
       .done()
   }
 
-  SearchFilterFunction(text) {
-    const newData = this.tempArray.filter(function (item) {
-      const itemData = item.title.toUpperCase()
-      const textData = text.toUpperCase()
-      return itemData.indexOf(textData) > -1
-    })
-    
-    var tempDataSource = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1.guid != r2.guid
-    })
-
-    this.setState({
-      dataSource: tempDataSource.cloneWithRows(newData),
-      text: text
-    })
-  }
-
   renderRow(rowData, sectionID, rowID) {
     const percent = (rowData.total / (rowData.goal ? rowData.goal : 1))
     return (
@@ -215,12 +194,7 @@ export default class CampaignList extends Component {
       <Spinner /> :
       <Container>
         <Content>
-        <Item regular>
-          <Input placeholder='Search' onChangeText={(text) => this.SearchFilterFunction(text)}
-            value={this.state.text} />
-        </Item>
-
-        <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} removeClippedSubviews={false} />
+          <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} removeClippedSubviews={false} />
         </Content>
       </Container>
 

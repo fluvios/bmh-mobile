@@ -10,7 +10,6 @@ import { cleanTag, convertToRupiah } from '../config/helper'
 import * as Progress from 'react-native-progress'
 import { baseUrl, color } from "../config/variable"
 import Share, { ShareSheet } from 'react-native-share'
-import HTML from 'react-native-render-html'
 
 export default class CampaignDetailInfo extends Component {
 

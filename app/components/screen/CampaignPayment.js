@@ -108,6 +108,13 @@ export default class CampaignPayment extends Component {
                             type: 'Navigation/NAVIGATE',
                             routeName: 'DeliveryScreen'
                         })
+                    } else {
+                        console.log(response)
+                        Toast.show({
+                            text: response.message,
+                            position: 'bottom',
+                            buttonText: 'Dismiss'
+                        })
                     }
                 })
                 break
@@ -121,6 +128,12 @@ export default class CampaignPayment extends Component {
                         })
 
                         this.goBack()
+                    } else {
+                        Toast.show({
+                            text: response.message,
+                            position: 'bottom',
+                            buttonText: 'Dismiss'
+                        })
                     }
                 })
                 break
@@ -135,6 +148,12 @@ export default class CampaignPayment extends Component {
                                 token: token,
                             }
                         })
+                    } else {
+                        Toast.show({
+                            text: response.message,
+                            position: 'bottom',
+                            buttonText: 'Dismiss'
+                        })
                     }
                 })
                 break
@@ -148,6 +167,12 @@ export default class CampaignPayment extends Component {
                             params: {
                                 donation: response,
                             }
+                        })
+                    } else {
+                        Toast.show({
+                            text: response.message,
+                            position: 'bottom',
+                            buttonText: 'Dismiss'
                         })
                     }
                 })
@@ -238,7 +263,20 @@ export default class CampaignPayment extends Component {
         let total = parseInt(this.state.cash) + parseInt(this.state.asset) + parseInt(this.state.debt) + parseInt(this.state.gold) + parseInt(this.state.stock) + parseInt(this.state.invest)
         this.setState({ hartaTotal: total.toString() })
         let jumlah = ''
-        if(total >= this.state.nishabEmas ) {
+        if (total >= this.state.nishabEmas) {
+            jumlah = total.toString()
+        } else {
+            jumlah = 'Tidak Mencukupi Nishab'
+        }
+
+        return jumlah
+    }
+
+    calculateProfesi() {
+        let total = parseInt(this.state.gaji) + parseInt(this.state.tunjangan)
+        this.setState({ pendapatanTotal: total.toString() })
+        let jumlah = ''
+        if (total >= this.state.nishabBeras) {
             jumlah = total.toString()
         } else {
             jumlah = 'Tidak Mencukupi Nishab'
@@ -276,7 +314,7 @@ export default class CampaignPayment extends Component {
                                                 </Item>
                                                 <Item>
                                                     <Input disabled placeholder="Jumlah Zakat Fitrah"
-                                                        value={this.state.jumlahZakatFitrah ? this.state.jumlahZakatFitrah : '0'} />
+                                                        value={!isNaN(this.state.jumlahZakatFitrah) ? this.state.jumlahZakatFitrah : '0'} />
                                                 </Item>
                                                 <Button block textStyle={{ color: '#87838B' }}
                                                     onPress={() => {
@@ -291,38 +329,50 @@ export default class CampaignPayment extends Component {
                                             <Form>
                                                 <Item>
                                                     <Input placeholder="Uang Kas & Bank"
-                                                        onChangeText={(text) => this.setState({ cash: text, 
-                                                            jumlahZakatMal: this.calculateMal() })}
+                                                        onChangeText={(text) => this.setState({
+                                                            cash: text,
+                                                            jumlahZakatMal: this.calculateMal()
+                                                        })}
                                                         value={this.state.cash} />
                                                 </Item>
                                                 <Item>
                                                     <Input placeholder="Total Asset (yg digunakan tidak perlu dihitung)"
-                                                        onChangeText={(text) => this.setState({ asset: text, 
-                                                            jumlahZakatMal: this.calculateMal() })}
+                                                        onChangeText={(text) => this.setState({
+                                                            asset: text,
+                                                            jumlahZakatMal: this.calculateMal()
+                                                        })}
                                                         value={this.state.asset} />
                                                 </Item>
                                                 <Item>
                                                     <Input placeholder="Piutang Tertagih"
-                                                        onChangeText={(text) => this.setState({ debt: text, 
-                                                            jumlahZakatMal: this.calculateMal() })}
+                                                        onChangeText={(text) => this.setState({
+                                                            debt: text,
+                                                            jumlahZakatMal: this.calculateMal()
+                                                        })}
                                                         value={this.state.debt} />
                                                 </Item>
                                                 <Item>
                                                     <Input placeholder="Emas & Perhiasan lain"
-                                                        onChangeText={(text) => this.setState({ gold: text, 
-                                                            jumlahZakatMal: this.calculateMal() })}
+                                                        onChangeText={(text) => this.setState({
+                                                            gold: text,
+                                                            jumlahZakatMal: this.calculateMal()
+                                                        })}
                                                         value={this.state.gold} />
                                                 </Item>
                                                 <Item>
                                                     <Input placeholder="Saham, obligasi, dana pensiun, asuransi yang diterima"
-                                                        onChangeText={(text) => this.setState({ stock: text, 
-                                                            jumlahZakatMal: this.calculateMal() })}
+                                                        onChangeText={(text) => this.setState({
+                                                            stock: text,
+                                                            jumlahZakatMal: this.calculateMal()
+                                                        })}
                                                         value={this.state.stock} />
                                                 </Item>
                                                 <Item>
                                                     <Input placeholder="Dana yg diinvestasikan"
-                                                        onChangeText={(text) => this.setState({ invest: text, 
-                                                            jumlahZakatMal: this.calculateMal() })}
+                                                        onChangeText={(text) => this.setState({
+                                                            invest: text,
+                                                            jumlahZakatMal: this.calculateMal()
+                                                        })}
                                                         value={this.state.invest} />
                                                 </Item>
                                                 <Item>
@@ -335,11 +385,11 @@ export default class CampaignPayment extends Component {
                                                 </Item>
                                                 <Item>
                                                     <Input disabled placeholder="Jumlah Harta"
-                                                        value={this.state.hartaTotal} />
+                                                        value={!isNaN(this.state.hartaTotal) ? this.state.hartaTotal : '0'} />
                                                 </Item>
                                                 <Item>
                                                     <Input disabled placeholder="Jumlah Zakat Maal"
-                                                        value={this.state.jumlahZakatMal} />
+                                                        value={!isNaN(this.state.jumlahZakatMal) ? this.state.jumlahZakatMal : '0'} />
                                                 </Item>
                                                 <Button block textStyle={{ color: '#87838B' }}
                                                     onPress={() => {
@@ -353,22 +403,35 @@ export default class CampaignPayment extends Component {
                                         <Tab heading="Profesi">
                                             <Form>
                                                 <Item>
-                                                    <Input placeholder="Jumlah Anggota Keluarga"
-                                                        onChangeText={(text) => this.setState({ jumlahKeluarga: text, jumlahZakatFitrah: (parseInt(text) * parseInt(this.state.hargaBeras)).toString() })}
-                                                        value={this.state.jumlahKeluarga} />
+                                                    <Input placeholder="Jumlah Penghasilan Per Bulan"
+                                                        onChangeText={(text) => this.setState({ gaji: text, jumlahZakatProfesi: this.calculateProfesi() })}
+                                                        value={this.state.gaji} />
+                                                </Item>
+                                                <Item>
+                                                    <Input placeholder="Jumlah Pendapatan Lain Per Bulan"
+                                                        onChangeText={(text) => this.setState({ tunjangan: text, jumlahZakatProfesi: this.calculateProfesi() })}
+                                                        value={this.state.tunjangan} />
                                                 </Item>
                                                 <Item>
                                                     <Input disabled placeholder="Harga Beras"
                                                         value={this.state.hargaBeras} />
                                                 </Item>
                                                 <Item>
-                                                    <Input disabled placeholder="Jumlah Zakat Fitrah"
-                                                        value={this.state.jumlahZakatFitrah ? this.state.jumlahZakatFitrah : '0'} />
+                                                    <Input disabled placeholder="Nishab (520 Kg)"
+                                                        value={this.state.nishabBeras} />
+                                                </Item>
+                                                <Item>
+                                                    <Input disabled placeholder="Pendapatan Total"
+                                                        value={!isNaN(this.state.pendapatanTotal) ? this.state.pendapatanTotal : '0'} />
+                                                </Item>
+                                                <Item>
+                                                    <Input disabled placeholder="Jumlah Zakat Profesi"
+                                                        value={!isNaN(this.state.jumlahZakatProfesi) ? this.state.jumlahZakatProfesi : '0'} />
                                                 </Item>
                                                 <Button block textStyle={{ color: '#87838B' }}
                                                     onPress={() => {
                                                         this.setModalVisible(!this.state.modalVisible);
-                                                        this.setState({ amount: convertToAngka(this.state.jumlahZakatFitrah) })
+                                                        this.setState({ amount: convertToAngka(this.state.jumlahZakatProfesi) })
                                                     }}>
                                                     <Text>Hitung</Text>
                                                 </Button>

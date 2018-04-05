@@ -103,6 +103,7 @@ export const CampaignStack = StackNavigator({
         navigationOptions: {
             title: 'Midtrans',
             tabBarVisible: false,
+            headerLeft: null
         }
     },
 })
@@ -168,6 +169,7 @@ export const DepositoStack = StackNavigator({
         navigationOptions: {
             title: 'Midtrans',
             tabBarVisible: false,
+            headerLeft: null
         }
     },
 })

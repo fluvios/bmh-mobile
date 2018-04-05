@@ -6,7 +6,7 @@ import {
 import {
   Container, Header, Left, Body, Right, Title,
   Content, Footer, FooterTab, Button, Text, Card,
-  CardItem, Thumbnail, Spinner,
+  CardItem, Thumbnail, Spinner, Item, Input,
 } from 'native-base'
 import { cleanTag, convertToSlug, shortenDescription } from '../config/helper'
 import * as Progress from 'react-native-progress'
@@ -27,6 +27,8 @@ export default class NewsListBerita extends Component {
       dataSource: dataSource.cloneWithRows(campaignArray),
       isLoading: true,
     })
+
+    this.tempArray = []
   }
 
   componentDidMount() {
@@ -36,6 +38,7 @@ export default class NewsListBerita extends Component {
         dataSource: this.state.dataSource.cloneWithRows(campaignArray),
         isLoading: false
       })
+      this.tempArray = campaignArray
     }.bind(this))
   }
 
@@ -55,14 +58,33 @@ export default class NewsListBerita extends Component {
       .done()
   }
 
+  SearchFilterFunction(text) {
+    const newData = this.tempArray.filter(function (item) {
+      const itemData = cleanTag(item.title.rendered.toUpperCase())
+      const textData = text.toUpperCase()
+      return itemData.indexOf(textData) > -1
+    })
+
+    var tempDataSource = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1.guid != r2.guid
+    })
+
+    this.setState({
+      dataSource: tempDataSource.cloneWithRows(newData),
+      text: text
+    })
+  }
+
   renderRow(rowData, sectionID, rowID) {
     return (
       <Card style={{ flex: 0 }}>
         <CardItem>
           <Left>
             <Body>
-              {/* <Text>{cleanTag(rowData.title.rendered)}</Text> */}
-              <HTML html={rowData.title.rendered} />
+              <Text onPress={() => this.props.data.propies.navigation.navigate('DetailScreen', {
+                campaign: rowData,
+              })}>{cleanTag(rowData.title.rendered)}</Text>
+              {/* <HTML html={rowData.title.rendered} /> */}
               <Text note>{rowData.date}</Text>
             </Body>
           </Left>
@@ -75,7 +97,7 @@ export default class NewsListBerita extends Component {
             </Text>
           </Body>
         </CardItem>
-        <CardItem>
+        {/* <CardItem>
           <Left />
           <Body />
           <Right>
@@ -86,7 +108,7 @@ export default class NewsListBerita extends Component {
               <Text>Read</Text>
             </Button>
           </Right>
-        </CardItem>
+        </CardItem> */}
       </Card>
     )
   }
@@ -94,7 +116,16 @@ export default class NewsListBerita extends Component {
   render() {
     let campaign = (this.state.isLoading) ?
       <Spinner /> :
-      <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} />
+      <Container>
+        <Content>
+          <Item regular style={{ width: '100%', marginHorizontal: 0, marginVertical: 5, paddingHorizontal: 0 }}>
+            <Input placeholder='Search' onChangeText={(text) => this.SearchFilterFunction(text)}
+              value={this.state.text} />
+          </Item>
+
+          <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} />
+        </Content>
+      </Container>
 
     return campaign
   }

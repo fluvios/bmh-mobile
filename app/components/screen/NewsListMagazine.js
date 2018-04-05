@@ -12,7 +12,6 @@ import { cleanTag, convertToSlug, shortenDescription } from '../config/helper'
 import * as Progress from 'react-native-progress'
 import { styles } from "../config/styles"
 import { wpUrl, baseUrl } from "../config/variable"
-import Wordpress from 'react-native-wordpress'
 
 export default class NewsListMagazine extends Component {
     constructor(props) {
@@ -50,8 +49,7 @@ export default class NewsListMagazine extends Component {
     }
 
     render() {
-        return (
-            <Wordpress url={'bmh.or.id'} />
-        )
+        // return (
+        // )
     }
 }
