@@ -38,13 +38,14 @@ export default class NewsList extends Component {
         storage.load({
             key: 'user'
         }).then(ret => {
-            isLogin = true            
+            isLogin = true
             this.props.navigation.setParams({
                 handleProfile: this.profile,
-                user: ret
+                user: ret,
             })
         }).catch(err => {
             console.log(err.message)
+            isLogin = false
             this.props.navigation.setParams({
                 handleProfile: this.profile,
             })

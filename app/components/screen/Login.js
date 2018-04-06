@@ -14,7 +14,10 @@ import PasswordInputText from 'react-native-hide-show-password-input'
 const FBSDK = require('react-native-fbsdk')
 const {
     LoginButton,
-    AccessToken
+    AccessToken,
+    LoginManager,
+    GraphRequest,
+    GraphRequestManager
 } = FBSDK
 const Constants = {
     //Dev Parse keys
@@ -37,12 +40,49 @@ export default class Login extends Component {
             showRegister: false,
             showForgot: false,
             email: '',
-            password: ''
+            password: '',
+            user_id: ''
         }
+
+        var _registerUser = this._registerUser
     }
 
     getAccount(params, callback) {
         fetch(baseUrl + "api/login", {
+            method: "POST",
+            body: JSON.stringify(params),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+            .then((response) => response.json())
+            .then(json => callback(json))
+            .catch((error) => {
+                console.error(error)
+            })
+            .done()
+    }
+
+    _getAccountFromFacebook(params, callback) {
+        fetch(baseUrl + "api/login-facebook", {
+            method: "POST",
+            body: JSON.stringify(params),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+            .then((response) => response.json())
+            .then(json => callback(json))
+            .catch((error) => {
+                console.error(error)
+            })
+            .done()
+    }
+
+    _registerUser(params, callback) {
+        fetch(baseUrl + "api/register", {
             method: "POST",
             body: JSON.stringify(params),
             headers: {
@@ -153,8 +193,86 @@ export default class Login extends Component {
         })
     }
 
-    loginTwitter() {
+    handleLoginFacebook = () => {
+        const nav = this.props.navigation
+        LoginManager.logInWithReadPermissions(['public_profile']).then(
+            (result) => {
+                if (result.isCancelled) {
+                    console.log('Login cancelled')
+                } else {
+                    AccessToken.getCurrentAccessToken().then(
+                        (data) => {
+                            const form  = { user_id: data.userID.toString()}
+                            this._getAccountFromFacebook(form, (response) => {
+                                if (response.status === 'active') {
+                                    storage.save({
+                                        key: 'user',
+                                        data: response
+                                    })
+                                    if (nav.state.params) {
+                                        nav.navigate(nav.state.params.goto, {
+                                            campaign: nav.state.params.item,
+                                            user: response
+                                        })
+                                        Toast.show({
+                                            text: 'Login Success',
+                                            position: 'bottom',
+                                            buttonText: 'Dismiss'
+                                        })
+                                    } else {
+                                        // nav.goBack()
+                                        const resetAction = NavigationActions.reset({
+                                            index: 0,
+                                            actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
+                                        })
+                                        nav.dispatch(resetAction)
+                                        Toast.show({
+                                            text: 'Login Success',
+                                            position: 'bottom',
+                                            buttonText: 'Dismiss'
+                                        })
+                                    }
+                                } else {
+                                    this._registerUser(form, (response) => {
+                                        if (response.success == true) {
+                                            storage.save({
+                                                key: 'user',
+                                                data: response
+                                            })
+                                            if (nav.state.params) {
+                                                nav.navigate(nav.state.params.goto, {
+                                                    campaign: nav.state.params.item,
+                                                    user: response
+                                                })
+                                                Toast.show({
+                                                    text: 'Login Success',
+                                                    position: 'bottom',
+                                                    buttonText: 'Dismiss'
+                                                })
+                                            } else {
+                                                const resetAction = NavigationActions.reset({
+                                                    index: 0,
+                                                    actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
+                                                })
+                                                nav.dispatch(resetAction)
+                                                Toast.show({
+                                                    text: 'Login Success',
+                                                    position: 'bottom',
+                                                    buttonText: 'Dismiss'
+                                                })
+                                            }
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    ).catch(err => console.log(err))
 
+                }
+            },
+            (error) => {
+                console.log('Login fail with error: ' + error)
+            })
     }
 
     render() {
@@ -203,31 +321,11 @@ export default class Login extends Component {
                             </View>
                         </View>
                         <View style={styles.deviderColumn}>
-                            <LoginButton
-                                publishPermissions={["publish_actions"]}
-                                onLoginFinished={
-                                    (error, result) => {
-                                        if (error) {
-                                            alert("login has error: " + result.error);
-                                        } else if (result.isCancelled) {
-                                            alert("login is cancelled.");
-                                        } else {
-                                            AccessToken.getCurrentAccessToken().then(
-                                                (data) => {
-                                                    alert(data.accessToken.toString())
-                                                }
-                                            )
-                                        }
-                                    }
-                                }
-                                onLogoutFinished={() => alert("logout.")} />
-                        </View>
-                        {/* <View style={styles.deviderColumn}>
-                            <Button iconLeft block style={{ backgroundColor: '#00aced' }} onPress={() => this.loginTwitter()}>
-                                <Icon name='logo-twitter' />
-                                <Text style={styles.buttonText}>Masuk Menggunakan Twitter</Text>
+                            <Button iconLeft block style={{ backgroundColor: '#3b5998' }} onPress={() => this.handleLoginFacebook()}>
+                                <Icon name='logo-facebook' />
+                                <Text style={styles.buttonText}>Masuk Menggunakan Facebook</Text>
                             </Button>
-                        </View> */}
+                        </View>
                     </Content>
                 </Container>
             </StyleProvider>

@@ -126,18 +126,13 @@ export default class DepositoList extends Component {
             key: 'user'
         }).then(ret => {
             isLogin = true
-            this.getAccount(ret.id, response => {
-                this.setState({
-                    saldo: response.saldo,
-                    user_id: response.id
-                })
-            })
             this.props.navigation.setParams({
                 handleProfile: this.profile,
-                user: ret
+                user: ret,
             })
         }).catch(err => {
             console.log(err.message)
+            isLogin = false
             this.props.navigation.setParams({
                 handleProfile: this.profile,
             })
