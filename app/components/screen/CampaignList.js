@@ -19,7 +19,7 @@ var storage = new Storage({
   size: 1000,
   storageBackend: AsyncStorage,
   defaultExpires: null,
-  enableCache: true,
+  enableCache: false,
 })
 
 var isLogin = false
@@ -37,6 +37,7 @@ export default class CampaignList extends Component {
 
   constructor(props) {
     super(props)
+
     var dataSource = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1.guid != r2.guid
     })
@@ -48,10 +49,8 @@ export default class CampaignList extends Component {
   }
 
   componentWillMount() {
-    this.loadStorage()
-  }
+    AppState.addEventListener('change', this.handleAppStateChange)
 
-  componentDidMount() {
     this.getCampaign(function (json) {
       campaignArray = json
       this.setState({
@@ -61,7 +60,6 @@ export default class CampaignList extends Component {
     }.bind(this))
 
     this.loadStorage()
-    AppState.addEventListener('change', this.handleAppStateChange)
   }
 
   componentWillUnmount() {
@@ -69,10 +67,9 @@ export default class CampaignList extends Component {
   }
 
   handleAppStateChange = (nextAppState) => {
-    // if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-    //   this.forceUpdate()
-    // }
-    this.forceUpdate()
+    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      this.forceUpdate()
+    }
     this.setState({ appState: nextAppState })
   }
 
@@ -99,13 +96,13 @@ export default class CampaignList extends Component {
       isLogin = true
       this.props.navigation.setParams({
         handleProfile: this.profile,
-        user: ret
+        user: ret,
       })
     }).catch(err => {
       console.log(err.message)
+      isLogin = false
       this.props.navigation.setParams({
         handleProfile: this.profile,
-        user: null
       })
     })
   }
@@ -113,7 +110,7 @@ export default class CampaignList extends Component {
   profile(navigation) {
     if (navigation.state.params.user) {
       navigation.navigate('ProfileScreen', {
-        user: navigation.state.params.user
+        user: navigation.state.params.user,
       })
     } else {
       navigation.navigate('LoginScreen')

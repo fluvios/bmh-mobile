@@ -18,7 +18,7 @@ var storage = new Storage({
     size: 1000,
     storageBackend: AsyncStorage,
     defaultExpires: null,
-    enableCache: true,
+    enableCache: false,
 })
 
 const styles = StyleSheet.create({
@@ -44,15 +44,6 @@ export default class CampaignDeliveryPayment extends Component {
 
     constructor(props) {
         super(props)
-
-        this.state = ({
-            region: {
-                latitude: -6.121435,
-                longitude: 106.774124,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-            }
-        })
     }
 
     onRegionChange = (region) => {
@@ -61,9 +52,16 @@ export default class CampaignDeliveryPayment extends Component {
 
     render() {
         navigator.geolocation.getCurrentPosition((position) => {
-            this.setState({ position: { longitude: position.longitude, latitude: position.latitude } })
+            this.setState({
+                position: {
+                    longitude: position.coords.longitude,
+                    latitude: position.coords.latitude,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta: 0.0421,
+                }
+            })
         }, (error) => {
-            alert(JSON.stringify(error))
+            console.log(JSON.stringify(error))
         }, {
                 enableHighAccuracy: true,
                 timeout: 20000,

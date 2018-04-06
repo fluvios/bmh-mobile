@@ -19,7 +19,7 @@ var storage = new Storage({
     size: 1000,
     storageBackend: AsyncStorage,
     defaultExpires: null,
-    enableCache: true,
+    enableCache: false,
 })
 
 export default class DonationReportList extends Component {

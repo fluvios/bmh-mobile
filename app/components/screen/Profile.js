@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { AsyncStorage, Image, WebView, BackHandler } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import Storage from 'react-native-storage'
 import {
   Container, Content, Card, Button, List, ListItem, Icon, Switch,
-  CardItem, Body, Text, Left, Right, StyleProvider, View
+  CardItem, Body, Text, Left, Right, StyleProvider, View, Toast
 } from 'native-base'
 import { styles } from "../config/styles"
 import { baseUrl } from "../config/variable"
@@ -15,7 +16,7 @@ var storage = new Storage({
   size: 1000,
   storageBackend: AsyncStorage,
   defaultExpires: null,
-  enableCache: true,
+  enableCache: false,
 })
 
 export default class Profile extends Component {
@@ -31,7 +32,8 @@ export default class Profile extends Component {
       user: this.props.navigation.state.params.user,
       showEdit: false,
       isZakat: false,
-      isNotification: false
+      isNotification: false,
+      showToast: false
     })
   }
 
@@ -57,29 +59,29 @@ export default class Profile extends Component {
         user: response,
       })
     })
-
-    BackHandler.addEventListener('hardwareBackPress', this.logOut)
-  }
-
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this.logOut)
   }
 
   logOut() {
     const nav = this.props.navigation
     storage.remove({
       key: 'user'
+    })
+    storage.load({
+      key: 'user'
     }).then(ret => {
-      nav.dispatch({
-        type: "Navigation/BACK",
-      })
+      console.log(ret)
+    }).catch(err => {
+      console.log(err.message)
       Toast.show({
         text: 'Logout Success',
         position: 'bottom',
         buttonText: 'Dismiss'
       })
-      // BackHandler.exitApp()
-      // return true
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
+      })
+      nav.dispatch(resetAction)
     })
   }
 

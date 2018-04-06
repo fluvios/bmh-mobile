@@ -18,7 +18,7 @@ var storage = new Storage({
     size: 1000,
     storageBackend: AsyncStorage,
     defaultExpires: null,
-    enableCache: true,
+    enableCache: false,
 })
 
 const styles = StyleSheet.create({
@@ -44,27 +44,18 @@ export default class SaldoDeliveryPayment extends Component {
 
     constructor(props) {
         super(props)
-
-        this.state = ({
-            region: {
-                latitude: -6.121435,
-                longitude: 106.774124,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-            }
-        })
     }
 
     onRegionChange = (region) => {
         this.setState({ region })
     }
 
-    componentDidMount() {
+    render() {
         navigator.geolocation.getCurrentPosition((position) => {
             this.setState({
-                region: {
-                    longitude: position.longitude, 
-                    latitude: position.latitude, 
+                position: {
+                    longitude: position.coords.longitude, 
+                    latitude: position.coords.latitude, 
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 }
@@ -72,18 +63,17 @@ export default class SaldoDeliveryPayment extends Component {
         }, (error) => {
             console.log(JSON.stringify(error))
         }, {
-                enableHighAccuracy: true,
+                enableHighAccuracy: false,
                 timeout: 20000,
                 maximumAge: 1000
             })
-    }
 
-    render() {
+
         return (
             <View style={styles.container}>
                 <MapView
                     style={styles.map}
-                    region={this.state.region}
+                    region={this.state.position}
                     onRegionChangeComplete={this.onRegionChange}
                     provider={this.props.provider}
                     zoomEnabled={true}

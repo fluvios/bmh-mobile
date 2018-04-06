@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component, NativeModules } from 'react'
 import { View, AsyncStorage, Image, Text, WebView, } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import {
     Container, Item, Input, Header, Body, Content, Icon,
     Title, Button, Label, Spinner, Toast, H1, Form, StyleProvider
@@ -15,25 +16,17 @@ const {
     LoginButton,
     AccessToken
 } = FBSDK
-// import OAuthManager from 'react-native-oauth'
-
-// const manager = new OAuthManager('Berbagikebaikan')
-// manager.configure({
-//     twitter: {
-//         consumer_key: 'jCsPnR8eQ1lLP3KC9XlPCRUJo',
-//         consumer_secret: '7MwZHve1fX2ThCJnOR6CxHHHp9OHnTTWAUAPV4y5lymP7N78AO'
-//     },
-//     facebook: {
-//         client_id: '1030581603764130',
-//         client_secret: '6bfdffc28bd657bb3496ae1fd66d354f'
-//     }
-// })
+const Constants = {
+    //Dev Parse keys
+    TWITTER_COMSUMER_KEY: "jCsPnR8eQ1lLP3KC9XlPCRUJo",
+    TWITTER_CONSUMER_SECRET: "7MwZHve1fX2ThCJnOR6CxHHHp9OHnTTWAUAPV4y5lymP7N78AO"
+}
 
 var storage = new Storage({
     size: 1000,
     storageBackend: AsyncStorage,
     defaultExpires: null,
-    enableCache: true,
+    enableCache: false,
 })
 
 export default class Login extends Component {
@@ -84,9 +77,12 @@ export default class Login extends Component {
                         buttonText: 'Dismiss'
                     })
                 } else {
-                    nav.dispatch({
-                        type: "Navigation/BACK",
+                    // nav.goBack()
+                    const resetAction = NavigationActions.reset({
+                        index: 0,
+                        actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
                     })
+                    nav.dispatch(resetAction)
                     Toast.show({
                         text: 'Login Success',
                         position: 'bottom',
@@ -157,16 +153,8 @@ export default class Login extends Component {
         })
     }
 
-    loginFacebook() {
-        // manager.authorize('facebook')
-        //     .then(resp => console.log(resp))
-        //     .catch(err => console.log(err))
-    }
-
     loginTwitter() {
-        // manager.authorize('twitter')
-        //     .then(resp => console.log(resp))
-        //     .catch(err => console.log(err))
+
     }
 
     render() {
@@ -215,10 +203,6 @@ export default class Login extends Component {
                             </View>
                         </View>
                         <View style={styles.deviderColumn}>
-                            {/* <Button iconLeft block style={{ backgroundColor: '#3b5998' }} onPress={() => this.loginFacebook()}>
-                                <Icon name='logo-facebook' />
-                                <Text style={styles.buttonText}>Masuk Menggunakan Facebook</Text>
-                            </Button> */}
                             <LoginButton
                                 publishPermissions={["publish_actions"]}
                                 onLoginFinished={
@@ -238,12 +222,12 @@ export default class Login extends Component {
                                 }
                                 onLogoutFinished={() => alert("logout.")} />
                         </View>
-                        <View style={styles.deviderColumn}>
+                        {/* <View style={styles.deviderColumn}>
                             <Button iconLeft block style={{ backgroundColor: '#00aced' }} onPress={() => this.loginTwitter()}>
                                 <Icon name='logo-twitter' />
                                 <Text style={styles.buttonText}>Masuk Menggunakan Twitter</Text>
                             </Button>
-                        </View>
+                        </View> */}
                     </Content>
                 </Container>
             </StyleProvider>

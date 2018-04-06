@@ -72,6 +72,9 @@
 		25B6EC42C6664FFD9D302AAE /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71D953EAE7F24A3BB5121BA5 /* libAirMaps.a */; };
 		E8503C2A5CF94E29B508361E /* libRNShare.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DD8518D8BA2424692085CA0 /* libRNShare.a */; };
 		99F3763D44904EA5B604A49A /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 76510C6B29A643399267A120 /* libRCTFBSDK.a */; };
+		F2ECFCE1535442E6A29B4906 /* libyoga.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EA75A25B51544C89C915DA7 /* libyoga.a */; };
+		3E7BC8BEADA141D4856BC508 /* libcxxreact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7BEC314D3C47E580F93507 /* libcxxreact.a */; };
+		2DC260B161394D4394A21E49 /* libjschelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49DDF4BE3EE74D70B3DB7E97 /* libjschelpers.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -364,6 +367,10 @@
 		5DD8518D8BA2424692085CA0 /* libRNShare.a */ = {isa = PBXFileReference; name = "libRNShare.a"; path = "libRNShare.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		B2A638311EDE4BD299DC29C3 /* RCTFBSDK.xcodeproj */ = {isa = PBXFileReference; name = "RCTFBSDK.xcodeproj"; path = "../../../node_modules/react-native-fbsdk/ios/RCTFBSDK.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		76510C6B29A643399267A120 /* libRCTFBSDK.a */ = {isa = PBXFileReference; name = "libRCTFBSDK.a"; path = "libRCTFBSDK.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		CD98B6B8E1FB400193FF8359 /* RNTwitterSignIn.xcodeproj */ = {isa = PBXFileReference; name = "RNTwitterSignIn.xcodeproj"; path = "../../../node_modules/react-native-twitter-signin/ios/RNTwitterSignIn.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		6EA75A25B51544C89C915DA7 /* libyoga.a */ = {isa = PBXFileReference; name = "libyoga.a"; path = "libyoga.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		1C7BEC314D3C47E580F93507 /* libcxxreact.a */ = {isa = PBXFileReference; name = "libcxxreact.a"; path = "libcxxreact.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		49DDF4BE3EE74D70B3DB7E97 /* libjschelpers.a */ = {isa = PBXFileReference; name = "libjschelpers.a"; path = "libjschelpers.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -400,6 +407,9 @@
 				25B6EC42C6664FFD9D302AAE /* libAirMaps.a in Frameworks */,
 				E8503C2A5CF94E29B508361E /* libRNShare.a in Frameworks */,
 				99F3763D44904EA5B604A49A /* libRCTFBSDK.a in Frameworks */,
+				F2ECFCE1535442E6A29B4906 /* libyoga.a in Frameworks */,
+				3E7BC8BEADA141D4856BC508 /* libcxxreact.a in Frameworks */,
+				2DC260B161394D4394A21E49 /* libjschelpers.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -585,6 +595,7 @@
 				63543E733E224B26BE31A4CC /* AirMaps.xcodeproj */,
 				FF8A34EDF1C1494FBDD557BA /* RNShare.xcodeproj */,
 				B2A638311EDE4BD299DC29C3 /* RCTFBSDK.xcodeproj */,
+				CD98B6B8E1FB400193FF8359 /* RNTwitterSignIn.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1227,6 +1238,9 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1236,6 +1250,7 @@
 					"$(SRCROOT)\..\..\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-twitter-signin\ios/**",
 				);
 			};
 			name = Debug;
@@ -1263,6 +1278,9 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1272,6 +1290,7 @@
 					"$(SRCROOT)\..\..\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-twitter-signin\ios/**",
 				);
 			};
 			name = Release;
@@ -1299,6 +1318,7 @@
 					"$(SRCROOT)\..\..\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-twitter-signin\ios/**",
 				);
 			};
 			name = Debug;
@@ -1325,6 +1345,7 @@
 					"$(SRCROOT)\..\..\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-twitter-signin\ios/**",
 				);
 			};
 			name = Release;
@@ -1361,6 +1382,9 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1370,6 +1394,7 @@
 					"$(SRCROOT)\..\..\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-twitter-signin\ios/**",
 				);
 			};
 			name = Debug;
@@ -1406,6 +1431,9 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1415,6 +1443,7 @@
 					"$(SRCROOT)\..\..\..\node_modules\react-native-maps\lib\ios/**",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-twitter-signin\ios/**",
 				);
 			};
 			name = Release;
@@ -1446,6 +1475,9 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1470,6 +1502,9 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

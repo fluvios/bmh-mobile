@@ -16,7 +16,7 @@ var storage = new Storage({
     size: 1000,
     storageBackend: AsyncStorage,
     defaultExpires: null,
-    enableCache: true,
+    enableCache: false,
 })
 
 var isLogin = false
