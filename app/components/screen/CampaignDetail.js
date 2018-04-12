@@ -87,9 +87,9 @@ export default class CampaignDetail extends Component {
                             <Tab heading="Detail">
                                 <CampaignDetailText data={{ campaign }} />
                             </Tab>
-                            <Tab heading="Info">
+                            {/* <Tab heading="Info">
                                 <CampaignDetailInfo data={{ campaign }} />
-                            </Tab>
+                            </Tab> */}
                             <Tab heading="Updates">
                                 <CampaignDetailStory data={{ campaign }} />
                             </Tab>

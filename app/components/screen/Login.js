@@ -11,6 +11,7 @@ import Storage from 'react-native-storage'
 import { baseUrl } from "../config/variable"
 import { styles } from "../config/styles"
 import PasswordInputText from 'react-native-hide-show-password-input'
+import { TextField } from 'react-native-material-textfield'
 const FBSDK = require('react-native-fbsdk')
 const {
     LoginButton,
@@ -202,7 +203,7 @@ export default class Login extends Component {
                 } else {
                     AccessToken.getCurrentAccessToken().then(
                         (data) => {
-                            const form  = { user_id: data.userID.toString()}
+                            const form = { user_id: data.userID.toString() }
                             this._getAccountFromFacebook(form, (response) => {
                                 if (response.status === 'active') {
                                     storage.save({
@@ -289,14 +290,12 @@ export default class Login extends Component {
                             }} />
                         </View>
                         <Form>
-                            <Item floatingLabel style={{ width: '100%', marginLeft: 0, paddingLeft: 0, paddingRight: 0, marginRight: 0 }}>
-                                <Label style={{ color: "#999" }}>Email</Label>
-                                <Input
-                                    keyboardType='email-address'
-                                    onChangeText={(email) => this.setState({ email })}
-                                    value={this.state.email} />
-                            </Item>
                             <View>
+                                <TextField
+                                    label='Alamat Email'
+                                    value={this.state.email}
+                                    onChangeText={(email) => this.setState({ email })}
+                                />
                                 <PasswordInputText
                                     value={this.state.password}
                                     onChangeText={(password) => this.setState({ password })}

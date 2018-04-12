@@ -1,39 +1,80 @@
 import React, { Component } from 'react'
-import {
-    StyleSheet, ScrollView, ListView, WebView,
-    View, Image, TouchableHighlight, Linking
-} from 'react-native'
+import { ListView, AsyncStorage, Image, AppState } from 'react-native'
+import Storage from 'react-native-storage'
 import {
     Container, Header, Left, Body, Right, Title,
     Content, Footer, FooterTab, Button, Text, Card,
-    CardItem, Thumbnail, Spinner,
+    CardItem, Thumbnail, Spinner, Icon, StyleProvider,
 } from 'native-base'
-import { cleanTag, convertToSlug, shortenDescription } from '../config/helper'
+import getTheme from '../../../native-base-theme/components'
+import material from '../../../native-base-theme/variables/material'
+import { cleanTag, convertToSlug, shortenDescription, convertToRupiah } from '../config/helper'
 import * as Progress from 'react-native-progress'
 import { styles } from "../config/styles"
-import { wpUrl, baseUrl } from "../config/variable"
+import { baseUrl, color } from "../config/variable"
+import Moment from 'react-moment'
+var campaignArray = []
+
+var storage = new Storage({
+    size: 1000,
+    storageBackend: AsyncStorage,
+    defaultExpires: null,
+    enableCache: false,
+})
+
+var isLogin = false
 
 export default class NewsListMagazine extends Component {
+
+    static navigationOptions = ({ navigation }) => ({
+        title: 'Berbagi Kebaikan',
+        headerRight: (
+            <Button icon transparent onPress={() => { navigation.state.params.handleProfile(navigation) }}>
+                {isLogin ? <Icon name='contact' style={{ color: '#f38d1f' }} /> : <Text style={{ color: '#f38d1f' }}>Login</Text>}
+            </Button>
+        ),
+    })
+
     constructor(props) {
         super(props)
+
+        var dataSource = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1.guid != r2.guid
+        })
         this.state = ({
-            content: '',
+            dataSource: dataSource.cloneWithRows(campaignArray),
             isLoading: true,
+            appState: AppState.currentState
         })
     }
 
-    componentDidMount() {
-        this.getCampaign(function (json) {
-            news = json
+    componentWillMount() {
+        AppState.addEventListener('change', this.handleAppStateChange)
+
+        this.getMagazine(function (json) {
+            campaignArray = json
             this.setState({
-                content: news.guid.rendered,
+                dataSource: this.state.dataSource.cloneWithRows(campaignArray),
                 isLoading: false
             })
         }.bind(this))
+
+        this.loadStorage()
     }
 
-    getCampaign(callback) {
-        fetch(wpUrl + "pages/1058", {
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this.handleAppStateChange)
+    }
+
+    handleAppStateChange = (nextAppState) => {
+        if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+            this.forceUpdate()
+        }
+        this.setState({ appState: nextAppState })
+    }
+
+    getAccount(params, callback) {
+        fetch(baseUrl + "api/account/" + params + "/refresh", {
             method: "GET",
             headers: {
                 'Accept': 'application/json',
@@ -48,8 +89,82 @@ export default class NewsListMagazine extends Component {
             .done()
     }
 
+    loadStorage() {
+        storage.load({
+            key: 'user'
+        }).then(ret => {
+            isLogin = true
+            this.props.navigation.setParams({
+                handleProfile: this.profile,
+                user: ret,
+            })
+        }).catch(err => {
+            console.log(err.message)
+            isLogin = false
+            this.props.navigation.setParams({
+                handleProfile: this.profile,
+            })
+        })
+    }
+
+    profile(navigation) {
+        if (navigation.state.params.user) {
+            navigation.navigate('ProfileScreen', {
+                user: navigation.state.params.user,
+            })
+        } else {
+            navigation.navigate('LoginScreen')
+        }
+    }
+
+    getMagazine(callback) {
+        fetch(baseUrl + "api/magazines", {
+            method: "GET",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+            .then((response) => response.json())
+            .then(json => callback(json.data))
+            .catch((error) => {
+                console.error(error)
+            })
+            .done()
+    }
+
+    renderRow(rowData, sectionID, rowID) {
+        const percent = (rowData.total / (rowData.goal ? rowData.goal : 1))
+        return (
+            <StyleProvider style={getTheme(material)}>
+                <Card style={{ flex: 0 }}>
+                    <CardItem>
+                        <Left>
+                            <Text>{rowData.filename}</Text>
+                        </Left>
+                        <Right>
+                            <Button style={{ backgroundColor: '#f38d1f' }}
+                                onPress={() => this.props.data.propies.navigation.navigate('ReadScreen', {
+                                    magazine: rowData,
+                                })}>
+                                <Text>Read</Text>
+                            </Button>
+                        </Right>
+                    </CardItem>
+                </Card>
+            </StyleProvider>
+        )
+    }
+
     render() {
-        // return (
-        // )
+        let campaign = (this.state.isLoading) ?
+            <Spinner /> :
+            <Container>
+                <Content>
+                    <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} removeClippedSubviews={false} />
+                </Content>
+            </Container>
+
+        return campaign
     }
 }

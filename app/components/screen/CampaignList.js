@@ -1,19 +1,22 @@
 import React, { Component } from 'react'
-import { ListView, AsyncStorage, Image, AppState } from 'react-native'
+import { ListView, AsyncStorage, Image, AppState, Modal, FlatList, } from 'react-native'
 import Storage from 'react-native-storage'
 import {
-  Container, Header, Left, Body, Right, Title,
-  Content, Footer, FooterTab, Button, Text, Card,
-  CardItem, Thumbnail, Spinner, Icon, StyleProvider,
+  Container, Header, Left, Body, Right, Title, Form, Item,
+  Content, Footer, FooterTab, Button, Text, Card, ListItem,
+  CardItem, Thumbnail, Spinner, Icon, StyleProvider, View,
 } from 'native-base'
 import getTheme from '../../../native-base-theme/components'
 import material from '../../../native-base-theme/variables/material'
 import { cleanTag, convertToSlug, shortenDescription, convertToRupiah } from '../config/helper'
 import * as Progress from 'react-native-progress'
+import { CheckBox } from 'react-native-elements'
 import { styles } from "../config/styles"
 import { baseUrl, color } from "../config/variable"
 import Moment from 'react-moment'
+
 var campaignArray = []
+var filterArray = []
 
 var storage = new Storage({
   size: 1000,
@@ -44,8 +47,14 @@ export default class CampaignList extends Component {
     this.state = ({
       dataSource: dataSource.cloneWithRows(campaignArray),
       isLoading: true,
-      appState: AppState.currentState
+      modalVisible: false,
+      appState: AppState.currentState,
+      kategori_id: 0,
+      funding_id: 0,
+      lokasi_id: 0,
     })
+
+    var tempArray = []
   }
 
   componentWillMount() {
@@ -57,9 +66,72 @@ export default class CampaignList extends Component {
         dataSource: this.state.dataSource.cloneWithRows(campaignArray),
         isLoading: false
       })
+
+      this.tempArray = campaignArray
     }.bind(this))
 
+    this.getFilter(function (json) {
+      filterArray = json
+    })
+
     this.loadStorage()
+  }
+
+  filterKategori(text) {
+    const newData = this.tempArray.filter(function (item) {
+      item.kategori.filter(function (itemKategori) {
+        const itemData = itemKategori.kategori_id
+        const textData = text
+        return itemData.indexOf(textData) > -1
+      })
+
+      const itemData = item.id
+      const textData = text
+      return itemData.indexOf(textData) > -1
+    })
+
+    var tempDataSource = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1.guid != r2.guid
+    })
+
+    this.setState({
+      dataSource: tempDataSource.cloneWithRows(newData),
+      text: text
+    })
+  }
+
+  filterJenisDana(text) {
+    const newData = this.tempArray.filter(function (item) {
+      const itemData = item.categories_id
+      const textData = text
+      return itemData.indexOf(textData) > -1
+    })
+
+    var tempDataSource = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1.guid != r2.guid
+    })
+
+    this.setState({
+      dataSource: tempDataSource.cloneWithRows(newData),
+      text: text
+    })
+  }
+
+  filterJenisDana(text) {
+    const newData = this.tempArray.filter(function (item) {
+      const itemData = item.city_id
+      const textData = text
+      return itemData.indexOf(textData) > -1
+    })
+
+    var tempDataSource = new ListView.DataSource({
+      rowHasChanged: (r1, r2) => r1.guid != r2.guid
+    })
+
+    this.setState({
+      dataSource: tempDataSource.cloneWithRows(newData),
+      text: text
+    })
   }
 
   componentWillUnmount() {
@@ -133,6 +205,22 @@ export default class CampaignList extends Component {
       .done()
   }
 
+  getFilter(callback) {
+    fetch(baseUrl + "api/filter", {
+      method: "GET",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+      .then((response) => response.json())
+      .then(json => callback(json))
+      .catch((error) => {
+        console.error(error)
+      })
+      .done()
+  }
+
   renderRow(rowData, sectionID, rowID) {
     const percent = (rowData.total / (rowData.goal ? rowData.goal : 1))
     return (
@@ -186,13 +274,112 @@ export default class CampaignList extends Component {
     )
   }
 
+  onKategoriPress(value) {
+    this.setState({
+      kategori_id: value.id,
+    })
+  }
+
+  onJenisDanaPress(value) {
+    this.setState({
+      funding_id: value.id,
+    })
+  }
+
+  onJenisDanaPress(value) {
+    this.setState({
+      funding_id: value.id,
+    })
+  }
+
+  filterAll() {
+
+  }
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible })
+  }
+
   render() {
     let campaign = (this.state.isLoading) ?
       <Spinner /> :
       <Container>
-        <Content>
+        <View style={{ flex: 1 }}>
+          <Modal
+            animationType={'slide'}
+            transparent={false}
+            visible={this.state.modalVisible} onRequestClose={() => {
+              console.log('Filter added.')
+            }}>
+            <Form>
+              <Item>
+                <FlatList
+                  extraData={this.state}
+                  keyExtractor={(item, index) => item.id}
+                  data={filterArray.kategori}
+                  renderItem={({ item }) => {
+                    return <ListItem>
+                      <CheckBox
+                        checked={this.state.kategori_id == item.id}
+                        title={item.nama}
+                        onPress={() => this.onKategoriPress(item)}
+                        onIconPress={() => this.onKategoriPress(item)}
+                        containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                      />
+                    </ListItem>
+                  }}
+                />
+              </Item>
+              <Item>
+                <FlatList
+                  extraData={this.state}
+                  keyExtractor={(item, index) => item.id}
+                  data={filterArray.jenis}
+                  renderItem={({ item }) => {
+                    return <ListItem>
+                      <CheckBox
+                        checked={this.state.funding_id == item.id}
+                        title={item.name}
+                        onPress={() => this.onJenisDanaPress(item)}
+                        onIconPress={() => this.onJenisDanaPress(item)}
+                        containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                      />
+                    </ListItem>
+                  }}
+                />
+              </Item>
+              <Item>
+                <FlatList
+                  extraData={this.state}
+                  keyExtractor={(item, index) => item.id}
+                  data={filterArray.kota}
+                  renderItem={({ item }) => {
+                    return <ListItem>
+                      <CheckBox
+                        checked={this.state.lokasi_id == item.id}
+                        title={item.nama}
+                        onPress={() => this.onKotaPress(item)}
+                        onIconPress={() => this.onKotaPress(item)}
+                        containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                      />
+                    </ListItem>
+                  }}
+                />
+              </Item>
+              <Button block textStyle={{ color: '#87838B' }}
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                  this.filterAll();
+                }}>
+                <Text>Filter</Text>
+              </Button>
+            </Form>
+          </Modal>
           <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} removeClippedSubviews={false} />
-        </Content>
+          {/* <View style={{ backgroundColor: '#FFFFFF', height: 40 }}>
+            <Text onPress={() => this.setModalVisible(!this.state.modalVisible)} style={{ fontSize: 22 }}>Filter</Text>
+          </View> */}
+        </View>
       </Container>
 
     return campaign

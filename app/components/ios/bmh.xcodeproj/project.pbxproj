@@ -75,6 +75,8 @@
 		F2ECFCE1535442E6A29B4906 /* libyoga.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EA75A25B51544C89C915DA7 /* libyoga.a */; };
 		3E7BC8BEADA141D4856BC508 /* libcxxreact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C7BEC314D3C47E580F93507 /* libcxxreact.a */; };
 		2DC260B161394D4394A21E49 /* libjschelpers.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 49DDF4BE3EE74D70B3DB7E97 /* libjschelpers.a */; };
+		4DE3DC6E219349408E7AC76C /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F06178A1E6C4FDF92966807 /* libRNFetchBlob.a */; };
+		0696F8E690BF475691AD3506 /* libRCTPdf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B4CEA1F9589B4362A29E6D7F /* libRCTPdf.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -371,6 +373,10 @@
 		6EA75A25B51544C89C915DA7 /* libyoga.a */ = {isa = PBXFileReference; name = "libyoga.a"; path = "libyoga.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		1C7BEC314D3C47E580F93507 /* libcxxreact.a */ = {isa = PBXFileReference; name = "libcxxreact.a"; path = "libcxxreact.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		49DDF4BE3EE74D70B3DB7E97 /* libjschelpers.a */ = {isa = PBXFileReference; name = "libjschelpers.a"; path = "libjschelpers.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		4C6C259E46CE46D39485FA9E /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; name = "RNFetchBlob.xcodeproj"; path = "../../../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		2F06178A1E6C4FDF92966807 /* libRNFetchBlob.a */ = {isa = PBXFileReference; name = "libRNFetchBlob.a"; path = "libRNFetchBlob.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		A96106514F1242ADB1202134 /* RCTPdf.xcodeproj */ = {isa = PBXFileReference; name = "RCTPdf.xcodeproj"; path = "../../../node_modules/react-native-pdf/ios/RCTPdf.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		B4CEA1F9589B4362A29E6D7F /* libRCTPdf.a */ = {isa = PBXFileReference; name = "libRCTPdf.a"; path = "libRCTPdf.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -410,6 +416,8 @@
 				F2ECFCE1535442E6A29B4906 /* libyoga.a in Frameworks */,
 				3E7BC8BEADA141D4856BC508 /* libcxxreact.a in Frameworks */,
 				2DC260B161394D4394A21E49 /* libjschelpers.a in Frameworks */,
+				4DE3DC6E219349408E7AC76C /* libRNFetchBlob.a in Frameworks */,
+				0696F8E690BF475691AD3506 /* libRCTPdf.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -596,6 +604,8 @@
 				FF8A34EDF1C1494FBDD557BA /* RNShare.xcodeproj */,
 				B2A638311EDE4BD299DC29C3 /* RCTFBSDK.xcodeproj */,
 				CD98B6B8E1FB400193FF8359 /* RNTwitterSignIn.xcodeproj */,
+				4C6C259E46CE46D39485FA9E /* RNFetchBlob.xcodeproj */,
+				A96106514F1242ADB1202134 /* RCTPdf.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1241,6 +1251,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1251,6 +1263,8 @@
 					"$(SRCROOT)\..\..\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-twitter-signin\ios/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-fetch-blob\ios/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-pdf\ios\RCTPdf/**",
 				);
 			};
 			name = Debug;
@@ -1281,6 +1295,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1291,6 +1307,8 @@
 					"$(SRCROOT)\..\..\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-twitter-signin\ios/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-fetch-blob\ios/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-pdf\ios\RCTPdf/**",
 				);
 			};
 			name = Release;
@@ -1319,6 +1337,8 @@
 					"$(SRCROOT)\..\..\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-twitter-signin\ios/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-fetch-blob\ios/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-pdf\ios\RCTPdf/**",
 				);
 			};
 			name = Debug;
@@ -1346,6 +1366,8 @@
 					"$(SRCROOT)\..\..\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-twitter-signin\ios/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-fetch-blob\ios/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-pdf\ios\RCTPdf/**",
 				);
 			};
 			name = Release;
@@ -1385,6 +1407,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1395,6 +1419,8 @@
 					"$(SRCROOT)\..\..\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-twitter-signin\ios/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-fetch-blob\ios/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-pdf\ios\RCTPdf/**",
 				);
 			};
 			name = Debug;
@@ -1434,6 +1460,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1444,6 +1472,8 @@
 					"$(SRCROOT)\..\..\..\node_modules\react-native-share\ios",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-fbsdk\ios\RCTFBSDK/**",
 					"$(SRCROOT)\..\..\..\node_modules\react-native-twitter-signin\ios/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-fetch-blob\ios/**",
+					"$(SRCROOT)\..\..\..\node_modules\react-native-pdf\ios\RCTPdf/**",
 				);
 			};
 			name = Release;
@@ -1478,6 +1508,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1502,6 +1534,8 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

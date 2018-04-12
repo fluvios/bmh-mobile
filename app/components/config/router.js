@@ -27,6 +27,7 @@ import ForgotPassword from '../screen/ForgotPassword'
 import MidtransPayment from '../screen/MidtransPayment'
 import EditProfile from "../screen/EditProfile"
 import NewsDownload from '../screen/NewsDownload'
+import ReadMagazine from '../screen/ReadMagazine'
 
 export const CampaignStack = StackNavigator({
     ListScreen: {
@@ -89,6 +90,7 @@ export const CampaignStack = StackNavigator({
         navigationOptions: {
             title: 'Payment',
             tabBarVisible: false,
+            headerLeft: null
         }
     },
     DeliveryScreen: {
@@ -96,6 +98,7 @@ export const CampaignStack = StackNavigator({
         navigationOptions: {
             title: 'Delivery',
             tabBarVisible: false,
+            headerLeft: null
         }
     },
     MidtransScreen: {
@@ -155,6 +158,7 @@ export const DepositoStack = StackNavigator({
         navigationOptions: {
             title: 'Payment',
             tabBarVisible: false,
+            headerLeft: null
         }
     },
     DeliveryScreen: {
@@ -162,6 +166,7 @@ export const DepositoStack = StackNavigator({
         navigationOptions: {
             title: 'Delivery',
             tabBarVisible: false,
+            headerLeft: null
         }
     },
     MidtransScreen: {
@@ -220,6 +225,13 @@ export const NewsStack = StackNavigator({
         screen: NewsDownload,
         navigationOptions: {
             title: 'Download',
+            tabBarVisible: false,
+        }
+    },
+    ReadScreen: {
+        screen: ReadMagazine,
+        navigationOptions: {
+            title: 'Read',
             tabBarVisible: false,
         }
     },

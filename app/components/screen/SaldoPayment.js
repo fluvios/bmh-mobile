@@ -163,21 +163,27 @@ export default class SaldoPayment extends Component {
                             }}
                         />
                     </Item>
-                    <Picker
-                        iosHeader="Select one"
-                        mode="dropdown"
-                        selectedValue={this.state.payment_gateway}
-                        onValueChange={this.onValueChange.bind(this)}
-                    >
-                        <Item label="Metode Pembayaran" value="0" />
-                        {
-                            this.state.banks.map((bank, i) =>
-                                <Item key={i} label={"Transfer " + bank.name} value={bank.id} />
-                            )
-                        }
-                        <Item label="Cash On Delivery" value="Delivery" />
-                        <Item label="Other" value="Payment" />
-                    </Picker>
+                    <Item>
+                        <FlatList
+                            extraData={this.state}
+                            keyExtractor={(item, index) => item.id}
+                            data={this.state.banks}
+                            renderItem={({ item }) => {
+                                return <ListItem>
+                                    <CheckBox
+                                        checked={this.state.payment_gateway == item.id}
+                                        title={''}
+                                        onPress={() => this.onCheckBoxPress(item)}
+                                        onIconPress={() => this.onCheckBoxPress(item)}
+                                        containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                                    />
+                                    <Right>
+                                        <Image source={{ uri: baseUrl + "public/bank/" + item.logo }} style={{ height: 100, width: "100%", flex: 1, resizeMode: 'center' }} />
+                                    </Right>
+                                </ListItem>
+                            }}
+                        />
+                    </Item>
                     <Button full textStyle={{ color: '#87838B' }}
                         onPress={() => this.paymentMethod()}>
                         <Text>Donate</Text>

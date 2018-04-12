@@ -72,6 +72,10 @@ export default class CampaignDetailText extends Component {
               </Body>
             </CardItem>
           </Card>
+          <View style={{ flex: 0 }}>
+            <HTML
+              html={campaign.description} />
+          </View>
         </Content>
       </Container>
     )

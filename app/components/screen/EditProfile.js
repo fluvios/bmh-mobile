@@ -8,6 +8,7 @@ import Storage from 'react-native-storage'
 import { baseUrl } from "../config/variable"
 import { styles } from "../config/styles"
 import PasswordInputText from 'react-native-hide-show-password-input'
+import { TextField } from 'react-native-material-textfield'
 
 var storage = new Storage({
     size: 1000,
@@ -31,6 +32,7 @@ export default class EditProfile extends Component {
     }
 
     updateAccount(params, data, callback) {
+        console.log(JSON.stringify(data))
         fetch(baseUrl + "api/account/" + params + "/edit", {
             method: "POST",
             body: JSON.stringify(data),
@@ -65,15 +67,17 @@ export default class EditProfile extends Component {
 
     editAccount(data) {
         const nav = this.props.navigation
-        this.updateAccount(data.user_id, data, function (response) {
+        this.updateAccount(data.user_id, data, (response) => {
             if (response.success === true) {
                 storage.save({
                     key: 'user',
                     data: response
                 })
-                nav.dispatch({
-                    type: "Navigation/BACK",
+                const resetAction = NavigationActions.reset({
+                    index: 0,
+                    actions: [NavigationActions.navigate({ routeName: 'ProfileScreen' })],
                 })
+                nav.dispatch(resetAction)
                 Toast.show({
                     text: 'Edit Profile Success',
                     position: 'bottom',
@@ -114,31 +118,27 @@ export default class EditProfile extends Component {
             <Container>
                 <Content padder>
                     <Form>
-                        <Item floatingLabel style={{ width: '100%', marginLeft: 0, paddingLeft: 0, paddingRight: 0, marginRight: 0 }}>
-                            <Label>Nama</Label>
-                            <Input
-                                onChangeText={(name) => this.setState({ name })}
-                                value={this.state.name} />
-                        </Item>
-                        <Item floatingLabel style={{ width: '100%', marginLeft: 0, paddingLeft: 0, paddingRight: 0, marginRight: 0 }}>
-                            <Label>Nomor HP 1</Label>
-                            <Input
-                                onChangeText={(phone_number_1) => this.setState({ phone_number_1 })}
-                                value={this.state.phone_number_1} />
-                        </Item>
-                        <Item floatingLabel style={{ width: '100%', marginLeft: 0, paddingLeft: 0, paddingRight: 0, marginRight: 0 }}>
-                            <Label>Nomor HP 2</Label>
-                            <Input
-                                onChangeText={(phone_number_2) => this.setState({ phone_number_2 })}
-                                value={this.state.phone_number_2} />
-                        </Item>
-                        <Item floatingLabel style={{ width: '100%', marginLeft: 0, paddingLeft: 0, paddingRight: 0, marginRight: 0 }}>
-                            <Label>Email Address</Label>
-                            <Input
-                                onChangeText={(email) => this.setState({ email })}
-                                value={this.state.email} />
-                        </Item>
                         <View>
+                            <TextField
+                                label='Nama'
+                                value={this.state.name}
+                                onChangeText={(name) => this.setState({ name })}
+                            />
+                            <TextField
+                                label='Nomor HP 1'
+                                value={this.state.phone_number_1}
+                                onChangeText={(phone_number_1) => this.setState({ phone_number_1 })}
+                            />
+                            <TextField
+                                label='Nomor HP 2'
+                                value={this.state.phone_number_2}
+                                onChangeText={(phone_number_2) => this.setState({ phone_number_2 })}
+                            />
+                            <TextField
+                                label='Alamat Email'
+                                value={this.state.email}
+                                onChangeText={(email) => this.setState({ email })}
+                            />                            
                             <PasswordInputText
                                 value={this.state.password}
                                 onChangeText={(password) => this.setState({ password })}

@@ -39,8 +39,8 @@ export default class DepositoList extends Component {
             indexTop: -1,
             indexBottom: -1,
             banks: [
-                { id: 'Delivery', name: 'Jemput Cash' },
-                { id: 'Midtrans', name: 'Multipayment' },
+                // { id: 'Delivery', name: 'Jemput Cash' },
+                { id: 'Midtrans', label: 'Multipayment' },
             ],
             payment_gateway: 'Delivery',
             user_id: 0,
@@ -369,14 +369,13 @@ export default class DepositoList extends Component {
                                     return <ListItem>
                                         <CheckBox
                                             checked={this.state.payment_gateway == item.id}
+                                            title={item.label ? item.label : <Left>
+                                                <Image source={{ uri: baseUrl + "public/bank/" + item.logo }} style={{ height: 40, width: "100%", flex: 1, resizeMode: 'center' }} />
+                                            </Left>}
                                             onPress={() => this.onCheckBoxPress(item)}
-                                            title={item.name}
                                             onIconPress={() => this.onCheckBoxPress(item)}
                                             containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
                                         />
-                                        <Right>
-                                            <Image source={{ uri: baseUrl + "public/bank/" + item.logo }} style={{ height: 50, width: "100%", flex: 1, resizeMode: 'center' }} />
-                                        </Right>
                                     </ListItem>
                                 }}
                             />
