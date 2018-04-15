@@ -103,24 +103,21 @@ export default class SaldoTransferPayment extends Component {
                             <Text>Rekening Tujuan</Text>
                         </CardItem>
                         <CardItem>
+                            <Left>
+                                <Image source={{ uri: baseUrl + "public/bank/" + this.state.donation.bank.logo }} style={{ height: 50, width: 50, flex: 1, resizeMode: 'center' }} />
+                            </Left>
                             <Body style={styles.wrapCenter}>
-                                <Image source={{ uri: baseUrl + "public/bank/" + this.state.donation.bank.logo }}
-                                    style={{
-                                        height: 125,
-                                        width: '100%',
-                                        flex: 1,
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        resizeMode: 'center'
-                                    }} />
                                 <Text>
-                                    {/* {this.state.donation.bank.branch}{`\n`} */}
+                                    {this.state.donation.bank.name}{`\n`}
+                                    {this.state.donation.bank.branch}{`\n`}
                                     {this.state.donation.bank.account_number}
                                 </Text>
-                                <Button icon transparent onPress={this.writeAccountToClipboard} style={styles.wrapCenter}>
+                            </Body>
+                            <Right>
+                                <Button icon transparent onPress={this.writeAccountToClipboard}>
                                     <Icon name='clipboard' />
                                 </Button>
-                            </Body>
+                            </Right>
                         </CardItem>
                         <CardItem style={styles.wrapCenter}>
                             <Body style={{ backgroundColor: '#FFAA64', padding: 5 }}>

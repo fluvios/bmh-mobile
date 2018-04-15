@@ -50,8 +50,6 @@ export default class DepositoList extends Component {
             token: '',
             usingNominal: false
         }
-
-        this.bankList()
     }
 
     bankList() {
@@ -103,6 +101,7 @@ export default class DepositoList extends Component {
 
     componentWillMount() {
         this.loadStorage()
+        this.bankList()
     }
 
     getAccount(params, callback) {
@@ -126,6 +125,9 @@ export default class DepositoList extends Component {
             key: 'user'
         }).then(ret => {
             isLogin = true
+            this.setState({
+                user_id: ret.id
+            })
             this.props.navigation.setParams({
                 handleProfile: this.profile,
                 user: ret,
@@ -136,27 +138,6 @@ export default class DepositoList extends Component {
             this.props.navigation.setParams({
                 handleProfile: this.profile,
             })
-        })
-    }
-
-    deposit() {
-        storage.load({
-            key: 'user'
-        }).then(ret => {
-            this.paymentMethod()
-        }).catch(err => {
-            // console.error(err.message)
-            switch (err.name) {
-                case 'NotFoundError':
-                    this.props.navigation.navigate('LoginScreen')
-                    break
-                case 'ExpiredError':
-                    storage.remove({
-                        key: 'user'
-                    })
-                    this.props.navigation.navigate('LoginScreen')
-                    break
-            }
         })
     }
 
@@ -202,9 +183,9 @@ export default class DepositoList extends Component {
         const form = this.state
         let donation = form.amount
         if (this.state.usingNominal) {
-            form.amount = Number.parseInt(this.state.nominal)
+            form.amount = parseInt(this.state.nominal)
         } else {
-            form.amount = Number.parseInt(this.state.amount)
+            form.amount = this.state.amount
         }
         switch (this.state.payment_gateway) {
             case 'Delivery':
@@ -381,7 +362,7 @@ export default class DepositoList extends Component {
                             />
                         </Item>
                         <Button full style={{ backgroundColor: '#f38d1f' }}
-                            onPress={() => this.deposit()}>
+                            onPress={() => this.paymentMethod()}>
                             <Text>Tambah Saldo</Text>
                         </Button>
                     </View>
