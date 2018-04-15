@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ListView, AsyncStorage, Image, AppState, Modal, FlatList, } from 'react-native'
+import { ScrollView, AsyncStorage, Image, AppState, Modal, FlatList, ListView, } from 'react-native'
 import Storage from 'react-native-storage'
 import {
   Container, Header, Left, Body, Right, Title, Form, Item,
@@ -51,7 +51,7 @@ export default class CampaignList extends Component {
       appState: AppState.currentState,
       kategori_id: 0,
       funding_id: 0,
-      lokasi_id: 0,
+      lokasi_id: '',
     })
 
     var tempArray = []
@@ -117,7 +117,7 @@ export default class CampaignList extends Component {
     })
   }
 
-  filterJenisDana(text) {
+  filterKota(text) {
     const newData = this.tempArray.filter(function (item) {
       const itemData = item.city_id
       const textData = text
@@ -286,14 +286,18 @@ export default class CampaignList extends Component {
     })
   }
 
-  onJenisDanaPress(value) {
+  onKotaPress(value) {
     this.setState({
-      funding_id: value.id,
+      lokasi_id: value.id_kab,
     })
   }
 
   filterAll() {
+    if (this.state.kategori_id) { this.filterKategori() }
+    if (this.state.funding_id) { this.filterJenisDana() }
+    if (this.state.lokasi_id) { this.filterKota() }
 
+    this.setModalVisible(!this.state.modalVisible)
   }
 
   setModalVisible(visible) {
@@ -312,73 +316,74 @@ export default class CampaignList extends Component {
               console.log('Filter added.')
             }}>
             <Form>
-              <Item>
+              <ScrollView>
+                <Text>Filter berdasarkan Kategori</Text>
                 <FlatList
                   extraData={this.state}
                   keyExtractor={(item, index) => item.id}
                   data={filterArray.kategori}
+                  scrollEnabled={false}
                   renderItem={({ item }) => {
-                    return <ListItem>
-                      <CheckBox
-                        checked={this.state.kategori_id == item.id}
-                        title={item.nama}
-                        onPress={() => this.onKategoriPress(item)}
-                        onIconPress={() => this.onKategoriPress(item)}
-                        containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
-                      />
-                    </ListItem>
+                    return <CheckBox
+                      checked={this.state.kategori_id == item.id}
+                      title={item.nama}
+                      onPress={() => this.onKategoriPress(item)}
+                      onIconPress={() => this.onKategoriPress(item)}
+                      containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                    />
                   }}
                 />
-              </Item>
-              <Item>
+                <Text>Filter berdasarkan Jenis Dana</Text>
                 <FlatList
                   extraData={this.state}
                   keyExtractor={(item, index) => item.id}
-                  data={filterArray.jenis}
+                  data={filterArray['jenis-dana']}
+                  scrollEnabled={false}
                   renderItem={({ item }) => {
-                    return <ListItem>
-                      <CheckBox
-                        checked={this.state.funding_id == item.id}
-                        title={item.name}
-                        onPress={() => this.onJenisDanaPress(item)}
-                        onIconPress={() => this.onJenisDanaPress(item)}
-                        containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
-                      />
-                    </ListItem>
+                    return <CheckBox
+                      checked={this.state.funding_id == item.id}
+                      title={item.name}
+                      onPress={() => this.onJenisDanaPress(item)}
+                      onIconPress={() => this.onJenisDanaPress(item)}
+                      containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                    />
                   }}
                 />
-              </Item>
-              <Item>
+                <Text>Filter berdasarkan Kabupaten/Kota</Text>
                 <FlatList
                   extraData={this.state}
                   keyExtractor={(item, index) => item.id}
                   data={filterArray.kota}
+                  scrollEnabled={false}
                   renderItem={({ item }) => {
-                    return <ListItem>
-                      <CheckBox
-                        checked={this.state.lokasi_id == item.id}
-                        title={item.nama}
-                        onPress={() => this.onKotaPress(item)}
-                        onIconPress={() => this.onKotaPress(item)}
-                        containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
-                      />
-                    </ListItem>
+                    return <CheckBox
+                      checked={this.state.lokasi_id == item.id_kab}
+                      title={item.nama}
+                      onPress={() => this.onKotaPress(item)}
+                      onIconPress={() => this.onKotaPress(item)}
+                      containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                    />
                   }}
                 />
-              </Item>
-              <Button block textStyle={{ color: '#87838B' }}
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                  this.filterAll();
-                }}>
-                <Text>Filter</Text>
-              </Button>
+                <Button full textStyle={{ color: '#87838B' }}
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                    this.filterAll();
+                  }}>
+                  <Text>Filter</Text>
+                </Button>
+              </ScrollView>
             </Form>
           </Modal>
           <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} removeClippedSubviews={false} />
-          {/* <View style={{ backgroundColor: '#FFFFFF', height: 40 }}>
-            <Text onPress={() => this.setModalVisible(!this.state.modalVisible)} style={{ fontSize: 22 }}>Filter</Text>
-          </View> */}
+          <Footer>
+            <FooterTab>
+              <Button full iconLeft onPress={() => this.setModalVisible(!this.state.modalVisible)}>
+                <Icon name='funnel' />
+                <Text>Filter Campaign</Text>
+              </Button>
+            </FooterTab>
+          </Footer>
         </View>
       </Container>
 
