@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { styles } from "../config/styles"
-import { Image, WebView } from 'react-native'
+import { Image, WebView,Dimensions } from 'react-native'
 import {
   Container, Header, Left, Body, Right, Title, Icon,
   Content, Footer, FooterTab, Button, Text, Card, Fab,
@@ -12,22 +12,65 @@ import { baseUrl, color } from "../config/variable"
 import Share, { ShareSheet } from 'react-native-share'
 import HTML from 'react-native-render-html'
 
+const MAX_SCREEN_HEIGHT=Dimensions.get('window').height
+
+
 export default class CampaignDetailText extends Component {
 
   constructor(props) {
     super(props)
   }
 
+  renderDescription(data){
+    console.log(data)
+    if (data != undefined || data !=null) {
+      if (data.includes('iframe')) {
+        
+        return(
+        <View style={{flex:1}}>
+          <View style={{height:250,width:350,alignSelf:'center'}}>
+          
+          <WebView source ={{uri:`https:${data.split('</iframe>')[0].split('"')[1]}`}}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}/>
+
+          </View>
+          <View style={{height:900,width:350,alignSelf:'center'}}>
+          <WebView source ={{html:data.split('</iframe>')[1]}}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}/>
+          </View>
+        </View>
+      
+        );
+      }
+      else{
+          return(
+            <View style={{alignSelf:'center'}}>
+            <WebView source ={{html:data}} 
+            style={{height:900,width:350}}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}/>
+            </View>
+            
+          )
+      }
+      
+    }
+    return null;
+  };
+
   render() {
     const campaign = this.props.data.campaign
     const percent = (campaign.total / (campaign.goal ? campaign.goal : 1))
-
     let shareOptions = {
       title: "Share Campaign",
       message: campaign.title,
       url: baseUrl + 'campaign/' + campaign.id + '/' + campaign.slug,
       subject: "Share Link" //  for email
     }
+
+
 
     return (
       <Container>
@@ -72,10 +115,9 @@ export default class CampaignDetailText extends Component {
               </Body>
             </CardItem>
           </Card>
-          <View style={{ flex: 0 }}>
-            <HTML
-              html={campaign.description} />
-          </View>
+          
+          {this.renderDescription(campaign.description)}
+          
         </Content>
       </Container>
     )
