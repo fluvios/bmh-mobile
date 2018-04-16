@@ -97,7 +97,7 @@ export default class CampaignTransferPayment extends Component {
                         <CardItem>
                             <Body style={styles.wrapCenter}>
                                 <Text>
-                                    Pembayaran dapat dilakukan ke rekening atas nama berbagi kebaikan:
+                                    Pembayaran dapat dilakukan ke rekening:
                                 </Text>
                             </Body>
                         </CardItem>
@@ -112,7 +112,7 @@ export default class CampaignTransferPayment extends Component {
                             </Left>
                             <Body style={styles.wrapCenter}>
                                 <Text>
-                                    {this.state.donation.bank.name}{`\n`}
+                                    {this.state.donation.bank.account_name}{`\n`}
                                     {this.state.donation.bank.branch}{`\n`}
                                     {this.state.donation.bank.account_number}
                                 </Text>

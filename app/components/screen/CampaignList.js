@@ -102,9 +102,9 @@ export default class CampaignList extends Component {
 
   filterJenisDana(text) {
     const newData = this.tempArray.filter(function (item) {
-      const itemData = item.categories_id
+      const itemData = item.id
       const textData = text
-      return itemData.indexOf(textData) > -1
+      return itemData == textData
     })
 
     var tempDataSource = new ListView.DataSource({
@@ -119,9 +119,9 @@ export default class CampaignList extends Component {
 
   filterKota(text) {
     const newData = this.tempArray.filter(function (item) {
-      const itemData = item.city_id
+      const itemData = item.id_kab
       const textData = text
-      return itemData.indexOf(textData) > -1
+      itemData == textData
     })
 
     var tempDataSource = new ListView.DataSource({
@@ -365,13 +365,15 @@ export default class CampaignList extends Component {
                     />
                   }}
                 />
-                <Button full textStyle={{ color: '#87838B' }}
-                  onPress={() => {
-                    this.setModalVisible(!this.state.modalVisible);
-                    this.filterAll();
-                  }}>
-                  <Text>Filter</Text>
-                </Button>
+                <View style={{ flex: 0 }}>
+                  <Button full textStyle={{ color: '#87838B' }}
+                    onPress={() => {
+                      this.setModalVisible(!this.state.modalVisible);
+                      this.filterAll();
+                    }}>
+                    <Text>Filter</Text>
+                  </Button>
+                </View>
               </ScrollView>
             </Form>
           </Modal>
