@@ -14,6 +14,7 @@ import HTML from 'react-native-render-html'
 
 const MAX_SCREEN_HEIGHT=Dimensions.get('window').height
 
+
 export default class CampaignDetailText extends Component {
 
   constructor(props) {
@@ -26,8 +27,8 @@ export default class CampaignDetailText extends Component {
       if (data.includes('iframe')) {
         
         return(
-        <View>
-          <View style={{height:350,width:350,alignSelf:'center'}}>
+        <View style={{flex:1}}>
+          <View style={{height:250,width:350,alignSelf:'center'}}>
           
           <WebView source ={{uri:`https:${data.split('</iframe>')[0].split('"')[1]}`}}
           javaScriptEnabled={true}
@@ -51,7 +52,6 @@ export default class CampaignDetailText extends Component {
             javaScriptEnabled={true}
             domStorageEnabled={true}/>
             </View>
-            
             
           )
       }
