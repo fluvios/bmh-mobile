@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {
   StyleSheet, ScrollView, ListView,
-  View, Image, TouchableHighlight, Linking
+  View, Image, TouchableHighlight, Linking, RefreshControl
 } from 'react-native'
 import {
   Container, Header, Left, Body, Right, Title,
@@ -26,6 +26,7 @@ export default class NewsListInspirasi extends Component {
     this.state = ({
       dataSource: dataSource.cloneWithRows(campaignArray),
       isLoading: true,
+      refreshing: false
     })
     this.tempArray = []
   }
@@ -38,6 +39,20 @@ export default class NewsListInspirasi extends Component {
         isLoading: false
       })
       this.tempArray = campaignArray
+    }.bind(this))
+  }
+
+  onRefresh() {
+    this.setState({ refreshing: true })
+    this.getCampaign(function (json) {
+      campaignArray = json
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(campaignArray),
+        isLoading: false
+      })
+
+      this.tempArray = campaignArray
+      this.setState({ refreshing: false })
     }.bind(this))
   }
 
@@ -122,7 +137,17 @@ export default class NewsListInspirasi extends Component {
               value={this.state.text} />
           </Item>
 
-          <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} />
+          <ListView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh.bind(this)} />
+            }
+            dataSource={this.state.dataSource}
+            renderRow={this.renderRow.bind(this)}
+            enableEmptySections={true}
+            removeClippedSubviews={false} >
+          </ListView>
         </Content>
       </Container>
 

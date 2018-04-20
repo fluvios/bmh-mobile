@@ -9,6 +9,7 @@ import { baseUrl } from "../config/variable"
 import { styles } from "../config/styles"
 import PasswordInputText from 'react-native-hide-show-password-input'
 import { TextField } from 'react-native-material-textfield'
+import { NavigationActions } from 'react-navigation'
 
 var storage = new Storage({
     size: 1000,
@@ -32,7 +33,6 @@ export default class EditProfile extends Component {
     }
 
     updateAccount(params, data, callback) {
-        console.log(JSON.stringify(data))
         fetch(baseUrl + "api/account/" + params + "/edit", {
             method: "POST",
             body: JSON.stringify(data),
@@ -71,11 +71,11 @@ export default class EditProfile extends Component {
             if (response.success === true) {
                 storage.save({
                     key: 'user',
-                    data: response
+                    data: response.response
                 })
                 const resetAction = NavigationActions.reset({
                     index: 0,
-                    actions: [NavigationActions.navigate({ routeName: 'ProfileScreen' })],
+                    actions: [NavigationActions.navigate({ routeName: 'ProfileScreen', params: { user: response.response } })],
                 })
                 nav.dispatch(resetAction)
                 Toast.show({
@@ -138,7 +138,7 @@ export default class EditProfile extends Component {
                                 label='Alamat Email'
                                 value={this.state.email}
                                 onChangeText={(email) => this.setState({ email })}
-                            />                            
+                            />
                             <PasswordInputText
                                 value={this.state.password}
                                 onChangeText={(password) => this.setState({ password })}

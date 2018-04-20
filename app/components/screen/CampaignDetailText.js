@@ -35,7 +35,7 @@ export default class CampaignDetailText extends Component {
           domStorageEnabled={true}/>
 
           </View>
-          <View style={{height:900,width:350,alignSelf:'center'}}>
+          <View style={{height:'100%',width:'98%',alignSelf:'center'}}>
           <WebView source ={{html:data.split('</iframe>')[1]}}
           javaScriptEnabled={true}
           domStorageEnabled={true}/>
@@ -48,7 +48,8 @@ export default class CampaignDetailText extends Component {
           return(
             <View style={{alignSelf:'center'}}>
             <WebView source ={{html:data}} 
-            style={{height:900,width:350}}
+            // style={{height:900,width:350}}
+            style={{height:'100%',width:'98%'}}
             javaScriptEnabled={true}
             domStorageEnabled={true}/>
             </View>

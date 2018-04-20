@@ -7,11 +7,11 @@ import Pdf from 'react-native-pdf'
 export default class ReadMagazine extends Component {
     render() { 
         let magazine = this.props.navigation.state.params.magazine
-
+        const source = { uri: baseUrl + "public/magazine/" + magazine.name, cache: true }
         return (
             <View style={magzStyle.container}>
                 <Pdf
-                    source={{ uri: baseUrl + "public/magazine/" + magazine.name }}
+                    source={source}
                     onLoadComplete={(numberOfPages,filePath)=>{
                         console.log(`number of pages: ${numberOfPages}`)
                     }}

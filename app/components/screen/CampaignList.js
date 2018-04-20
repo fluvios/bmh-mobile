@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, AsyncStorage, Image, AppState, Modal, FlatList, ListView, } from 'react-native'
+import { ScrollView, AsyncStorage, Image, AppState, Modal, FlatList, ListView, RefreshControl } from 'react-native'
 import Storage from 'react-native-storage'
 import {
   Container, Header, Left, Body, Right, Title, Form, Item,
@@ -52,9 +52,24 @@ export default class CampaignList extends Component {
       kategori_id: 0,
       funding_id: 0,
       lokasi_id: '',
+      refreshing: false,
     })
 
     var tempArray = []
+  }
+
+  onRefresh() {
+    this.setState({ refreshing: true })
+    this.getCampaign(function (json) {
+      campaignArray = json
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(campaignArray),
+        isLoading: false
+      })
+
+      this.tempArray = campaignArray
+      this.setState({ refreshing: false })
+    }.bind(this))
   }
 
   componentWillMount() {
@@ -79,13 +94,7 @@ export default class CampaignList extends Component {
 
   filterKategori(text) {
     const newData = this.tempArray.filter(function (item) {
-      item.kategori.filter(function (itemKategori) {
-        const itemData = itemKategori.kategori_id
-        const textData = text
-        return itemData.indexOf(textData) > -1
-      })
-
-      const itemData = item.id
+      const itemData = item.kategori
       const textData = text
       return itemData.indexOf(textData) > -1
     })
@@ -102,7 +111,7 @@ export default class CampaignList extends Component {
 
   filterJenisDana(text) {
     const newData = this.tempArray.filter(function (item) {
-      const itemData = item.id
+      const itemData = item.categories_id
       const textData = text
       return itemData == textData
     })
@@ -377,7 +386,17 @@ export default class CampaignList extends Component {
               </ScrollView>
             </Form>
           </Modal>
-          <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} removeClippedSubviews={false} />
+          <ListView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this.onRefresh.bind(this)} />
+            }
+            dataSource={this.state.dataSource}
+            renderRow={this.renderRow.bind(this)}
+            enableEmptySections={true}
+            removeClippedSubviews={false} >
+          </ListView>
           <Footer>
             <FooterTab>
               <Button full iconLeft onPress={() => this.setModalVisible(!this.state.modalVisible)}>

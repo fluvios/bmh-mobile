@@ -99,7 +99,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.Galangbersama"
+        applicationId "com.berbagikebaikan"
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
@@ -116,19 +116,8 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
-    signingConfigs {
-        release {
-            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
-                storeFile file(MYAPP_RELEASE_STORE_FILE)
-                storePassword MYAPP_RELEASE_STORE_PASSWORD
-                keyAlias MYAPP_RELEASE_KEY_ALIAS
-                keyPassword MYAPP_RELEASE_KEY_PASSWORD
-            }
-        }
-    }    
     buildTypes {
         release {
-            signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -149,9 +138,10 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-share')
     compile project(':react-native-vector-icons')
+    compile project(':react-native-share')
     compile project(':react-native-image-picker')
+    compile project(':react-native-google-signin')
     compile project(':react-native-code-push')
     compile project(':react-native-pdf')
     compile project(':react-native-fetch-blob')

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ListView, AsyncStorage, Image, AppState } from 'react-native'
+import { ListView, AsyncStorage, Image, AppState, RefreshControl } from 'react-native'
 import Storage from 'react-native-storage'
 import {
     Container, Header, Left, Body, Right, Title,
@@ -44,7 +44,8 @@ export default class NewsListMagazine extends Component {
         this.state = ({
             dataSource: dataSource.cloneWithRows(campaignArray),
             isLoading: true,
-            appState: AppState.currentState
+            appState: AppState.currentState,
+            refreshing: false
         })
     }
 
@@ -107,6 +108,19 @@ export default class NewsListMagazine extends Component {
         })
     }
 
+    onRefresh() {
+        this.setState({ refreshing: true })
+        this.getMagazine(function (json) {
+            campaignArray = json
+            this.setState({
+                dataSource: this.state.dataSource.cloneWithRows(campaignArray),
+                isLoading: false
+            })
+
+            this.setState({ refreshing: true })
+        }.bind(this))
+      }
+
     profile(navigation) {
         if (navigation.state.params.user) {
             navigation.navigate('ProfileScreen', {
@@ -161,7 +175,17 @@ export default class NewsListMagazine extends Component {
             <Spinner /> :
             <Container>
                 <Content>
-                    <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)} enableEmptySections={true} removeClippedSubviews={false} />
+                    <ListView
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.onRefresh.bind(this)} />
+                        }
+                        dataSource={this.state.dataSource}
+                        renderRow={this.renderRow.bind(this)}
+                        enableEmptySections={true}
+                        removeClippedSubviews={false} >
+                    </ListView>
                 </Content>
             </Container>
 

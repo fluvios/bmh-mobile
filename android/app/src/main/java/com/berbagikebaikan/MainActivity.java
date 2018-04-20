@@ -1,4 +1,4 @@
-package com.Galangbersama;
+package com.berbagikebaikan;
 
 import com.facebook.react.ReactActivity;
 import android.content.Intent;
@@ -11,7 +11,7 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "Galangbersama";
+        return "Berbagikebaikan";
     }
 
     @Override

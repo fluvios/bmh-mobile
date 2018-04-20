@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FlatList, AsyncStorage, Image, WebView } from 'react-native'
+import { FlatList, AsyncStorage, Image, WebView, ActivityIndicator } from 'react-native'
 import Storage from 'react-native-storage'
 import {
     Body, Button, Content, Card, Icon, View, Item, ListItem, Left, Right,
@@ -48,7 +48,8 @@ export default class DepositoList extends Component {
             nominal: '',
             is_mobile: 1,
             token: '',
-            usingNominal: false
+            usingNominal: false,
+            animating: false
         }
     }
 
@@ -179,6 +180,7 @@ export default class DepositoList extends Component {
     }
 
     paymentMethod() {
+        this.setState({ animating: true })
         const nav = this.props.navigation
         const form = this.state
         let donation = form.amount
@@ -190,6 +192,7 @@ export default class DepositoList extends Component {
         switch (this.state.payment_gateway) {
             case 'Delivery':
                 this.topup(form, response => {
+                    this.setState({ animating: false })
                     if (response.success == true) {
                         nav.dispatch({
                             type: 'Navigation/NAVIGATE',
@@ -201,6 +204,7 @@ export default class DepositoList extends Component {
             case 'Midtrans':
                 this.topup(form, response => {
                     if (response.success == true) {
+                        this.setState({ animating: false })
                         // this.state.token = response.token
                         // this.openMidtrans()
                         const token = response.token
@@ -217,6 +221,7 @@ export default class DepositoList extends Component {
             default:
                 form.payment_gateway = Number.parseInt(this.state.payment_gateway)
                 this.topup(form, response => {
+                    this.setState({ animating: false })
                     if (response.success == true) {
                         nav.dispatch({
                             type: "Navigation/NAVIGATE",
@@ -331,6 +336,19 @@ export default class DepositoList extends Component {
                             onPress={() => this.onNominalPress()}
                             title='Nominal Lainnya (Min IDR. 20.000,-)'
                         />
+                        {this.state.animating &&
+                            <View style={{
+                                flex: 1,
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                                bottom: 0,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}>
+                                <ActivityIndicator size="large" />
+                            </View>
+                        }
                         <Form>
                             <Item>
                                 <Input placeholder="Nominal"

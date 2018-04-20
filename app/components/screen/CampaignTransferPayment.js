@@ -25,15 +25,15 @@ export default class CampaignTransferPayment extends Component {
     }
 
     goBack() {
-        // const resetAction = NavigationActions.reset({
-        //     index: 0,
-        //     actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
-        // })
-        // this.props.navigation.dispatch(resetAction)
-        const nav = this.props.navigation
-        nav.dispatch({
-            type: "Navigation/BACK",
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
         })
+        this.props.navigation.dispatch(resetAction)
+        // const nav = this.props.navigation
+        // nav.dispatch({
+        //     type: "Navigation/BACK",
+        // })
     }
 
     componentWillUnmount() {

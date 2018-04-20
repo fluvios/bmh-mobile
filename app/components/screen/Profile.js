@@ -35,6 +35,8 @@ export default class Profile extends Component {
       isNotification: false,
       showToast: false
     })
+
+    console.log(this.props)
   }
 
   getAccount(params, callback) {

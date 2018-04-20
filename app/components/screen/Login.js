@@ -12,6 +12,7 @@ import { baseUrl } from "../config/variable"
 import { styles } from "../config/styles"
 import PasswordInputText from 'react-native-hide-show-password-input'
 import { TextField } from 'react-native-material-textfield'
+import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin'
 const FBSDK = require('react-native-fbsdk')
 const {
     LoginButton,
@@ -42,7 +43,8 @@ export default class Login extends Component {
             showForgot: false,
             email: '',
             password: '',
-            user_id: ''
+            user_id: '',
+            user: ''
         }
 
         var _registerUser = this._registerUser
@@ -63,6 +65,29 @@ export default class Login extends Component {
                 console.error(error)
             })
             .done()
+    }
+
+    componentDidMount() {
+        this._setupGoogleSignin()
+    }
+
+    async _setupGoogleSignin() {
+        try {
+            await GoogleSignin.hasPlayServices({ autoResolve: true })
+            await GoogleSignin.configure({
+                // For Production
+                // webClientId: '1065269558966-0ej6ivq8cm9tr3nf8mhaai9g1lsjt5ul.apps.googleusercontent.com',
+                // For Debug
+                webClientId: '1065269558966-0ej6ivq8cm9tr3nf8mhaai9g1lsjt5ul.apps.googleusercontent.com',
+                offlineAccess: false
+            })
+
+            const user = await GoogleSignin.currentUserAsync()
+            this.setState({ user })
+        }
+        catch (err) {
+            console.log("Play services error", err.code, err.message)
+        }
     }
 
     _getAccountFromFacebook(params, callback) {
@@ -194,6 +219,80 @@ export default class Login extends Component {
         })
     }
 
+    handleLoginGoogle = () => {
+        const nav = this.props.navigation
+        GoogleSignin.signIn()
+            .then((user) => {
+                const form = { user_id: user.id, email: user.email, name: user.name }
+                this._getAccountFromFacebook(form, (response) => {
+                    if (response.status === 'active') {
+                        storage.save({
+                            key: 'user',
+                            data: response
+                        })
+                        if (nav.state.params) {
+                            nav.navigate(nav.state.params.goto, {
+                                campaign: nav.state.params.item,
+                                user: response
+                            })
+                            Toast.show({
+                                text: 'Login Success',
+                                position: 'bottom',
+                                buttonText: 'Dismiss'
+                            })
+                        } else {
+                            // nav.goBack()
+                            const resetAction = NavigationActions.reset({
+                                index: 0,
+                                actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
+                            })
+                            nav.dispatch(resetAction)
+                            Toast.show({
+                                text: 'Login Success',
+                                position: 'bottom',
+                                buttonText: 'Dismiss'
+                            })
+                        }
+                    } else {
+                        this._registerUser(form, (response) => {
+                            if (response.success == true) {
+                                storage.save({
+                                    key: 'user',
+                                    data: response
+                                })
+                                if (nav.state.params) {
+                                    nav.navigate(nav.state.params.goto, {
+                                        campaign: nav.state.params.item,
+                                        user: response
+                                    })
+                                    Toast.show({
+                                        text: 'Login Success',
+                                        position: 'bottom',
+                                        buttonText: 'Dismiss'
+                                    })
+                                } else {
+                                    const resetAction = NavigationActions.reset({
+                                        index: 0,
+                                        actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
+                                    })
+                                    nav.dispatch(resetAction)
+                                    Toast.show({
+                                        text: 'Login Success',
+                                        position: 'bottom',
+                                        buttonText: 'Dismiss'
+                                    })
+                                }
+                            }
+                        })
+                    }
+                })
+            })
+            .catch((err) => {
+                console.log('WRONG SIGNIN', err)
+            })
+            .done()
+    }
+
     handleLoginFacebook = () => {
         const nav = this.props.navigation
         LoginManager.logInWithReadPermissions(['public_profile']).then(
@@ -320,10 +419,15 @@ export default class Login extends Component {
                             </View>
                         </View>
                         <View style={styles.deviderColumn}>
-                            <Button iconLeft block style={{ backgroundColor: '#3b5998' }} onPress={() => this.handleLoginFacebook()}>
+                            {/* <Button iconLeft block style={{ backgroundColor: '#3b5998' }} onPress={() => this.handleLoginFacebook()}>
                                 <Icon name='logo-facebook' />
                                 <Text style={styles.buttonText}>Masuk Menggunakan Facebook</Text>
-                            </Button>
+                            </Button> */}
+                            <GoogleSigninButton
+                                style={{ width: '100%', height: 60 }}
+                                size={GoogleSigninButton.Size.Icon}
+                                color={GoogleSigninButton.Color.Dark}
+                                onPress={this.handleLoginGoogle.bind(this)} />
                         </View>
                     </Content>
                 </Container>
