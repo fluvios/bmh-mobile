@@ -28,6 +28,9 @@ import MidtransPayment from '../screen/MidtransPayment'
 import EditProfile from "../screen/EditProfile"
 import NewsDownload from '../screen/NewsDownload'
 import ReadMagazine from '../screen/ReadMagazine'
+import CaraDonasi from '../screen/CaraDonasi'
+import SyaratKetentuan from '../screen/SyaratKetentuan'
+import TentangKami from '../screen/TentangKami'
 
 export const CampaignStack = StackNavigator({
     ListScreen: {
@@ -41,6 +44,27 @@ export const CampaignStack = StackNavigator({
         navigationOptions: {
             tabBarVisible: false,
             title: 'Edit Profile',
+        }
+    },
+    TermsScreen: {
+        screen: SyaratKetentuan,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Syarat dan Ketentuan',
+        }
+    },
+    FaqScreen: {
+        screen: CaraDonasi,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Cara Donasi',
+        }
+    },
+    AboutScreen: {
+        screen: TentangKami,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Tentang Kami',
         }
     },
     DetailScreen: {
@@ -125,6 +149,27 @@ export const DepositoStack = StackNavigator({
             title: 'Edit Profile',
         }
     },
+    TermsScreen: {
+        screen: SyaratKetentuan,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Syarat dan Ketentuan',
+        }
+    },
+    FaqScreen: {
+        screen: CaraDonasi,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Cara Donasi',
+        }
+    },
+    AboutScreen: {
+        screen: TentangKami,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Tentang Kami',
+        }
+    },
     LoginScreen: {
         screen: Login,
         navigationOptions: {
@@ -191,6 +236,27 @@ export const NewsStack = StackNavigator({
         navigationOptions: {
             tabBarVisible: false,
             title: 'Edit Profile',
+        }
+    },
+    TermsScreen: {
+        screen: SyaratKetentuan,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Syarat dan Ketentuan',
+        }
+    },
+    FaqScreen: {
+        screen: CaraDonasi,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Cara Donasi',
+        }
+    },
+    AboutScreen: {
+        screen: TentangKami,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Tentang Kami',
         }
     },
     LoginScreen: {
@@ -270,6 +336,27 @@ export const ReportStack = StackNavigator({
         navigationOptions: {
             tabBarVisible: false,
             title: 'Edit Profile',
+        }
+    },
+    TermsScreen: {
+        screen: SyaratKetentuan,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Syarat dan Ketentuan',
+        }
+    },
+    FaqScreen: {
+        screen: CaraDonasi,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Cara Donasi',
+        }
+    },
+    AboutScreen: {
+        screen: TentangKami,
+        navigationOptions: {
+            tabBarVisible: false,
+            title: 'Tentang Kami',
         }
     },
 })

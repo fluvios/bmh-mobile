@@ -2,6 +2,8 @@ package com.berbagikebaikan;
 
 import com.facebook.react.ReactActivity;
 import android.content.Intent;
+import android.os.Bundle;
+import org.devio.rn.splashscreen.SplashScreen;
 
 public class MainActivity extends ReactActivity {
 
@@ -12,6 +14,12 @@ public class MainActivity extends ReactActivity {
     @Override
     protected String getMainComponentName() {
         return "Berbagikebaikan";
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen.show(this, true);
+        super.onCreate(savedInstanceState);
     }
 
     @Override

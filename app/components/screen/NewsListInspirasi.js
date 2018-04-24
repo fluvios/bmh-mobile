@@ -105,7 +105,7 @@ export default class NewsListInspirasi extends Component {
         </CardItem>
         <CardItem>
           <Body>
-            <Image source={{ uri: rowData.better_featured_image.source_url }} style={{ height: 200, width: "95%", flex: 1 }} />
+            <Image source={{ uri: rowData.better_featured_image.source_url }} resizeMode="cover" style={{ height: 200, width: "95%", flex: 1 }} />
             <Text>
               {shortenDescription(cleanTag(rowData.excerpt.rendered))}
             </Text>

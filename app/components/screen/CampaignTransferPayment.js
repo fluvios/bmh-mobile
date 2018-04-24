@@ -108,7 +108,7 @@ export default class CampaignTransferPayment extends Component {
                         </CardItem>
                         <CardItem>
                             <Left>
-                                <Image source={{ uri: baseUrl + "public/bank/" + this.state.donation.bank.logo }} style={{ height: 50, width: 50, flex: 1, resizeMode: 'center' }} />
+                                <Image source={{ uri: baseUrl + "public/bank/large/" + this.state.donation.bank.logo }} style={{ height: 50, width: 50, flex: 1, resizeMode: 'center' }} />
                             </Left>
                             <Body style={styles.wrapCenter}>
                                 <Text>

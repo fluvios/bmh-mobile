@@ -62,7 +62,7 @@ export default class CampaignDetailDonatur extends Component {
                 <CardItem>
                     {rowData.anonymous != '1' ?
                         <Left>
-                            <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
+                            <Thumbnail source={{ uri: baseUrl + "public/avatar/" + rowData.avatar }} />
                             <Body>
                                 <Text style={{ color: '#00B7C2' }}>{rowData.fullname}</Text>
                             </Body>
@@ -111,7 +111,7 @@ export default class CampaignDetailDonatur extends Component {
             <Spinner /> :
             <Content>
                 <View>
-                    <Image source={{ uri: baseUrl + "public/campaigns/large/" + campaign.large_image }} style={{ height: 200, width: "100%", flex: 1 }} />
+                <Image source={{ uri: baseUrl + "public/campaigns/large/" + campaign.large_image }} resizeMode="cover" style={{ height: 200, width: "100%", flex: 1 }} />
                     <Fab
                         containerStyle={{}}
                         style={{ backgroundColor: '#5067FF', zIndex: 1 }}

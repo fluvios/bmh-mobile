@@ -32,7 +32,7 @@ export default class CampaignDetailInfo extends Component {
       <Container>
         <Content contentContainerStyle={{ flex: 1 }}>
           <View style={{ flex:0.755 }}>
-            <Image source={{ uri: baseUrl + "public/campaigns/large/" + campaign.large_image }} style={{ height: 200, width: "100%", flex: 1 }} />
+          <Image source={{ uri: baseUrl + "public/campaigns/large/" + campaign.large_image }} resizeMode="cover" style={{ height: 200, width: "100%", flex: 1 }} />
             <Fab
               containerStyle={{}}
               style={{ backgroundColor: '#5067FF', zIndex: 1 }}

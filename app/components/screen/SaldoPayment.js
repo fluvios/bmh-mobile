@@ -178,7 +178,7 @@ export default class SaldoPayment extends Component {
                                         containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
                                     />
                                     <Right>
-                                        <Image source={{ uri: baseUrl + "public/bank/" + item.logo }} style={{ height: 100, width: "100%", flex: 1, resizeMode: 'center' }} />
+                                        <Image source={{ uri: baseUrl + "public/bank/large/" + item.logo }} style={{ height: 100, width: "100%", flex: 1, resizeMode: 'center' }} />
                                     </Right>
                                 </ListItem>
                             }}

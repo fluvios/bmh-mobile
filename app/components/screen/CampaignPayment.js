@@ -49,7 +49,7 @@ export default class CampaignPayment extends Component {
             // Zakat Fitrah
             jumlahKeluarga: '',
             hargaBeras: '8900',
-            jumlahZakatFitrah: '0',
+            jumlahZakatFitrah: '',
             // Zakat Maal
             cash: '',
             asset: '',
@@ -109,12 +109,14 @@ export default class CampaignPayment extends Component {
                             position: 'bottom',
                             buttonText: 'Dismiss'
                         })
+                        this.setState({ animating: false })
                         nav.dispatch({
                             type: 'Navigation/NAVIGATE',
                             routeName: 'DeliveryScreen'
                         })
                     } else {
                         console.log(response)
+                        this.setState({ animating: false })
                         Toast.show({
                             text: response.message,
                             position: 'bottom',
@@ -125,14 +127,13 @@ export default class CampaignPayment extends Component {
                 break
             case 'Deposit':
                 this.donate(this.state.campaign_id, form, response => {
-                    this.setState({ animating: false })
                     if (response.success == true) {
                         Toast.show({
                             text: response.message,
                             position: 'bottom',
                             buttonText: 'Dismiss'
                         })
-
+                        this.setState({ animating: false })
                         this.goBack()
                     } else {
                         Toast.show({
@@ -140,14 +141,15 @@ export default class CampaignPayment extends Component {
                             position: 'bottom',
                             buttonText: 'Dismiss'
                         })
+                        this.setState({ animating: false })
                     }
                 })
                 break
             case 'Midtrans':
                 this.donate(this.state.campaign_id, form, response => {
-                    this.setState({ animating: false })
                     if (response.success == true) {
                         const token = response.token
+                        this.setState({ animating: false })
                         nav.dispatch({
                             type: "Navigation/NAVIGATE",
                             routeName: 'MidtransScreen',
@@ -161,6 +163,7 @@ export default class CampaignPayment extends Component {
                             position: 'bottom',
                             buttonText: 'Dismiss'
                         })
+                        this.setState({ animating: false })
                     }
                 })
                 break
@@ -182,6 +185,7 @@ export default class CampaignPayment extends Component {
                             position: 'bottom',
                             buttonText: 'Dismiss'
                         })
+                        this.setState({ animating: false })
                     }
                 })
                 break
@@ -267,52 +271,6 @@ export default class CampaignPayment extends Component {
         this.setState({ modalVisible: visible })
     }
 
-    calculateMal(state, item) {
-        let total = parseInt(this.state.hartaTotal ? this.state.hartaTotal : 0)
-        if (this.state.maalState != state && state != 'gold-price') {
-            total = total + item
-        } else if (this.state.maalState == state && state != 'gold-price') {
-            total = item
-        } else {
-            this.setState({
-                hargaEmas: item,
-                nishabEmas: (85 * parseInt(item)).toString()
-            })
-        }
-        this.setState({ hartaTotal: total.toString(), maalState: state })
-        let jumlah = ''
-        if (total >= parseInt(this.state.nishabEmas)) {
-            jumlah = convertToRupiah((0.025 * total).toString())
-        } else {
-            jumlah = 'Tidak Mencukupi Nishab'
-        }
-
-        return jumlah
-    }
-
-    calculateProfesi(state, item) {
-        let total = parseInt(this.state.pendapatanTotal ? this.state.pendapatanTotal : 0)
-        if (this.state.profesiState != state && state != 'rice-price') {
-            total = total + item
-        } else if (this.state.profesiState == state && state != 'rice-price') {
-            total = item
-        } else {
-            this.setState({
-                hargaBeras: item,
-                nishabBeras: (520 * parseInt(item)).toString()
-            })
-        }
-        this.setState({ pendapatanTotal: total.toString(), profesiState: state })
-        let jumlah = ''
-        if (total >= parseInt(this.state.nishabBeras)) {
-            jumlah = convertToRupiah((0.025 * total).toString())
-        } else {
-            jumlah = 'Tidak Mencukupi Nishab'
-        }
-
-        return jumlah
-    }
-
     render() {
         let campaign = this.props.navigation.state.params.campaign
 
@@ -325,15 +283,28 @@ export default class CampaignPayment extends Component {
                         visible={this.state.modalVisible} onRequestClose={() => {
                             console.log('Modal has been closed.');
                         }}>
-                        <TouchableWithoutFeedback onPress={() => { this.setModalVisible(!this.state.modalVisible); }}>
-                            <Container>
-                                <Content>
-                                    <Tabs>
-                                        <Tab heading="Fitrah">
+                        <Container>
+                            <Header style={{ backgroundColor: '#fff' }}>
+                                <Left>
+                                    <Button transparent onPress={() => {
+                                        this.setModalVisible(!this.state.modalVisible);
+                                    }}>
+                                        <Icon style={{ color: '#000' }} name='arrow-round-back' />
+                                    </Button>
+                                </Left>
+                                <Body>
+                                    <Title style={{ color: '#000' }}>Kalkulator</Title>
+                                </Body>
+                                <Right />
+                            </Header>
+                            <Content>
+                                <Tabs>
+                                    <Tab heading="Fitrah">
+                                        <Content padder>
                                             <Form>
                                                 <View>
                                                     <TextField label="Jumlah Anggota Keluarga"
-                                                        onChangeText={(text) => this.setState({ jumlahKeluarga: convertToAngka(text), jumlahZakatFitrah: (parseInt(text) * parseInt(this.state.hargaBeras) * 3.5).toString() })}
+                                                        onChangeText={(text) => this.setState({ jumlahKeluarga: text, jumlahZakatFitrah: (parseInt(text) * parseInt(this.state.hargaBeras) * 3.5).toString() })}
                                                         value={this.state.jumlahKeluarga ? this.state.jumlahKeluarga : ''}
                                                         keyboardType='numeric' />
                                                 </View>
@@ -347,78 +318,202 @@ export default class CampaignPayment extends Component {
                                                     <TextField disabled label="Jumlah Zakat Fitrah"
                                                         value={!isNaN(this.state.jumlahZakatFitrah) ? convertToRupiah(this.state.jumlahZakatFitrah) : '0'} />
                                                 </View>
-                                                <Button block textStyle={{ color: '#87838B' }}
-                                                    onPress={() => {
-                                                        this.setModalVisible(!this.state.modalVisible);
-                                                        this.setState({ amount: convertToAngka(this.state.jumlahZakatFitrah) })
-                                                    }}>
-                                                    <Text>Hitung</Text>
-                                                </Button>
+                                                <View style={{ flexDirection: 'row' }} >
+                                                    <View style={{ flex: 1 }}>
+                                                        <Button style={{ backgroundColor: '#C40018' }}
+                                                            onPress={() => {
+                                                                this.setState({
+                                                                    jumlahKeluarga: '',
+                                                                    hargaBeras: '8900',
+                                                                    jumlahZakatFitrah: ''
+                                                                })
+                                                            }}>
+                                                            <Text>Hapus</Text>
+                                                        </Button>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                                        <Button textStyle={{ color: '#87838B' }}
+                                                            onPress={() => {
+                                                                this.setModalVisible(!this.state.modalVisible);
+                                                                this.setState({ amount: convertToAngka(this.state.jumlahZakatFitrah) })
+                                                            }}>
+                                                            <Text>Hitung</Text>
+                                                        </Button>
+                                                    </View>
+                                                </View>
                                             </Form>
-                                        </Tab>
-                                        <Tab heading="Maal">
+                                        </Content>
+                                    </Tab>
+                                    <Tab heading="Maal">
+                                        <Content padder>
                                             <Form>
                                                 <View>
                                                     <TextField label="Uang Kas & Bank"
-                                                        onChangeText={(text) => this.setState({
-                                                            cash: convertToAngka(text),
-                                                            jumlahZakatMal: this.calculateMal('cash', convertToAngka(text))
-                                                        })}
+                                                        onChangeText={
+                                                            (text) => {
+                                                                let total = (text ? convertToAngka(text) : 0) + (this.state.asset ? parseInt(this.state.asset) : 0) +
+                                                                    (this.state.debt ? parseInt(this.state.debt) : 0) + (this.state.gold ? parseInt(this.state.gold) : 0) +
+                                                                    (this.state.stock ? parseInt(this.state.stock) : 0) + (this.state.invest ? parseInt(this.state.invest) : 0)
+                                                                let jumlah = ''
+                                                                if (total >= parseInt(this.state.nishabEmas)) {
+                                                                    jumlah = convertToRupiah((0.025 * total).toString())
+                                                                } else {
+                                                                    jumlah = 'Tidak Mencukupi Nishab'
+                                                                }
+
+                                                                this.setState({
+                                                                    jumlahZakatMal: jumlah,
+                                                                    hartaTotal: total.toString(),
+                                                                    cash: convertToAngka(text),
+                                                                })
+                                                            }
+                                                        }
                                                         keyboardType='numeric'
                                                         value={this.state.cash ? convertToRupiah(this.state.cash) : ''} />
                                                 </View>
                                                 <View>
                                                     <TextField label="Total Asset (yg digunakan tidak perlu dihitung)"
-                                                        onChangeText={(text) => this.setState({
-                                                            asset: convertToAngka(text),
-                                                            jumlahZakatMal: this.calculateMal('asset', convertToAngka(text))
-                                                        })}
+                                                        onChangeText={
+                                                            (text) => {
+                                                                let total = (text ? convertToAngka(text) : 0) + (this.state.cash ? parseInt(this.state.cash) : 0) +
+                                                                    (this.state.debt ? parseInt(this.state.debt) : 0) + (this.state.gold ? parseInt(this.state.gold) : 0) +
+                                                                    (this.state.stock ? parseInt(this.state.stock) : 0) + (this.state.invest ? parseInt(this.state.invest) : 0)
+                                                                let jumlah = ''
+                                                                if (total >= parseInt(this.state.nishabEmas)) {
+                                                                    jumlah = convertToRupiah((0.025 * total).toString())
+                                                                } else {
+                                                                    jumlah = 'Tidak Mencukupi Nishab'
+                                                                }
+
+                                                                this.setState({
+                                                                    jumlahZakatMal: jumlah,
+                                                                    hartaTotal: total.toString(),
+                                                                    asset: convertToAngka(text),
+                                                                })
+                                                            }
+                                                        }
                                                         keyboardType='numeric'
                                                         value={this.state.asset ? convertToRupiah(this.state.asset) : ''} />
                                                 </View>
                                                 <View>
                                                     <TextField label="Piutang Tertagih"
-                                                        onChangeText={(text) => this.setState({
-                                                            debt: convertToAngka(text),
-                                                            jumlahZakatMal: this.calculateMal('debt', convertToAngka(text))
-                                                        })}
+                                                        onChangeText={
+                                                            (text) => {
+                                                                let total = (text ? convertToAngka(text) : 0) + (this.state.asset ? parseInt(this.state.asset) : 0) +
+                                                                    (this.state.cash ? parseInt(this.state.cash) : 0) + (this.state.gold ? parseInt(this.state.gold) : 0) +
+                                                                    (this.state.stock ? parseInt(this.state.stock) : 0) + (this.state.invest ? parseInt(this.state.invest) : 0)
+                                                                let jumlah = ''
+                                                                if (total >= parseInt(this.state.nishabEmas)) {
+                                                                    jumlah = convertToRupiah((0.025 * total).toString())
+                                                                } else {
+                                                                    jumlah = 'Tidak Mencukupi Nishab'
+                                                                }
+
+                                                                this.setState({
+                                                                    jumlahZakatMal: jumlah,
+                                                                    hartaTotal: total.toString(),
+                                                                    debt: convertToAngka(text),
+                                                                })
+                                                            }
+                                                        }
                                                         keyboardType='numeric'
                                                         value={this.state.debt ? convertToRupiah(this.state.debt) : ''} />
                                                 </View>
                                                 <View>
                                                     <TextField label="Emas & Perhiasan lain"
-                                                        onChangeText={(text) => this.setState({
-                                                            gold: convertToAngka(text),
-                                                            jumlahZakatMal: this.calculateMal('gold', convertToAngka(text))
-                                                        })}
+                                                        onChangeText={
+                                                            (text) => {
+                                                                let total = (text ? convertToAngka(text) : 0) + (this.state.asset ? parseInt(this.state.asset) : 0) +
+                                                                    (this.state.debt ? parseInt(this.state.debt) : 0) + (this.state.cash ? parseInt(this.state.cash) : 0) +
+                                                                    (this.state.stock ? parseInt(this.state.stock) : 0) + (this.state.invest ? parseInt(this.state.invest) : 0)
+                                                                let jumlah = ''
+                                                                if (total >= parseInt(this.state.nishabEmas)) {
+                                                                    jumlah = convertToRupiah((0.025 * total).toString())
+                                                                } else {
+                                                                    jumlah = 'Tidak Mencukupi Nishab'
+                                                                }
+
+                                                                this.setState({
+                                                                    jumlahZakatMal: jumlah,
+                                                                    hartaTotal: total.toString(),
+                                                                    gold: convertToAngka(text),
+                                                                })
+                                                            }
+                                                        }
                                                         keyboardType='numeric'
                                                         value={this.state.gold ? convertToRupiah(this.state.gold) : ''} />
                                                 </View>
                                                 <View>
                                                     <TextField label="Saham, obligasi, dana pensiun, asuransi yang diterima"
-                                                        onChangeText={(text) => this.setState({
-                                                            stock: convertToAngka(text),
-                                                            jumlahZakatMal: this.calculateMal('stock', convertToAngka(text))
-                                                        })}
+                                                        onChangeText={
+                                                            (text) => {
+                                                                let total = (text ? convertToAngka(text) : 0) + (this.state.asset ? parseInt(this.state.asset) : 0) +
+                                                                    (this.state.debt ? parseInt(this.state.debt) : 0) + (this.state.gold ? parseInt(this.state.gold) : 0) +
+                                                                    (this.state.cash ? parseInt(this.state.cash) : 0) + (this.state.invest ? parseInt(this.state.invest) : 0)
+                                                                let jumlah = ''
+                                                                if (total >= parseInt(this.state.nishabEmas)) {
+                                                                    jumlah = convertToRupiah((0.025 * total).toString())
+                                                                } else {
+                                                                    jumlah = 'Tidak Mencukupi Nishab'
+                                                                }
+
+                                                                this.setState({
+                                                                    jumlahZakatMal: jumlah,
+                                                                    hartaTotal: total.toString(),
+                                                                    stock: convertToAngka(text),
+                                                                })
+                                                            }
+                                                        }
                                                         keyboardType='numeric'
                                                         value={this.state.stock ? convertToRupiah(this.state.stock) : ''} />
                                                 </View>
                                                 <View>
                                                     <TextField label="Dana yg diinvestasikan"
-                                                        onChangeText={(text) => this.setState({
-                                                            invest: convertToAngka(text),
-                                                            jumlahZakatMal: this.calculateMal('invest', convertToAngka(text))
-                                                        })}
+                                                        onChangeText={
+                                                            (text) => {
+                                                                let total = (text ? convertToAngka(text) : 0) + (this.state.asset ? parseInt(this.state.asset) : 0) +
+                                                                    (this.state.debt ? parseInt(this.state.debt) : 0) + (this.state.gold ? parseInt(this.state.gold) : 0) +
+                                                                    (this.state.stock ? parseInt(this.state.stock) : 0) + (this.state.cash ? parseInt(this.state.cash) : 0)
+                                                                let jumlah = ''
+                                                                if (total >= parseInt(this.state.nishabEmas)) {
+                                                                    jumlah = convertToRupiah((0.025 * total).toString())
+                                                                } else {
+                                                                    jumlah = 'Tidak Mencukupi Nishab'
+                                                                }
+
+                                                                this.setState({
+                                                                    jumlahZakatMal: jumlah,
+                                                                    hartaTotal: total.toString(),
+                                                                    invest: convertToAngka(text),
+                                                                })
+                                                            }
+                                                        }
                                                         keyboardType='numeric'
                                                         value={this.state.invest ? convertToRupiah(this.state.invest) : ''} />
                                                 </View>
                                                 <View>
                                                     <TextField label="Harga Emas"
                                                         keyboardType='numeric'
-                                                        onChangeText={(text) => this.setState({
-                                                            hargaEmas: convertToAngka(text),
-                                                            jumlahZakatMal: this.calculateMal('gold-price', convertToAngka(text))
-                                                        })}
+                                                        onChangeText={
+                                                            (text) => {
+                                                                let total = (this.state.cash ? parseInt(this.state.cash) : 0) + (this.state.asset ? parseInt(this.state.asset) : 0) +
+                                                                    (this.state.debt ? parseInt(this.state.debt) : 0) + (this.state.gold ? parseInt(this.state.gold) : 0) +
+                                                                    (this.state.stock ? parseInt(this.state.stock) : 0) + (this.state.invest ? parseInt(this.state.invest) : 0)
+                                                                let jumlah = ''
+                                                                if (total >= parseInt(this.state.nishabEmas)) {
+                                                                    jumlah = convertToRupiah((0.025 * total).toString())
+                                                                } else {
+                                                                    jumlah = 'Tidak Mencukupi Nishab'
+                                                                }
+
+                                                                this.setState({
+                                                                    jumlahZakatMal: jumlah,
+                                                                    hartaTotal: total.toString(),
+                                                                    hargaEmas: convertToAngka(text),
+                                                                    nishabEmas: (85 * convertToAngka(text)).toString()
+                                                                })
+                                                            }
+                                                        }
                                                         value={this.state.hargaEmas ? convertToRupiah(this.state.hargaEmas) : ''} />
                                                 </View>
                                                 <View>
@@ -433,38 +528,113 @@ export default class CampaignPayment extends Component {
                                                     <TextField disabled label="Jumlah Zakat Maal"
                                                         value={this.state.jumlahZakatMal ? this.state.jumlahZakatMal : ''} />
                                                 </View>
-                                                <Button block textStyle={{ color: '#87838B' }}
-                                                    onPress={() => {
-                                                        this.setModalVisible(!this.state.modalVisible);
-                                                        this.setState({ amount: convertToAngka(this.state.jumlahZakatMal) })
-                                                    }}>
-                                                    <Text>Hitung</Text>
-                                                </Button>
+                                                <View style={{ flexDirection: 'row' }} >
+                                                    <View style={{ flex: 1 }}>
+                                                        <Button style={{ backgroundColor: '#C40018' }}
+                                                            onPress={() => {
+                                                                this.setState({
+                                                                    cash: '',
+                                                                    asset: '',
+                                                                    debt: '',
+                                                                    gold: '',
+                                                                    stock: '',
+                                                                    invest: '',
+                                                                    hargaEmas: '586933',
+                                                                    nishabEmas: '49889305',
+                                                                    hartaTotal: '',
+                                                                    jumlahZakatMal: '',
+                                                                    maalState: '',
+                                                                })
+                                                            }}>
+                                                            <Text>Hapus</Text>
+                                                        </Button>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                                        <Button block textStyle={{ color: '#87838B' }}
+                                                            onPress={() => {
+                                                                this.setModalVisible(!this.state.modalVisible);
+                                                                this.setState({ amount: convertToAngka(this.state.jumlahZakatMal) })
+                                                            }}>
+                                                            <Text>Hitung</Text>
+                                                        </Button>
+                                                    </View>
+                                                </View>
                                             </Form>
-                                        </Tab>
-                                        <Tab heading="Profesi">
+                                        </Content>
+                                    </Tab>
+                                    <Tab heading="Profesi">
+                                        <Content padder>
                                             <Form>
                                                 <View>
                                                     <TextField label="Jumlah Penghasilan Per Bulan"
                                                         keyboardType='numeric'
-                                                        onChangeText={(text) => this.setState({ gaji: convertToAngka(text), jumlahZakatProfesi: this.calculateProfesi('gaji', convertToAngka(text)) })}
+                                                        onChangeText={
+                                                            (text) => {
+                                                                let total = (text ? convertToAngka(text) : 0) + (this.state.tunjangan ? parseInt(this.state.tunjangan) : 0)
+                                                                let jumlah = ''
+                                                                if (total >= parseInt(this.state.nishabBeras)) {
+                                                                    jumlah = convertToRupiah((0.025 * total).toString())
+                                                                } else {
+                                                                    jumlah = 'Tidak Mencukupi Nishab'
+                                                                }
+
+                                                                this.setState({
+                                                                    gaji: convertToAngka(text),
+                                                                    jumlahZakatProfesi: jumlah,
+                                                                    pendapatanTotal: total.toString(),
+                                                                })
+                                                            }
+                                                        }
                                                         value={this.state.gaji ? convertToRupiah(this.state.gaji) : ''} />
                                                 </View>
                                                 <View>
                                                     <TextField label="Jumlah Pendapatan Lain Per Bulan"
                                                         keyboardType='numeric'
-                                                        onChangeText={(text) => this.setState({ tunjangan: convertToAngka(text), jumlahZakatProfesi: this.calculateProfesi('tunjangan', convertToAngka(text)) })}
+                                                        onChangeText={
+                                                            (text) => {
+                                                                let total = (text ? convertToAngka(text) : 0) + (this.state.gaji ? parseInt(this.state.gaji) : 0)
+                                                                let jumlah = ''
+                                                                if (total >= parseInt(this.state.nishabBeras)) {
+                                                                    jumlah = convertToRupiah((0.025 * total).toString())
+                                                                } else {
+                                                                    jumlah = 'Tidak Mencukupi Nishab'
+                                                                }
+
+                                                                this.setState({
+                                                                    tunjangan: convertToAngka(text),
+                                                                    jumlahZakatProfesi: jumlah,
+                                                                    pendapatanTotal: total.toString(),
+                                                                })
+                                                            }
+                                                        }
                                                         value={this.state.tunjangan ? convertToRupiah(this.state.tunjangan) : ''} />
                                                 </View>
                                                 <View>
                                                     <TextField label="Harga Beras"
                                                         keyboardType='numeric'
-                                                        onChangeText={(text) => this.setState({ hargaBeras: convertToAngka(text), jumlahZakatProfesi: this.calculateProfesi('rice-price', convertToAngka(text)) })}
+                                                        onChangeText={
+                                                            (text) => {
+                                                                let total = (this.state.gaji ? parseInt(this.state.gaji) : 0) + (this.state.tunjangan ? parseInt(this.state.tunjangan) : 0)
+                                                                let jumlah = ''
+                                                                if (total >= parseInt(this.state.nishabBeras)) {
+                                                                    jumlah = convertToRupiah((0.025 * total).toString())
+                                                                } else {
+                                                                    jumlah = 'Tidak Mencukupi Nishab'
+                                                                }
+
+                                                                this.setState({
+                                                                    jumlahZakatProfesi: jumlah,
+                                                                    pendapatanTotal: total.toString(),
+                                                                    hargaBeras: convertToAngka(text),
+                                                                    nishabBeras: (520 * convertToAngka(text)).toString()
+                                                                })
+                                                            }
+                                                        }
                                                         value={this.state.hargaBeras ? convertToRupiah(this.state.hargaBeras) : ''} />
                                                 </View>
                                                 <View>
                                                     <TextField disabled label="Nishab (520 Kg)"
-                                                        value={this.state.nishabBeras ? convertToRupiah(this.state.nishabBeras) : ''} />
+                                                        value={!isNaN(this.state.nishabBeras) ? convertToRupiah(this.state.nishabBeras) : ''} />
                                                 </View>
                                                 <View>
                                                     <TextField disabled label="Pendapatan Total"
@@ -474,19 +644,39 @@ export default class CampaignPayment extends Component {
                                                     <TextField disabled label="Jumlah Zakat Profesi"
                                                         value={this.state.jumlahZakatProfesi ? this.state.jumlahZakatProfesi : ''} />
                                                 </View>
-                                                <Button block textStyle={{ color: '#87838B' }}
-                                                    onPress={() => {
-                                                        this.setModalVisible(!this.state.modalVisible);
-                                                        this.setState({ amount: convertToAngka(this.state.jumlahZakatProfesi) })
-                                                    }}>
-                                                    <Text>Hitung</Text>
-                                                </Button>
+                                                <View style={{ flexDirection: 'row' }} >
+                                                    <View style={{ flex: 1 }}>
+                                                        <Button style={{ backgroundColor: '#C40018' }}
+                                                            onPress={() => {
+                                                                this.setState({
+                                                                    gaji: '',
+                                                                    tunjangan: '',
+                                                                    pendapatanTotal: '',
+                                                                    hargaBeras: '8900',
+                                                                    nishabBeras: '4628000',
+                                                                    jumlahZakatProfesi: '',
+                                                                    profesiState: ''
+                                                                })
+                                                            }}>
+                                                            <Text>Hapus</Text>
+                                                        </Button>
+                                                    </View>
+                                                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                                        <Button block textStyle={{ color: '#87838B' }}
+                                                            onPress={() => {
+                                                                this.setModalVisible(!this.state.modalVisible);
+                                                                this.setState({ amount: convertToAngka(this.state.jumlahZakatProfesi) })
+                                                            }}>
+                                                            <Text>Hitung</Text>
+                                                        </Button>
+                                                    </View>
+                                                </View>
                                             </Form>
-                                        </Tab>
-                                    </Tabs>
-                                </Content>
-                            </Container>
-                        </TouchableWithoutFeedback>
+                                        </Content>
+                                    </Tab>
+                                </Tabs>
+                            </Content>
+                        </Container>
                     </Modal>
                     <Content padder style={{ backgroundColor: '#FFFFFF' }}>
                         {campaign.categories_id == 21 &&
@@ -525,7 +715,12 @@ export default class CampaignPayment extends Component {
                                     value={this.state.comment}
                                     error={this.state.comment == '' ? 'Text can\'t be empty' : ''} />
                             </View>
-                            {this.state.animating &&
+                            <Modal
+                                animationType={'fade'}
+                                transparent={true}
+                                visible={this.state.animating} onRequestClose={() => {
+                                    console.log('Modal has been closed.');
+                                }}>
                                 <View style={{
                                     flex: 1,
                                     left: 0,
@@ -537,7 +732,7 @@ export default class CampaignPayment extends Component {
                                 }}>
                                     <ActivityIndicator size="large" />
                                 </View>
-                            }
+                            </Modal>
                             <Text style={{ marginLeft: 10 }}>Tipe Donasi</Text>
                             <CheckBox
                                 checked={this.state.donation_type == 'Routine'}
@@ -571,7 +766,7 @@ export default class CampaignPayment extends Component {
                                         return <CheckBox
                                             checked={this.state.payment_gateway == item.id}
                                             title={item.label ? item.label : <Left>
-                                                <Image source={{ uri: baseUrl + "public/bank/" + item.logo }} style={{ height: 40, width: "100%", flex: 1, resizeMode: 'center' }} />
+                                                <Image source={{ uri: baseUrl + "public/bank/large/" + item.logo }} style={{ height: 70, width: "100%", flex: 1, resizeMode: 'center' }} />
                                             </Left>}
                                             onPress={() => this.onCheckBoxPress(item)}
                                             onIconPress={() => this.onCheckBoxPress(item)}

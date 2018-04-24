@@ -25,8 +25,8 @@ export default class CampaignDetailStory extends Component {
 
     return (
       <Content>
-        <View style={{ flex: 1 }}>
-          <Image source={{ uri: baseUrl + "public/campaigns/large/" + campaign.large_image }} style={{ height: 200, width: "100%", flex: 1 }} />
+        <View style={{ flex: 0 }}>
+        <Image source={{ uri: baseUrl + "public/campaigns/large/" + campaign.large_image }} resizeMode="cover" style={{ height: 200, width: "100%", flex: 1 }} />
           <Fab
             containerStyle={{}}
             style={{ backgroundColor: '#5067FF', zIndex: 1 }}
@@ -49,7 +49,7 @@ export default class CampaignDetailStory extends Component {
               <CardItem>
                 <Body>
                   {c.image != '' &&
-                    <Image source={{ uri: baseUrl + "public/campaigns/updates/" + c.image }} style={{ height: 200, width: "100%", flex: 1 }} />
+                    <Image source={{ uri: baseUrl + "public/campaigns/updates/" + c.image }} style={{ height: 200, width: "100%", flex: 1 }} resizeMode="cover" />
                   }
                   <Text>{shortenDescription(c.description)}</Text>
                 </Body>

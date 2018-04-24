@@ -132,7 +132,7 @@ export default class SaldoReportList extends Component {
             <Card style={{ flex: 0 }}>
                 <CardItem>
                     <Left>
-                        <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
+                        <Thumbnail source={{ uri: baseUrl + "public/avatar/121523859689c7bdxjdykxpyijl.png" }} />
                         <Body>
                             <Text note>{convertToRupiah((rowData.amount-rowData.amount_key))}</Text>
                             <Text note>{rowData.payment_date}</Text>

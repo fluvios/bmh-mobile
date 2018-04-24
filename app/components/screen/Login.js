@@ -75,9 +75,6 @@ export default class Login extends Component {
         try {
             await GoogleSignin.hasPlayServices({ autoResolve: true })
             await GoogleSignin.configure({
-                // For Production
-                // webClientId: '1065269558966-0ej6ivq8cm9tr3nf8mhaai9g1lsjt5ul.apps.googleusercontent.com',
-                // For Debug
                 webClientId: '1065269558966-0ej6ivq8cm9tr3nf8mhaai9g1lsjt5ul.apps.googleusercontent.com',
                 offlineAccess: false
             })
@@ -223,7 +220,8 @@ export default class Login extends Component {
         const nav = this.props.navigation
         GoogleSignin.signIn()
             .then((user) => {
-                const form = { user_id: user.id, email: user.email, name: user.name }
+                console.log(user)
+                const form = { user_id: user.id, email: user.email, name: user.name, idToken: user.idToken }
                 this._getAccountFromFacebook(form, (response) => {
                     if (response.status === 'active') {
                         storage.save({
@@ -367,7 +365,6 @@ export default class Login extends Component {
                             })
                         }
                     ).catch(err => console.log(err))
-
                 }
             },
             (error) => {
@@ -425,8 +422,8 @@ export default class Login extends Component {
                             </Button> */}
                             <GoogleSigninButton
                                 style={{ width: '100%', height: 60 }}
-                                size={GoogleSigninButton.Size.Icon}
-                                color={GoogleSigninButton.Color.Dark}
+                                size={GoogleSigninButton.Size.Wide}
+                                color={GoogleSigninButton.Color.Light}
                                 onPress={this.handleLoginGoogle.bind(this)} />
                         </View>
                     </Content>

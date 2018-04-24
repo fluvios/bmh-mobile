@@ -126,8 +126,11 @@ export default class DepositoList extends Component {
             key: 'user'
         }).then(ret => {
             isLogin = true
-            this.setState({
-                user_id: ret.id
+            this.getAccount(ret.id, (json) => {
+                this.setState({
+                    user_id: ret.id,
+                    saldo: json.saldo
+                })
             })
             this.props.navigation.setParams({
                 handleProfile: this.profile,
@@ -140,26 +143,6 @@ export default class DepositoList extends Component {
                 handleProfile: this.profile,
             })
         })
-    }
-
-    openMidtrans() {
-        const html = "<html>" +
-            "<head>" +
-            "<meta name='viewport' content='width=device-width, initial-scale=1'>" +
-            "<script type='text/javascript' src='https://app.sandbox.midtrans.com/snap/snap.js' data-client-key='VT-client-IXR9xdybkl8pqC-L'></script>" +
-            "</head>" +
-            "<body>" +
-            "<script type='text/javascript'>" +
-            "snap.pay('" + this.state.token + "');" +
-            "</script>" +
-            "</body>" +
-            "</html>"
-
-        return (
-            <WebView
-                style={{ marginTop: 20 }}
-                source={{ html: html }} />
-        )
     }
 
     topup(data, callback) {
@@ -192,11 +175,19 @@ export default class DepositoList extends Component {
         switch (this.state.payment_gateway) {
             case 'Delivery':
                 this.topup(form, response => {
-                    this.setState({ animating: false })
                     if (response.success == true) {
+                        this.setState({ animating: false })
                         nav.dispatch({
                             type: 'Navigation/NAVIGATE',
                             routeName: 'DeliveryScreen'
+                        })
+                    } else {
+                        console.log(response)
+                        this.setState({ animating: false })
+                        Toast.show({
+                            text: response.message,
+                            position: 'bottom',
+                            buttonText: 'Dismiss'
                         })
                     }
                 })
@@ -215,6 +206,14 @@ export default class DepositoList extends Component {
                                 token: token,
                             }
                         })
+                    } else {
+                        console.log(response)
+                        this.setState({ animating: false })
+                        Toast.show({
+                            text: response.message,
+                            position: 'bottom',
+                            buttonText: 'Dismiss'
+                        })
                     }
                 })
                 break
@@ -229,6 +228,14 @@ export default class DepositoList extends Component {
                             params: {
                                 donation: response,
                             }
+                        })
+                    } else {
+                        console.log(response)
+                        this.setState({ animating: false })
+                        Toast.show({
+                            text: response.message,
+                            position: 'bottom',
+                            buttonText: 'Dismiss'
                         })
                     }
                 })
@@ -330,25 +337,30 @@ export default class DepositoList extends Component {
                             ]}
                             containerStyle={{ height: 40 }} />
                     </View>
+                    <Modal
+                        animationType={'fade'}
+                        transparent={true}
+                        visible={this.state.animating} onRequestClose={() => {
+                            console.log('Modal has been closed.');
+                        }}>
+                        <View style={{
+                            flex: 1,
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}>
+                            <ActivityIndicator size="large" />
+                        </View>
+                    </Modal>
                     <View style={{ backgroundColor: '#FFFFFF' }}>
                         <CheckBox
                             checked={this.state.usingNominal}
                             onPress={() => this.onNominalPress()}
                             title='Nominal Lainnya (Min IDR. 20.000,-)'
                         />
-                        {this.state.animating &&
-                            <View style={{
-                                flex: 1,
-                                left: 0,
-                                right: 0,
-                                top: 0,
-                                bottom: 0,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}>
-                                <ActivityIndicator size="large" />
-                            </View>
-                        }
                         <Form>
                             <Item>
                                 <Input placeholder="Nominal"
@@ -365,17 +377,15 @@ export default class DepositoList extends Component {
                                 keyExtractor={(item, index) => item.id}
                                 data={this.state.banks}
                                 renderItem={({ item }) => {
-                                    return <ListItem>
-                                        <CheckBox
-                                            checked={this.state.payment_gateway == item.id}
-                                            title={item.label ? item.label : <Left>
-                                                <Image source={{ uri: baseUrl + "public/bank/" + item.logo }} style={{ height: 40, width: "100%", flex: 1, resizeMode: 'center' }} />
-                                            </Left>}
-                                            onPress={() => this.onCheckBoxPress(item)}
-                                            onIconPress={() => this.onCheckBoxPress(item)}
-                                            containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
-                                        />
-                                    </ListItem>
+                                    return <CheckBox
+                                        checked={this.state.payment_gateway == item.id}
+                                        title={item.label ? item.label : <Left>
+                                            <Image source={{ uri: baseUrl + "public/bank/large/" + item.logo }} style={{ height: 70, width: "100%", flex: 1, resizeMode: 'center' }} />
+                                        </Left>}
+                                        onPress={() => this.onCheckBoxPress(item)}
+                                        onIconPress={() => this.onCheckBoxPress(item)}
+                                        containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                                    />
                                 }}
                             />
                         </Item>

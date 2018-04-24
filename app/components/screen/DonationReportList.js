@@ -132,7 +132,7 @@ export default class DonationReportList extends Component {
             <Card style={{ flex: 0 }}>
                 <CardItem>
                     <Left>
-                        <Thumbnail source={{ uri: baseUrl + "public/avatar/default.jpg" }} />
+                        <Thumbnail source={{ uri: baseUrl + "public/avatar/121523859689c7bdxjdykxpyijl.png" }} />
                         <Body>
                             <Text>{rowData.campaign.title}</Text>
                             <Text note>{convertToRupiah(rowData.donation)}</Text>

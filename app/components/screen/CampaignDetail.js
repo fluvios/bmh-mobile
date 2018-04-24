@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Image, AsyncStorage } from 'react-native'
 import {
-    Container, Header, Title, Icon, Tabs, Tab, View, Fab, Button,
+    Container, Header, Title, Icon, Tabs, Tab, View, Fab, Button, Toast,
     Left, Body, Right, Content, Footer, FooterTab, Text, StyleProvider
 } from 'native-base'
 import CampaignDetailText from "./CampaignDetailText"
@@ -33,7 +33,8 @@ export default class CampaignDetail extends Component {
         super(props)
 
         this.state = {
-            visible: false
+            visible: false,
+            showToast: false,
         }
     }
 

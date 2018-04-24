@@ -35,8 +35,6 @@ export default class Profile extends Component {
       isNotification: false,
       showToast: false
     })
-
-    console.log(this.props)
   }
 
   getAccount(params, callback) {
@@ -132,32 +130,6 @@ export default class Profile extends Component {
                   </Button>
                 </Body>
               </ListItem>
-              <ListItem icon>
-                <Left>
-                  <Icon name="cash" />
-                </Left>
-                <Body>
-                  <Text>Edit Preferensi Zakat</Text>
-                </Body>
-                <Right>
-                  <Switch
-                    value={this.state.isZakat}
-                    onValueChange={() => { !this.state.isZakat ? this.setState({ isZakat: true }) : this.setState({ isZakat: false }) }} />
-                </Right>
-              </ListItem>
-              <ListItem icon>
-                <Left>
-                  <Icon name="notifications" />
-                </Left>
-                <Body>
-                  <Text>Push Notification</Text>
-                </Body>
-                <Right>
-                  <Switch
-                    value={this.state.isNotification}
-                    onValueChange={() => { !this.state.isNotification ? this.setState({ isNotification: true }) : this.setState({ isNotification: false }) }} />
-                </Right>
-              </ListItem>
             </List>
           </View>
           <View style={{ backgroundColor: "#FFF" }}>
@@ -167,7 +139,9 @@ export default class Profile extends Component {
                   <Icon name="book" />
                 </Left>
                 <Body>
-                  <Text>Syarat dan Ketentuan</Text>
+                  <Button transparent onPress={() => nav.navigate('TermsScreen')}>
+                    <Text style={{ color: '#000000' }}>Syarat dan Ketentuan</Text>
+                  </Button>
                 </Body>
               </ListItem>
               <ListItem icon>
@@ -175,7 +149,9 @@ export default class Profile extends Component {
                   <Icon name="bookmarks" />
                 </Left>
                 <Body>
-                  <Text>Kebijakan Privasi</Text>
+                  <Button transparent onPress={() => nav.navigate('FaqScreen')}>
+                    <Text style={{ color: '#000000' }}>Cara Donasi</Text>
+                  </Button>
                 </Body>
               </ListItem>
               <ListItem icon>
@@ -183,7 +159,9 @@ export default class Profile extends Component {
                   <Icon name="information-circle" />
                 </Left>
                 <Body>
-                  <Text>Tentang Berbagi Kebaikan</Text>
+                  <Button transparent onPress={() => nav.navigate('AboutScreen')}>
+                    <Text style={{ color: '#000000' }}>Tentang Kami</Text>
+                  </Button>
                 </Body>
               </ListItem>
             </List>
