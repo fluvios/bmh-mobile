@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FlatList, AsyncStorage, Image, WebView, ActivityIndicator } from 'react-native'
+import { FlatList, AsyncStorage, Image, WebView, ActivityIndicator, Modal } from 'react-native'
 import Storage from 'react-native-storage'
 import {
     Body, Button, Content, Card, Icon, View, Item, ListItem, Left, Right,

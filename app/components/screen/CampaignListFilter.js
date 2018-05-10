@@ -14,6 +14,7 @@ import { CheckBox } from 'react-native-elements'
 import { styles } from "../config/styles"
 import { baseUrl, color } from "../config/variable"
 import Moment from 'react-moment'
+import SelectMultiple from 'react-native-select-multiple'
 
 var campaignArray = []
 var filterArray = []
@@ -47,11 +48,12 @@ export default class CampaignListFilter extends Component {
     this.state = ({
       dataSource: dataSource.cloneWithRows(campaignArray),
       isLoading: true,
-      modalVisible: false,
+      isFilter: true,
+      modalVisible: true,
       appState: AppState.currentState,
       kategori_id: 0,
       funding_id: 0,
-      lokasi_id: '',
+      lokasi_id: 0,
       refreshing: false,
     })
 
@@ -87,7 +89,10 @@ export default class CampaignListFilter extends Component {
 
     this.getFilter(function (json) {
       filterArray = json
-    })
+      this.setState({
+        isFilter: false
+      })
+    }.bind(this))
 
     this.loadStorage()
   }
@@ -112,7 +117,7 @@ export default class CampaignListFilter extends Component {
   filterJenisDana(text) {
     const newData = this.tempArray.filter(function (item) {
       const itemData = item.categories_id
-      const textData = text
+      const textData = parseInt(text)
       return itemData == textData
     })
 
@@ -128,8 +133,8 @@ export default class CampaignListFilter extends Component {
 
   filterKota(text) {
     const newData = this.tempArray.filter(function (item) {
-      const itemData = item.id_kab
-      const textData = text
+      const itemData = item.city_id
+      const textData = parseInt(text)
       itemData == textData
     })
 
@@ -199,7 +204,7 @@ export default class CampaignListFilter extends Component {
   }
 
   getCampaign(callback) {
-    fetch(baseUrl + "api/campaign/19", {
+    fetch(baseUrl + "api/campaigns", {
       method: "GET",
       headers: {
         'Accept': 'application/json',
@@ -302,9 +307,9 @@ export default class CampaignListFilter extends Component {
   }
 
   filterAll() {
-    if (this.state.kategori_id) { this.filterKategori() }
-    if (this.state.funding_id) { this.filterJenisDana() }
-    if (this.state.lokasi_id) { this.filterKota() }
+    if (this.state.kategori_id) { this.filterKategori(this.state.kategori_id) }
+    if (this.state.funding_id) { this.filterJenisDana(this.state.funding_id) }
+    if (this.state.lokasi_id) { this.filterKota(this.state.lokasi_id) }
 
     this.setModalVisible(!this.state.modalVisible)
   }
@@ -313,111 +318,124 @@ export default class CampaignListFilter extends Component {
     this.setState({ modalVisible: visible })
   }
 
-  // render() {
-  //   let campaign = (this.state.isLoading) ?
-  //     <Spinner /> :
-  //     <Container>
-  //       <View style={{ flex: 1 }}>
-  //         <Modal
-  //           animationType={'slide'}
-  //           transparent={false}
-  //           visible={this.state.modalVisible} onRequestClose={() => {
-  //             console.log('Filter added.')
-  //           }}>
-  //           <Form>
-  //             <ScrollView>
-  //               <Text>Filter berdasarkan Kategori</Text>
-  //               <FlatList
-  //                 extraData={this.state}
-  //                 keyExtractor={(item, index) => item.id}
-  //                 data={filterArray.kategori}
-  //                 scrollEnabled={false}
-  //                 renderItem={({ item }) => {
-  //                   return <CheckBox
-  //                     checked={this.state.kategori_id == item.id}
-  //                     title={item.nama}
-  //                     onPress={() => this.onKategoriPress(item)}
-  //                     onIconPress={() => this.onKategoriPress(item)}
-  //                     containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
-  //                   />
-  //                 }}
-  //               />
-  //               <Text>Filter berdasarkan Jenis Dana</Text>
-  //               <FlatList
-  //                 extraData={this.state}
-  //                 keyExtractor={(item, index) => item.id}
-  //                 data={filterArray['jenis-dana']}
-  //                 scrollEnabled={false}
-  //                 renderItem={({ item }) => {
-  //                   return <CheckBox
-  //                     checked={this.state.funding_id == item.id}
-  //                     title={item.name}
-  //                     onPress={() => this.onJenisDanaPress(item)}
-  //                     onIconPress={() => this.onJenisDanaPress(item)}
-  //                     containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
-  //                   />
-  //                 }}
-  //               />
-  //               <Text>Filter berdasarkan Kabupaten/Kota</Text>
-  //               <FlatList
-  //                 extraData={this.state}
-  //                 keyExtractor={(item, index) => item.id}
-  //                 data={filterArray.kota}
-  //                 scrollEnabled={false}
-  //                 renderItem={({ item }) => {
-  //                   return <CheckBox
-  //                     checked={this.state.lokasi_id == item.id_kab}
-  //                     title={item.nama}
-  //                     onPress={() => this.onKotaPress(item)}
-  //                     onIconPress={() => this.onKotaPress(item)}
-  //                     containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
-  //                   />
-  //                 }}
-  //               />
-  //               <View style={{ flex: 0 }}>
-  //                 <Button full textStyle={{ color: '#87838B' }}
-  //                   onPress={() => {
-  //                     this.setModalVisible(!this.state.modalVisible);
-  //                     this.filterAll();
-  //                   }}>
-  //                   <Text>Filter</Text>
-  //                 </Button>
-  //               </View>
-  //             </ScrollView>
-  //           </Form>
-  //         </Modal>
-  //         <ListView
-  //           refreshControl={
-  //             <RefreshControl
-  //               refreshing={this.state.refreshing}
-  //               onRefresh={this.onRefresh.bind(this)} />
-  //           }
-  //           dataSource={this.state.dataSource}
-  //           renderRow={this.renderRow.bind(this)}
-  //           enableEmptySections={true}
-  //           removeClippedSubviews={false} >
-  //         </ListView>
-  //         <Footer>
-  //           <FooterTab>
-  //             <Button full iconLeft onPress={() => this.setModalVisible(!this.state.modalVisible)}>
-  //               <Icon name='funnel' />
-  //               <Text>Filter Campaign</Text>
-  //             </Button>
-  //           </FooterTab>
-  //         </Footer>
-  //       </View>
-  //     </Container>
-
-  //   return campaign
-  // }
-
   render() {
-    return (
-      <Container>
-        <Content padder>
-          <H2> Nantikan Fitur Ini Pada Update Selanjutnya </H2>
-        </Content>
-      </Container>
-    )
+    if (this.state.modalVisible) {
+      let campaign = (this.state.isFilter) ?
+        <Spinner /> :
+        <Container>
+          <Content>
+            <ScrollView>
+              <Text>Filter berdasarkan Kategori</Text>
+              <FlatList
+                extraData={this.state}
+                keyExtractor={(item, index) => item.id}
+                data={filterArray.kategori}
+                scrollEnabled={false}
+                renderItem={({ item, index }) => {
+                  return <CheckBox
+                    key={index}
+                    checked={this.state.kategori_id == item.id}
+                    title={item.nama}
+                    onPress={() => this.onKategoriPress(item)}
+                    onIconPress={() => this.onKategoriPress(item)}
+                    containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                  />
+                }}
+              />
+              {/* <SelectMultiple
+                items={filterArray['kategori']}
+                selectedItems={this.state.kategori_id}
+                onSelectionsChange={() => this.onKategoriPress(item)} /> */}
+              <Text>Filter berdasarkan Jenis Dana</Text>
+              <FlatList
+                extraData={this.state}
+                keyExtractor={(item, index) => item.id}
+                data={filterArray['jenis-dana']}
+                scrollEnabled={false}
+                renderItem={({ item, index }) => {
+                  return <CheckBox
+                    key={index}
+                    checked={this.state.funding_id == item.id}
+                    title={item.name}
+                    onPress={() => this.onJenisDanaPress(item)}
+                    onIconPress={() => this.onJenisDanaPress(item)}
+                    containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                  />
+                }}
+              />
+              <Text>Filter berdasarkan Kabupaten/Kota</Text>
+              <FlatList
+                extraData={this.state}
+                keyExtractor={(item, index) => item.id}
+                data={filterArray.kota}
+                scrollEnabled={false}
+                renderItem={({ item, index }) => {
+                  return <CheckBox
+                    key={index}
+                    checked={this.state.lokasi_id == item.id_kab}
+                    title={item.nama}
+                    onPress={() => this.onKotaPress(item)}
+                    onIconPress={() => this.onKotaPress(item)}
+                    containerStyle={{ flex: 1, backgroundColor: '#FFF', borderWidth: 0 }}
+                  />
+                }}
+              />
+            </ScrollView>
+          </Content>
+          <Footer style={{ backgroundColor: '#FFFFFF' }}>
+            <Left style={{ margin: 10 }}>
+              <Button block textStyle={{ color: '#87838B' }} style={{ backgroundColor: '#f38d1f' }}
+                onPress={() => {
+                  this.setState({
+                    kategori_id: 0,
+                    funding_id: 0,
+                    lokasi_id: 0,
+                  })
+                }}>
+                <Text>Hapus</Text>
+              </Button>
+            </Left>
+            <Right style={{ margin: 10 }}>
+              <Button block textStyle={{ color: '#87838B' }}
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                  this.filterAll();
+                }}>
+                <Text>Cari</Text>
+              </Button>
+            </Right>
+          </Footer>
+        </Container>
+
+      return campaign
+    } else {
+      let campaign = (this.state.isLoading) ?
+        <Spinner /> :
+        <Container>
+          <View style={{ flex: 1 }}>
+            <ListView
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this.onRefresh.bind(this)} />
+              }
+              dataSource={this.state.dataSource}
+              renderRow={this.renderRow.bind(this)}
+              enableEmptySections={true}
+              removeClippedSubviews={false} >
+            </ListView>
+            <Footer>
+              <FooterTab>
+                <Button full style={{ backgroundColor: '#f38d1f' }}
+                  onPress={() => this.setModalVisible(!this.state.modalVisible)}>
+                  <Text style={{ fontSize: 16 }}>Kembali</Text>
+                </Button>
+              </FooterTab>
+            </Footer>
+          </View>
+        </Container>
+
+      return campaign
+    }
   }
 }

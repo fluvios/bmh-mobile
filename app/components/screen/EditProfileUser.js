@@ -1,20 +1,15 @@
 import React, { Component } from 'react'
 import { View, AsyncStorage, Image, Text, WebView, } from 'react-native'
 import {
-    Container, Item, Input, Header, Body, Content, Tab, Tabs,
-    Title, Button, Label, Spinner, Toast, H1, Form, StyleProvider,
+    Container, Item, Input, Header, Body, Content,
+    Title, Button, Label, Spinner, Toast, H1, Form,
 } from 'native-base'
-import getTheme from '../../../native-base-theme/components'
-import material from '../../../native-base-theme/variables/material'
 import Storage from 'react-native-storage'
 import { baseUrl } from "../config/variable"
 import { styles } from "../config/styles"
 import PasswordInputText from 'react-native-hide-show-password-input'
 import { TextField } from 'react-native-material-textfield'
 import { NavigationActions } from 'react-navigation'
-
-import EditProfileAddress from "./EditProfileAddress"
-import EditProfileUser from "./EditProfileUser"
 
 var storage = new Storage({
     size: 1000,
@@ -23,7 +18,7 @@ var storage = new Storage({
     enableCache: false,
 })
 
-export default class EditProfile extends Component {
+export default class EditProfileUser extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -105,11 +100,11 @@ export default class EditProfile extends Component {
         }).then(ret => {
             this.getAccount(ret.id, response => {
                 this.setState({
-                    user_id: ret.id,
-                    email: ret.email,
-                    name: ret.name,
-                    phone_number_1: ret.phone_number_1,
-                    phone_number_2: ret.phone_number_2,
+                    user_id: response.id,
+                    email: response.email,
+                    name: response.name,
+                    phone_number_1: response.phone_number_1,
+                    phone_number_2: response.phone_number_2,
                 })
             })
         }).catch(err => {
@@ -118,22 +113,45 @@ export default class EditProfile extends Component {
     }
 
     render() {
-        const propies = this.props
+        const nav = this.props.navigation
         return (
-            <StyleProvider style={getTheme(material)}>
             <Container>
-              <View style={{ flex: 1 }}>
-                <Tabs>
-                  <Tab heading="Data Personal" textStyle={{ fontSize: 12 }} activeTextStyle={{ fontSize: 11 }}>
-                    <EditProfileUser data={{ propies }} />
-                  </Tab>
-                  <Tab heading="Alamat" textStyle={{ fontSize: 12 }} activeTextStyle={{ fontSize: 11 }}>
-                    <EditProfileAddress data={{ propies }} />
-                  </Tab>
-                </Tabs>
-              </View>
+                <Content padder>
+                    <Form>
+                        <View>
+                            <TextField
+                                label='Nama'
+                                value={this.state.name}
+                                onChangeText={(name) => this.setState({ name })}
+                            />
+                            <TextField
+                                label='Nomor HP 1'
+                                value={this.state.phone_number_1}
+                                onChangeText={(phone_number_1) => this.setState({ phone_number_1 })}
+                            />
+                            <TextField
+                                label='Nomor HP 2'
+                                value={this.state.phone_number_2}
+                                onChangeText={(phone_number_2) => this.setState({ phone_number_2 })}
+                            />
+                            <TextField
+                                label='Alamat Email'
+                                value={this.state.email}
+                                onChangeText={(email) => this.setState({ email })}
+                            />
+                            <PasswordInputText
+                                value={this.state.password}
+                                onChangeText={(password) => this.setState({ password })}
+                            />
+                        </View>
+                        <View style={styles.deviderColumn}>
+                            <Button block style={{ backgroundColor: '#f38d1f' }} onPress={() => this.editAccount(this.state)}>
+                                <Text style={styles.buttonText}>Edit Profile</Text>
+                            </Button>
+                        </View>
+                    </Form>
+                </Content>
             </Container>
-          </StyleProvider>
         )
     }
 }
