@@ -207,7 +207,7 @@ export default class CampaignListQurban extends Component {
       }
     })
       .then((response) => response.json())
-      .then(json => callback(json.data))
+      .then(json => callback(json))
       .catch((error) => {
         console.error(error)
       })

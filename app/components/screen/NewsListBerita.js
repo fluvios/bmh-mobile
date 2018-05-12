@@ -58,7 +58,7 @@ export default class NewsListBerita extends Component {
   }
 
   getCampaign(callback) {
-    fetch(wpUrl + "posts?categories=6", {
+    fetch(wpUrl + "posts?categories=6&per_page=100", {
       method: "GET",
       headers: {
         'Accept': 'application/json',

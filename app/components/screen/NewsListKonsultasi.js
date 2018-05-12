@@ -58,7 +58,7 @@ export default class NewsListKonsultasi extends Component {
   }
 
   getCampaign(callback) {
-    fetch(wpUrl + "posts?categories=268", {
+    fetch(wpUrl + "posts?categories=268&per_page=100", {
       method: "GET",
       headers: {
         'Accept': 'application/json',

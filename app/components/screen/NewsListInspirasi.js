@@ -57,7 +57,7 @@ export default class NewsListInspirasi extends Component {
   }
 
   getCampaign(callback) {
-    fetch(wpUrl + "posts?categories=10", {
+    fetch(wpUrl + "posts?categories=10&per_page=100", {
       method: "GET",
       headers: {
         'Accept': 'application/json',
