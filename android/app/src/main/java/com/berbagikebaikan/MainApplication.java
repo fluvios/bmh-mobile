@@ -1,11 +1,6 @@
 package com.berbagikebaikan;
 
 import android.app.Application;
-import android.content.Intent;
-
-import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
 
 import com.facebook.react.ReactApplication;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
@@ -26,12 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
-
-  private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
-
-  protected static CallbackManager getCallbackManager() {
-    return mCallbackManager;
-  }  
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
@@ -57,7 +46,6 @@ public class MainApplication extends Application implements ReactApplication {
             new ImagePickerPackage(),
             new RNGoogleSigninPackage(),
             new RNFetchBlobPackage(),
-            new FBSDKPackage(mCallbackManager),
             new CodePush(null, getApplicationContext(), BuildConfig.DEBUG)
       );
     }

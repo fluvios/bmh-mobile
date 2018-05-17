@@ -13,19 +13,6 @@ import { styles } from "../config/styles"
 import PasswordInputText from 'react-native-hide-show-password-input'
 import { TextField } from 'react-native-material-textfield'
 import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin'
-const FBSDK = require('react-native-fbsdk')
-const {
-    LoginButton,
-    AccessToken,
-    LoginManager,
-    GraphRequest,
-    GraphRequestManager
-} = FBSDK
-const Constants = {
-    //Dev Parse keys
-    TWITTER_COMSUMER_KEY: "jCsPnR8eQ1lLP3KC9XlPCRUJo",
-    TWITTER_CONSUMER_SECRET: "7MwZHve1fX2ThCJnOR6CxHHHp9OHnTTWAUAPV4y5lymP7N78AO"
-}
 
 var storage = new Storage({
     size: 1000,
@@ -291,87 +278,6 @@ export default class Login extends Component {
             .done()
     }
 
-    handleLoginFacebook = () => {
-        const nav = this.props.navigation
-        LoginManager.logInWithReadPermissions(['public_profile']).then(
-            (result) => {
-                if (result.isCancelled) {
-                    console.log('Login cancelled')
-                } else {
-                    AccessToken.getCurrentAccessToken().then(
-                        (data) => {
-                            const form = { user_id: data.userID.toString() }
-                            this._getAccountFromFacebook(form, (response) => {
-                                if (response.status === 'active') {
-                                    storage.save({
-                                        key: 'user',
-                                        data: response
-                                    })
-                                    if (nav.state.params) {
-                                        nav.navigate(nav.state.params.goto, {
-                                            campaign: nav.state.params.item,
-                                            user: response
-                                        })
-                                        Toast.show({
-                                            text: 'Login Success',
-                                            position: 'bottom',
-                                            buttonText: 'Dismiss'
-                                        })
-                                    } else {
-                                        // nav.goBack()
-                                        const resetAction = NavigationActions.reset({
-                                            index: 0,
-                                            actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
-                                        })
-                                        nav.dispatch(resetAction)
-                                        Toast.show({
-                                            text: 'Login Success',
-                                            position: 'bottom',
-                                            buttonText: 'Dismiss'
-                                        })
-                                    }
-                                } else {
-                                    this._registerUser(form, (response) => {
-                                        if (response.success == true) {
-                                            storage.save({
-                                                key: 'user',
-                                                data: response
-                                            })
-                                            if (nav.state.params) {
-                                                nav.navigate(nav.state.params.goto, {
-                                                    campaign: nav.state.params.item,
-                                                    user: response
-                                                })
-                                                Toast.show({
-                                                    text: 'Login Success',
-                                                    position: 'bottom',
-                                                    buttonText: 'Dismiss'
-                                                })
-                                            } else {
-                                                const resetAction = NavigationActions.reset({
-                                                    index: 0,
-                                                    actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
-                                                })
-                                                nav.dispatch(resetAction)
-                                                Toast.show({
-                                                    text: 'Login Success',
-                                                    position: 'bottom',
-                                                    buttonText: 'Dismiss'
-                                                })
-                                            }
-                                        }
-                                    })
-                                }
-                            })
-                        }
-                    ).catch(err => console.log(err))
-                }
-            },
-            (error) => {
-                console.log('Login fail with error: ' + error)
-            })
-    }
-
     render() {
         const nav = this.props.navigation
         return (
@@ -416,10 +322,6 @@ export default class Login extends Component {
                             </View>
                         </View>
                         <View style={styles.deviderColumn}>
-                            {/* <Button iconLeft block style={{ backgroundColor: '#3b5998' }} onPress={() => this.handleLoginFacebook()}>
-                                <Icon name='logo-facebook' />
-                                <Text style={styles.buttonText}>Masuk Menggunakan Facebook</Text>
-                            </Button> */}
                             <GoogleSigninButton
                                 style={{ width: '100%', height: 60 }}
                                 size={GoogleSigninButton.Size.Wide}
