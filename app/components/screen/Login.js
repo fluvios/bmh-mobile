@@ -12,7 +12,7 @@ import { baseUrl } from "../config/variable"
 import { styles } from "../config/styles"
 import PasswordInputText from 'react-native-hide-show-password-input'
 import { TextField } from 'react-native-material-textfield'
-import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin'
+// import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin'
 
 var storage = new Storage({
     size: 1000,
@@ -58,21 +58,21 @@ export default class Login extends Component {
         this._setupGoogleSignin()
     }
 
-    async _setupGoogleSignin() {
-        try {
-            await GoogleSignin.hasPlayServices({ autoResolve: true })
-            await GoogleSignin.configure({
-                webClientId: '1065269558966-0ej6ivq8cm9tr3nf8mhaai9g1lsjt5ul.apps.googleusercontent.com',
-                offlineAccess: false
-            })
+    // async _setupGoogleSignin() {
+    //     try {
+    //         await GoogleSignin.hasPlayServices({ autoResolve: true })
+    //         await GoogleSignin.configure({
+    //             webClientId: '1065269558966-0ej6ivq8cm9tr3nf8mhaai9g1lsjt5ul.apps.googleusercontent.com',
+    //             offlineAccess: false
+    //         })
 
-            const user = await GoogleSignin.currentUserAsync()
-            this.setState({ user })
-        }
-        catch (err) {
-            console.log("Play services error", err.code, err.message)
-        }
-    }
+    //         const user = await GoogleSignin.currentUserAsync()
+    //         this.setState({ user })
+    //     }
+    //     catch (err) {
+    //         console.log("Play services error", err.code, err.message)
+    //     }
+    // }
 
     _getAccountFromFacebook(params, callback) {
         fetch(baseUrl + "api/login-facebook", {
@@ -203,80 +203,80 @@ export default class Login extends Component {
         })
     }
 
-    handleLoginGoogle = () => {
-        const nav = this.props.navigation
-        GoogleSignin.signIn()
-            .then((user) => {
-                console.log(user)
-                const form = { user_id: user.id, email: user.email, name: user.name, idToken: user.idToken }
-                this._getAccountFromFacebook(form, (response) => {
-                    if (response.status === 'active') {
-                        storage.save({
-                            key: 'user',
-                            data: response
-                        })
-                        if (nav.state.params) {
-                            nav.navigate(nav.state.params.goto, {
-                                campaign: nav.state.params.item,
-                                user: response
-                            })
-                            Toast.show({
-                                text: 'Login Success',
-                                position: 'bottom',
-                                buttonText: 'Dismiss'
-                            })
-                        } else {
-                            // nav.goBack()
-                            const resetAction = NavigationActions.reset({
-                                index: 0,
-                                actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
-                            })
-                            nav.dispatch(resetAction)
-                            Toast.show({
-                                text: 'Login Success',
-                                position: 'bottom',
-                                buttonText: 'Dismiss'
-                            })
-                        }
-                    } else {
-                        this._registerUser(form, (response) => {
-                            if (response.success == true) {
-                                storage.save({
-                                    key: 'user',
-                                    data: response
-                                })
-                                if (nav.state.params) {
-                                    nav.navigate(nav.state.params.goto, {
-                                        campaign: nav.state.params.item,
-                                        user: response
-                                    })
-                                    Toast.show({
-                                        text: 'Login Success',
-                                        position: 'bottom',
-                                        buttonText: 'Dismiss'
-                                    })
-                                } else {
-                                    const resetAction = NavigationActions.reset({
-                                        index: 0,
-                                        actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
-                                    })
-                                    nav.dispatch(resetAction)
-                                    Toast.show({
-                                        text: 'Login Success',
-                                        position: 'bottom',
-                                        buttonText: 'Dismiss'
-                                    })
-                                }
-                            }
-                        })
-                    }
-                })
-            })
-            .catch((err) => {
-                console.log('WRONG SIGNIN', err)
-            })
-            .done()
-    }
+    // handleLoginGoogle = () => {
+    //     const nav = this.props.navigation
+    //     GoogleSignin.signIn()
+    //         .then((user) => {
+    //             console.log(user)
+    //             const form = { user_id: user.id, email: user.email, name: user.name, idToken: user.idToken }
+    //             this._getAccountFromFacebook(form, (response) => {
+    //                 if (response.status === 'active') {
+    //                     storage.save({
+    //                         key: 'user',
+    //                         data: response
+    //                     })
+    //                     if (nav.state.params) {
+    //                         nav.navigate(nav.state.params.goto, {
+    //                             campaign: nav.state.params.item,
+    //                             user: response
+    //                         })
+    //                         Toast.show({
+    //                             text: 'Login Success',
+    //                             position: 'bottom',
+    //                             buttonText: 'Dismiss'
+    //                         })
+    //                     } else {
+    //                         nav.goBack()
+    //                         const resetAction = NavigationActions.reset({
+    //                             index: 0,
+    //                             actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
+    //                         })
+    //                         nav.dispatch(resetAction)
+    //                         Toast.show({
+    //                             text: 'Login Success',
+    //                             position: 'bottom',
+    //                             buttonText: 'Dismiss'
+    //                         })
+    //                     }
+    //                 } else {
+    //                     this._registerUser(form, (response) => {
+    //                         if (response.success == true) {
+    //                             storage.save({
+    //                                 key: 'user',
+    //                                 data: response
+    //                             })
+    //                             if (nav.state.params) {
+    //                                 nav.navigate(nav.state.params.goto, {
+    //                                     campaign: nav.state.params.item,
+    //                                     user: response
+    //                                 })
+    //                                 Toast.show({
+    //                                     text: 'Login Success',
+    //                                     position: 'bottom',
+    //                                     buttonText: 'Dismiss'
+    //                                 })
+    //                             } else {
+    //                                 const resetAction = NavigationActions.reset({
+    //                                     index: 0,
+    //                                     actions: [NavigationActions.navigate({ routeName: 'ListScreen' })],
+    //                                 })
+    //                                 nav.dispatch(resetAction)
+    //                                 Toast.show({
+    //                                     text: 'Login Success',
+    //                                     position: 'bottom',
+    //                                     buttonText: 'Dismiss'
+    //                                 })
+    //                             }
+    //                         }
+    //                     })
+    //                 }
+    //             })
+    //         })
+    //         .catch((err) => {
+    //             console.log('WRONG SIGNIN', err)
+    //         })
+    //         .done()
+    // }
 
     render() {
         const nav = this.props.navigation
@@ -321,13 +321,13 @@ export default class Login extends Component {
                                 </Button>
                             </View>
                         </View>
-                        <View style={styles.deviderColumn}>
+                        {/* <View style={styles.deviderColumn}>
                             <GoogleSigninButton
                                 style={{ width: '100%', height: 60 }}
                                 size={GoogleSigninButton.Size.Wide}
                                 color={GoogleSigninButton.Color.Light}
                                 onPress={this.handleLoginGoogle.bind(this)} />
-                        </View>
+                        </View> */}
                     </Content>
                 </Container>
             </StyleProvider>
